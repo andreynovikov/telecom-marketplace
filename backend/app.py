@@ -1,26 +1,28 @@
 from dotenv import load_dotenv
 from flask import Flask
 
-from models import db, setup_db, init_db
+from .models import db_wrapper, setup_db
 
 
 def create_app(context=None):
     # Load configuration from environment
     load_dotenv()
 
-    # Initialize database
-    init_db()
-    setup_db()
-
     # Initialize flask
     app = Flask(__name__)
-    app.config.prom_refixed_env()
+    app.config.from_prefixed_env()
     if context:
         app.config.update(context)
 
+    # Initialize database
+    db_wrapper.init_app(app)
+    setup_db()
+    db = db_wrapper.database
+
     @app.before_request
     def _db_connect():
-        db.connect()
+        if db.is_closed():
+            db.connect()
 
     @app.teardown_request
     def _db_close(e):
@@ -41,12 +43,12 @@ def create_app(context=None):
             status = 'failure'
 
         return {
-            'debug': app.confg['DEBUG'],
+            'debug': app.config['DEBUG'],
             'database': database,
             'status': status
         }
 
-    from api import bp
-    app.regster_blueprint(bp, url_prefix='/api/v0')
+    from .api import bp
+    app.register_blueprint(bp, url_prefix='/api/v0')
 
     return app

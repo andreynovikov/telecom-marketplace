@@ -1,17 +1,8 @@
-import os
-
-from peewee import CharField, ForeignKeyField, SmallIntegerField
-from playhouse.postgres_ext import PostgresqlDatabase
-from playhouse.signals import Model
+from peewee import BooleanField, CharField, ForeignKeyField, SmallIntegerField
+from playhouse.flask_utils import FlaskDB
 
 
-db = PostgresqlDatabase(None, autoconnect=False)
-
-
-class BaseModel(Model):
-    class Meta:
-        database = db
-
+db_wrapper = FlaskDB()
 
 KIND_PROVIDER = 1
 KIND_CONSUMER = 2
@@ -22,23 +13,23 @@ KIND_CHOICES = [
 ]
 
 
-class Category(BaseModel):
+class Category(db_wrapper.Model):
     name = CharField(verbose_name='название')
 
 
-class Service(BaseModel):
+class Service(db_wrapper.Model):
     category = ForeignKeyField(Category, verbose_name='категория')
     name = CharField(verbose_name='название')
     description = CharField(verbose_name='описание')
 
 
-class Subject(BaseModel):
+class Subject(db_wrapper.Model):
     code = SmallIntegerField(primary_key=True, verbose_name='код региона')
     name = CharField(verbose_name='название')
 
 
-class Contractor(BaseModel):
-    kind = SmallIntegerField(choices=KIND_CHOICES, index=True, verbode_name='тип контрагента')
+class Contractor(db_wrapper.Model):
+    kind = SmallIntegerField(choices=KIND_CHOICES, index=True, verbose_name='тип контрагента')
     name = CharField(verbose_name='название')
     inn = CharField(max_length=12, verbose_name='ИНН', unique=True)
     legal_address = CharField()
@@ -48,26 +39,16 @@ class Contractor(BaseModel):
     experience_file = CharField(null=True, verbose_name='файл с опытом работы')
 
 
-class Geography(BaseModel):
+class Geography(db_wrapper.Model):
     contractor = ForeignKeyField(Contractor, backref='geography')
     subject = ForeignKeyField(Subject, backref='contractors')
 
 
-class Catalog(BaseModel):
+class Catalog(db_wrapper.Model):
     contractor = ForeignKeyField(Contractor, backref='services')
     service = ForeignKeyField(Service, backref='contractors')
+    approved = BooleanField(default=False, verbose_name='одобрен')
 
 
-@db.connection_context()
 def setup_db():
-    db.create_tables([Category, Service, Subject, Contractor, Geography, Catalog], safe=True)
-
-
-def init_db():
-    db.init(
-        os.environ.get('DB_NAME'),
-        user=os.environ.get('DB_USER'),
-        password=os.environ.get('DB_PASSWORD'),
-        host=os.environ.get('DB_HOST'),
-        port=os.environ.get('DB_PORT')
-    )
+    db_wrapper.database.create_tables([Category, Service, Subject, Contractor, Geography, Catalog], safe=True)
