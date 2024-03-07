@@ -1,3 +1,5 @@
+import csv
+
 from peewee import BooleanField, CharField, ForeignKeyField, SmallIntegerField
 from playhouse.flask_utils import FlaskDB
 
@@ -8,8 +10,8 @@ KIND_PROVIDER = 1
 KIND_CONSUMER = 2
 
 KIND_CHOICES = [
-    (KIND_PROVIDER, "поставщик"),
-    (KIND_CONSUMER, "заказчик")
+    (KIND_PROVIDER, 'поставщик'),
+    (KIND_CONSUMER, 'заказчик')
 ]
 
 
@@ -52,3 +54,8 @@ class Catalog(db_wrapper.Model):
 
 def setup_db():
     db_wrapper.database.create_tables([Category, Service, Subject, Contractor, Geography, Catalog], safe=True)
+    if not Subject.select().count():
+        with open('data/subjects.csv') as csvfile:
+            data = list(csv.DictReader(csvfile))
+            if data:
+                Subject.insert_many(data).execute()
