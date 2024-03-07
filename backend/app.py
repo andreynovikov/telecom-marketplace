@@ -51,4 +51,7 @@ def create_app(context=None):
     from .api import bp
     app.register_blueprint(bp, url_prefix='/api/v0')
 
+    from .admin import create_admin
+    create_admin(app)
+
     return app
