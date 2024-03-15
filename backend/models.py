@@ -1,9 +1,13 @@
 import csv
 
+from flask_jwt_extended import JWTManager
 from peewee import BooleanField, CharField, ForeignKeyField, SmallIntegerField
 from playhouse.flask_utils import FlaskDB
 
+from .fields import bcrypt, PasswordField  # noqa F401
 
+
+jwt = JWTManager()
 db_wrapper = FlaskDB()
 
 KIND_PROVIDER = 1
@@ -17,12 +21,19 @@ KIND_CHOICES = [
 
 class Category(db_wrapper.Model):
     name = CharField(verbose_name='название')
+    seq = SmallIntegerField(verbose_name='порядок')
+
+    class Meta:
+        order_by = ['seq']
+
+    def __str__(self):
+        return self.name
 
 
 class Service(db_wrapper.Model):
     category = ForeignKeyField(Category, verbose_name='категория')
     name = CharField(verbose_name='название')
-    description = CharField(verbose_name='описание')
+    description = CharField(null=True, verbose_name='описание')
 
 
 class Subject(db_wrapper.Model):
@@ -33,7 +44,7 @@ class Subject(db_wrapper.Model):
 class Contractor(db_wrapper.Model):
     kind = SmallIntegerField(choices=KIND_CHOICES, index=True, verbose_name='тип контрагента')
     name = CharField(verbose_name='название')
-    inn = CharField(max_length=12, verbose_name='ИНН', unique=True)
+    inn = CharField(max_length=12, unique=True, verbose_name='ИНН')
     legal_address = CharField()
     cover_letter = CharField(null=True, verbose_name='информация о компании')
     cover_file = CharField(null=True, verbose_name='файл с информацией о компании')
@@ -52,8 +63,29 @@ class Catalog(db_wrapper.Model):
     approved = BooleanField(default=False, verbose_name='одобрен')
 
 
-def setup_db():
-    db_wrapper.database.create_tables([Category, Service, Subject, Contractor, Geography, Catalog], safe=True)
+class User(db_wrapper.Model):
+    email = CharField(unique=True, verbose_name='e-mail')
+    password = PasswordField(verbose_name='пароль')
+    admin = BooleanField(default=False, verbose_name='администратор')
+
+
+@jwt.user_identity_loader
+def user_identity_lookup(user):
+    return user.id
+
+
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+    identity = jwt_data["sub"]
+    return User.select().filter(User.id == identity).first()
+
+
+def setup_db(app):
+    db_wrapper.database.create_tables([Category, Service, Subject, Contractor, Geography, Catalog, User], safe=True)
+    if not User.select().count():
+        admin = User(email='admin', password='admin', admin=True)
+        admin.save()
+        app.logger.warn('Default admin user created, you should change their password!')
     if not Subject.select().count():
         with open('data/subjects.csv') as csvfile:
             data = list(csv.DictReader(csvfile))

@@ -1,0 +1,44 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{{ super() }}
+<form id="login">
+    <div class="form-group">
+        <label for="inputEmail">Email address</label>
+        <input type="text" class="form-control" id="inputEmail" name="email">
+    </div>
+    <div class="form-group">
+        <label for="inputPassword">Password</label>
+        <input type="password" class="form-control" id="inputPassword" name="password">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<script>
+    async function login(event) {
+        event.preventDefault();
+
+        const data = new FormData(event.target);
+        const values = Object.fromEntries(data.entries());
+
+        try {
+            const response = await fetch("/api/v0/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
+            });
+
+            const result = await response.json();
+            if (response.ok)
+                window.location = "/admin/";
+            else
+                alert(result.msg)
+        } catch (error) {
+            alert("Error: " + error);
+        }
+    }
+
+    const form = document.querySelector('form#login');
+    form.addEventListener('submit', login);
+</script>
+{% endblock body %}
