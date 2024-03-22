@@ -39,8 +39,8 @@ def login():
     if user:
         if bcrypt.check_password_hash(user.password, data.get('password')):
             access_token = create_access_token(identity=user)
-            response = jsonify(msg='Login successful')
-            set_access_cookies(response, access_token)
+            response = jsonify(access_token=access_token)
+            set_access_cookies(response, access_token)  # cookies are used for admin interface
             return response
         else:
             return jsonify(msg='Wrong password'), 401

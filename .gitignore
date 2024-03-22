@@ -1,5 +1,8 @@
 .env
+database.db
+
 .venv/
 __pycache__/
 
-database.db
+.next/
+node_modules/

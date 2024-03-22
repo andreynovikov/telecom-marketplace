@@ -29,11 +29,29 @@ class Category(db_wrapper.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'name': self.name
+        }
+        return data
+
 
 class Service(db_wrapper.Model):
     category = ForeignKeyField(Category, verbose_name='категория')
     name = CharField(verbose_name='название')
     description = CharField(null=True, verbose_name='описание')
+
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'category': self.category.id,
+            'name': self.name,
+            'description': self.description
+        }
+        return data
 
 
 class Subject(db_wrapper.Model):
