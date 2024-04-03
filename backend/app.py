@@ -2,9 +2,13 @@ from datetime import datetime, timedelta
 
 from dotenv import load_dotenv
 from flask import Flask
+from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, set_access_cookies
 
 from .models import bcrypt, db_wrapper, jwt, setup_db
+
+
+cors = CORS()
 
 
 def create_app(context=None):
@@ -20,6 +24,7 @@ def create_app(context=None):
     })
     if context:
         app.config.update(context)
+    cors.init_app(app, supports_credentials=True)
     bcrypt.init_app(app)
     jwt.init_app(app)
 

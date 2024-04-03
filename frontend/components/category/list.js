@@ -1,13 +1,13 @@
 import Link from 'next/link'
 
-import { CategoryType, getCategories } from './queries'
+import { getCategories } from './queries'
 
 export default async function CategoryList() {
     const data = await getCategories()
 
     return (
         <div>
-            {data.map((category: CategoryType) => (
+            {data.map((category) => (
                 <div key={category.id}>
                     <Link href={`/category/${category.id}`}>
                         {category.name}

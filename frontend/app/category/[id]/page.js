@@ -1,7 +1,7 @@
-import { CategoryType, getCategories } from '@/components/category/queries'
+import { getCategories } from '@/components/category/queries'
 import ServiceList from '@/components/service/list'
 
-export default async function Services({ params }: { params: { id: number } }) {
+export default async function Services({ params }) {
     return (
         <div>
             <ServiceList category={params.id} />
@@ -12,7 +12,7 @@ export default async function Services({ params }: { params: { id: number } }) {
 export async function generateStaticParams() {
     const categories = await getCategories()
 
-    return categories.map((category : CategoryType) => ({
+    return categories.map((category) => ({
         id: String(category.id)
     }))
 }

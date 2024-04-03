@@ -24,7 +24,7 @@ def register():
     user.save()
     # generate the access token
     access_token = create_access_token(identity=user)
-    response = jsonify(msg='Registration successful')
+    response = jsonify(access_token=access_token, user_id=user.id)
     set_access_cookies(response, access_token)
     return response, 201
 
@@ -39,7 +39,7 @@ def login():
     if user:
         if bcrypt.check_password_hash(user.password, data.get('password')):
             access_token = create_access_token(identity=user)
-            response = jsonify(access_token=access_token)
+            response = jsonify(access_token=access_token, user_id=user.id)
             set_access_cookies(response, access_token)  # cookies are used for admin interface
             return response
         else:

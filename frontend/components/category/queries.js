@@ -1,21 +1,16 @@
-export interface CategoryType {
-    id: number;
-    name: string;
-}
-
 const categoryKeys = {
     all: ['categories'],
     lists: () => [...categoryKeys.all, 'list'],
     details: () => [...categoryKeys.all, 'detail'],
-    detail: (id: number) => [...categoryKeys.details(), id],
+    detail: (id) => [...categoryKeys.details(), id],
 }
 
-function serializeKey(key: string[]) {
+function serializeKey(key) {
     return JSON.stringify(key)
 }
 
 export async function getCategories() {
-    const res = await fetch(`${process.env.API_ROOT}/categories`, { next: { tags: [serializeKey(categoryKeys.lists())] } })
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/categories`, { next: { tags: [serializeKey(categoryKeys.lists())] } })
 
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary

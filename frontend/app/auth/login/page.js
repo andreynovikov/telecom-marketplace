@@ -1,25 +1,29 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useFormState } from 'react-dom'
 
-import { jwtDecode } from 'jwt-decode'
+import { useRouter, useSearchParams } from 'next/navigation'
 
-import { login } from '@/lib/actions/auth'
+import { signIn, useAuth } from '@/lib/auth'
 
 export default function Login() {
-    const [result, loginAction] = useFormState(login, {})
+    const { login } = useAuth()
 
-    useEffect(() => {
+    const router = useRouter()
+    const searchParams = useSearchParams()
+
+    const handleSubmit = async (event) => {
+        event.preventDefault()
+        const result = await signIn(new FormData(event.currentTarget))
+        console.log(result)
         if (result?.access_token) {
-            const decoded = jwtDecode(result.access_token)
-            console.log(decoded)
-            localStorage.setItem('access_token', result.access_token)
+            login(result)
+            router.push(searchParams.get('callbackUrl') || '/')
         }
-    }, [result])
+    }
 
     return (
-        <form action={loginAction}>
+        <form onSubmit={handleSubmit}>
             <div className="form-group">
                 <label htmlFor="inputEmail">Email address</label>
                 <input type="text" className="form-control" id="inputEmail" name="email" />
