@@ -69,6 +69,28 @@ class Contractor(db_wrapper.Model):
     experience = CharField(null=True, verbose_name='опыт работы')
     experience_file = CharField(null=True, verbose_name='файл с опытом работы')
 
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'kind': self.kind,
+            'name': self.name,
+            'inn': self.inn,
+            'legal_address': self.legal_address,
+            'cover_letter': self.cover_letter,
+            'cover_file': self.cover_file,
+            'experience': self.experience,
+            'experience_file': self.experience_file
+        }
+        return data
+
+    def reload(self):
+        newer_self = self.get(self._meta.primary_key == self.get_id())
+        for field_name in self._meta.fields.keys():
+            val = getattr(newer_self, field_name)
+            setattr(self, field_name, val)
+        self._dirty.clear()
+
 
 class Geography(db_wrapper.Model):
     contractor = ForeignKeyField(Contractor, backref='geography')
@@ -87,6 +109,11 @@ class User(db_wrapper.Model):
     admin = BooleanField(default=False, verbose_name='администратор')
 
 
+class ContractorUser(db_wrapper.Model):
+    contractor = ForeignKeyField(Contractor, backref='users')
+    user = ForeignKeyField(User, backref='contractors')
+
+
 @jwt.user_identity_loader
 def user_identity_lookup(user):
     return user.id
@@ -99,7 +126,16 @@ def user_lookup_callback(_jwt_header, jwt_data):
 
 
 def setup_db(app):
-    db_wrapper.database.create_tables([Category, Service, Subject, Contractor, Geography, Catalog, User], safe=True)
+    db_wrapper.database.create_tables([
+        Category,
+        Service,
+        Subject,
+        Contractor,
+        Geography,
+        Catalog,
+        User,
+        ContractorUser
+    ], safe=True)
     if not User.select().count():
         admin = User(email='admin', password='admin', admin=True)
         admin.save()
