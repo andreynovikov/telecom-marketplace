@@ -19,8 +19,8 @@ def create_app(context=None):
     app = Flask(__name__)
     app.config.from_prefixed_env()
     app.config.update({
-        'JWT_TOKEN_LOCATION': ['cookies'],
-        'JWT_ACCESS_TOKEN_EXPIRES': timedelta(hours=1),
+        'JWT_TOKEN_LOCATION': ('headers', 'cookies'),
+        'JWT_ACCESS_TOKEN_EXPIRES': timedelta(hours=2400),  # TODO: Refactor with refresh token
         'JWT_COOKIE_CSRF_PROTECT': False  # TODO: FIX!
     })
     if context:
