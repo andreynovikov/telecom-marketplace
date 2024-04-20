@@ -59,6 +59,8 @@ def contractors():
         else:
             contractor.update(**data).execute()
             contractor.reload()
+    elif contractor is None:
+        return {}
     return contractor.serialize
 
 

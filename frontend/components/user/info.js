@@ -1,21 +1,25 @@
-'use client'
-
 import Link from 'next/link'
 
-import { useAuth } from '@/lib/auth'
+import { auth, signOut } from '@/lib/auth'
 
-export default function UserInfo() {
-    const auth = useAuth()
+export default async function UserInfo() {
+    const session = await auth()
+
+    const handleLogout = async () => {
+        'use server'
+        await signOut({
+            redirectTo: '/'
+        })
+    }
 
     return (
         <div>
-            {auth.status === 'authenticated' ? (
-                <a href="" onClick={() => auth.logout()}>Выйти</a>
-            ) : (
-                <Link href="/auth/login">Войти</Link>
-            )}
+            <form action={handleLogout}>
+                <button type="submit">Выйти</button>
+            </form>
+            <Link href="/auth/login">Войти</Link>
             <pre>
-                {JSON.stringify(auth, null, 2)}
+                {JSON.stringify(session, null, 2)}
             </pre>
         </div>
     )

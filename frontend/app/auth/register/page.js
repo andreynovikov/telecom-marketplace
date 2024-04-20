@@ -1,16 +1,12 @@
-'use client'
-
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
-import { signUp, useAuth } from '@/lib/auth'
+import { signUp } from '@/lib/auth'
 
 export default function SignUp() {
-    const { login } = useAuth()
-
-    const handleSubmit = async (event) => {
-        event.preventDefault()
-        const result = await signUp(new FormData(event.currentTarget))
+    const registrationAction = async (formData) => {
+        'use server'
+        formData.append('redirectTo', '/user/profile/contractor')
+        const result = await signUp(formData)
         console.log(result)
     }
 
@@ -19,7 +15,7 @@ export default function SignUp() {
             <div className="container">
                 <div className="row">
                     <div className="col-lg-6 offset-lg-3">
-                        <form onSubmit={handleSubmit}>
+                        <form action={registrationAction}>
                             <div className="cardify signup_form">
                                 <div className="login--header">
                                     <h3>Зарегистрируйтесь</h3>

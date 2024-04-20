@@ -28,7 +28,8 @@ def register():
     response = jsonify(
         access_token=access_token,
         refresh_token=refresh_token,
-        user_id=user.id
+        id=user.id,
+        email=user.email
     )
     set_access_cookies(response, access_token)
     return response, 201
@@ -48,7 +49,8 @@ def login():
             response = jsonify(
                 access_token=access_token,
                 refresh_token=refresh_token,
-                user_id=user.id
+                id=user.id,
+                email=user.email
             )
             set_access_cookies(response, access_token)  # cookies are used for admin interface
             return response
