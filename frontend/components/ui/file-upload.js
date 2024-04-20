@@ -2,7 +2,9 @@
 
 import { useState } from 'react'
 
-function uploadFile(url, file, onProgress) {
+import { useSession } from 'next-auth/react'
+
+function uploadFile(url, file, accessToken, onProgress) {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest()
         xhr.upload.addEventListener('progress', e => {
@@ -13,20 +15,22 @@ function uploadFile(url, file, onProgress) {
         xhr.addEventListener('error', () => reject(new Error('File upload failed')))
         xhr.addEventListener('abort', () => reject(new Error('File upload aborted')))
         xhr.open('POST', url, true)
+        xhr.setRequestHeader('Authorization', `Bearer ${accessToken}`)
         const formData = new FormData()
         formData.append('file', file)
-        xhr.withCredentials = true
         xhr.send(formData)
     })
 }
 
 export default function FileUpload(props) {
-    const { name, description, variants } = props
+    const { name, defaultValue, description, variants } = props
 
-    const [fileName, setFileName] = useState('')
+    const [fileName, setFileName] = useState(defaultValue || '')
     const [file, setFile] = useState(null)
     const [prevFile, setPrevFile] = useState(null)
     const [progress, setProgress] = useState(-1)
+
+    const { data: session } = useSession()
 
     const handleChange = (event) => {
         setFile(event.target.files ? event.target.files[0] : null)
@@ -35,7 +39,7 @@ export default function FileUpload(props) {
     if (file != prevFile) {
         setPrevFile(file)
         setProgress(0)
-        uploadFile(`${process.env.NEXT_PUBLIC_API_ROOT}/user/files`, file, setProgress)
+        uploadFile(`${process.env.NEXT_PUBLIC_API_ROOT}/user/files`, file, session?.user?.access_token, setProgress)
             .then(({status, body}) => {
                 if (status != 200)
                     throw new Error(body)
@@ -64,7 +68,7 @@ export default function FileUpload(props) {
 
                 <div className="progress_wrapper">
                     <div className="labels clearfix">
-                        {file && <p>{file.name}</p>}
+                        {file ? <p>{file.name}</p> : defaultValue ? <p>{defaultValue}</p> : ''}
                         {progress >= 0 && <span data-width={progress}>{progress}%</span>}
                     </div>
                     {progress >= 0 && (

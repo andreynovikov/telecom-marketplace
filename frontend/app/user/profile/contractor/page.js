@@ -1,21 +1,23 @@
 'use client'
 
-import { saveContractor } from '@/components/contractor/queries'
+import { useState, useEffect } from 'react'
+import { useFormState, useFormStatus } from 'react-dom'
+
+import { getContractors, saveContractor } from '@/components/contractor/queries'
+
 import FileUpload from '@/components/ui/file-upload'
-import { useAuth } from '@/lib/auth'
 
-export default function SignUp() {
-    const { session } = useAuth()
+export default function ContractorForm() {
+    const [data, setData] = useState({})
 
-    const handleSubmit = async (event) => {
-        event.preventDefault()
-        const formData = new FormData(event.currentTarget)
-        const result = await saveContractor(formData)
-        console.log(result)
-    }
+    const [result, dispatch] = useFormState(saveContractor, undefined)
+
+    useEffect(() => {
+        getContractors().then((result) => setData(result))
+    }, [result])
 
     return (
-        <form onSubmit={handleSubmit} className="setting_form">
+        <form action={dispatch} className="setting_form">
             <input type="hidden" name="kind" value="1" />
             <div className="row">
                 <div className="col-lg-6">
@@ -28,27 +30,52 @@ export default function SignUp() {
                                 </p>
                                 <div className="form-group">
                                     <label htmlFor="name">Название компании</label>
-                                    <input id="name" name="name" type="text" className="text_field" />
+                                    <input
+                                        id="name"
+                                        name="name"
+                                        type="text"
+                                        defaultValue={data.name}
+                                        className="text_field" />
                                 </div>
 
                                 <div className="form-group">
                                     <label htmlFor="inn">ИНН</label>
-                                    <input id="inn" name="inn" type="text" className="text_field" />
+                                    <input
+                                        id="inn"
+                                        name="inn"
+                                        type="text"
+                                        defaultValue={data.inn}
+                                        className="text_field" />
                                 </div>
 
                                 <div className="form-group">
                                     <label htmlFor="legal_address">Юридический адрес</label>
-                                    <input id="legal_address" name="legal_address" type="text" className="text_field" />
+                                    <input
+                                        id="legal_address"
+                                        name="legal_address"
+                                        type="text"
+                                        defaultValue={data.legal_address}
+                                        className="text_field" />
                                 </div>
 
                                 <div className="form-group">
                                     <label htmlFor="cover_letter">Информация о компании</label>
-                                    <textarea id="cover_letter" name="cover_letter" className="text_field" placeholder="Краткая информация о вашей компании..."></textarea>
+                                    <textarea
+                                        id="cover_letter"
+                                        name="cover_letter"
+                                        defaultValue={data.cover_letter}
+                                        className="text_field"
+                                        placeholder="Краткая информация о вашей компании..." />
                                 </div>
 
                                 <div className="form-group">
                                     <label htmlFor="experience">Опыт работы</label>
-                                    <textarea id="experience" name="experience" className="text_field" placeholder="Краткое описание опыта работы..."></textarea>
+                                    <textarea
+                                        id="experience"
+                                        name="experience"
+                                        defaultValue={data.experience}
+                                        className="text_field"
+                                        placeholder="Краткое описание опыта работы..." />
                                 </div>
                             </div>
                         </div>
@@ -59,7 +86,11 @@ export default function SignUp() {
                     <div className="information_module">
                         <div className="information__set">
                             <div className="information_wrapper">
-                                <FileUpload name="cover_file" description="Файл с информацией о компании" variants="Документ или архив" />
+                                <FileUpload
+                                    name="cover_file"
+                                    defaultValue={data.cover_file}
+                                    description="Файл с информацией о компании"
+                                    variants="Документ или архив" />
                             </div>
                         </div>
                     </div>
@@ -67,7 +98,11 @@ export default function SignUp() {
                     <div className="information_module">
                         <div className="information__set">
                             <div className="information_wrapper">
-                                <FileUpload name="experience_file" description="Файл с опытом работы" variants="Документ или архив" />
+                                <FileUpload
+                                    name="experience_file"
+                                    defaultValue={data.experience_file}
+                                    description="Файл с опытом работы"
+                                    variants="Документ или архив" />
                             </div>
                         </div>
                     </div>
