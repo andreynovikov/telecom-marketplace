@@ -74,13 +74,11 @@ export default function FileUpload(props) {
                     {progress >= 0 && (
                         <div className="progress">
                             <div className="progress-bar" role="progressbar" aria-valuenow={progress} aria-valuemin="0" aria-valuemax="100" style={{ width: progress + "%" }}>
-                                <span className="sr-only">{progress}% Complete</span>
+                                <span className="visually-hidden">{progress}% Complete</span>
                             </div>
                         </div>
                     )}
                 </div>
-
-                <span className="lnr upload_cross lnr-cross"></span>
             </div>
     )
 }

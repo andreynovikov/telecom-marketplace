@@ -5,7 +5,7 @@ from flask_jwt_extended import current_user, jwt_required
 from peewee import PeeweeException
 from werkzeug.utils import secure_filename
 
-from .models import Category, Service, User, Contractor, ContractorUser
+from .models import Category, Service, Subject, User, Contractor, Geography, ContractorUser
 
 
 bp = Blueprint('api', __name__)
@@ -39,6 +39,14 @@ def list_services():
     return [s.serialize for s in query]
 
 
+@bp.route('/subjects', methods=['GET'])
+def list_subjects():
+    query = (
+        Subject.select()
+    )
+    return [s.serialize for s in query]
+
+
 @bp.route('/user/contractors', methods=['GET', 'POST'])
 @jwt_required()
 def contractors():
@@ -53,12 +61,17 @@ def contractors():
 
     if request.method == 'POST':
         data = request.get_json()
+        geography = data.pop('geography', [])
         if contractor is None:
             contractor = Contractor.create(**data)
             ContractorUser.create(contractor=contractor, user=current_user)
         else:
             contractor.update(**data).execute()
             contractor.reload()
+        Geography.delete().where(Geography.contractor == contractor).execute()
+        for code in geography:
+            subject = Subject.get(Subject.code == code)
+            Geography.create(contractor=contractor, subject=subject)
     elif contractor is None:
         return {}
     return contractor.serialize

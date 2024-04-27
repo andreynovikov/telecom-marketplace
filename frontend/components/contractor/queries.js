@@ -24,7 +24,15 @@ export async function getContractors() {
 }
 
 export async function saveContractor(_currentState, formData) {
-    const values = Object.fromEntries(Object.entries(Object.fromEntries(formData.entries())).filter(([key]) => !key.startsWith('$'))) // TODO: refactor
+    const values = {}
+    for (const key of formData.keys()) {
+        if (key.startsWith('$'))
+            continue
+        if (['geography'].includes(key))
+            values[key] = formData.getAll(key)
+        else
+            values[key] = formData.get(key)
+    }
     console.log(values)
     const session = await auth()
 

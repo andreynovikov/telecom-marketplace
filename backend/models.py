@@ -58,6 +58,14 @@ class Subject(db_wrapper.Model):
     code = SmallIntegerField(primary_key=True, verbose_name='код региона')
     name = CharField(verbose_name='название')
 
+    @property
+    def serialize(self):
+        data = {
+            'code': self.code,
+            'name': self.name
+        }
+        return data
+
 
 class Contractor(db_wrapper.Model):
     kind = SmallIntegerField(choices=KIND_CHOICES, index=True, verbose_name='тип контрагента')
@@ -80,7 +88,8 @@ class Contractor(db_wrapper.Model):
             'cover_letter': self.cover_letter,
             'cover_file': self.cover_file,
             'experience': self.experience,
-            'experience_file': self.experience_file
+            'experience_file': self.experience_file,
+            'geography': [g.subject.code for g in self.geography]
         }
         return data
 
