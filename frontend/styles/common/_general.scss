@@ -547,7 +547,7 @@ $transition: 0.3s ease;
         text-align: center;
         color: #fff;
         line-height: 18px;
-        font-family: FontAwesome, sans-serif;
+        font-family: var(--fa-font-solid);
         background: $pcolor;
         -webkit-border-radius: 2px;
         -moz-border-radius: 2px;
