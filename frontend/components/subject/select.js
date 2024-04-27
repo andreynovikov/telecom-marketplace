@@ -13,7 +13,8 @@ export default function SubjectSelector(props) {
     }, [])
 
     useEffect(() => {
-        setSelected(geography)
+        if (!!geography)
+            setSelected(geography)
     }, [geography])
 
     const handleChange = (event) => {

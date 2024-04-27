@@ -19,10 +19,10 @@ export default function ContractorForm() {
 
     return (
         <>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="dashboard_title_area">
-                        <div class="dashboard__title">
+            <div className="row">
+                <div className="col-md-12">
+                    <div className="dashboard_title_area">
+                        <div className="dashboard__title">
                             <h3>Данные о поставщике услуг</h3>
                         </div>
                     </div>

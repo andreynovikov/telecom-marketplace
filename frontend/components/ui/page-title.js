@@ -2,11 +2,11 @@ export default function PageTitle(props) {
     const { title } = props
 
     return (
-        <section class="breadcrumb-area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h1 class="page-title">{title}</h1>
+        <section className="breadcrumb-area">
+            <div className="container">
+                <div className="row">
+                    <div className="col-md-12">
+                        <h1 className="page-title">{title}</h1>
                     </div>
                 </div>
             </div>
