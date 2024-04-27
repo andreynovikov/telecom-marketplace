@@ -1,15 +1,17 @@
+'use client'
+
+import { useFormState } from 'react-dom'
+
 import Link from 'next/link'
 
-import { signUp } from '@/lib/auth'
+import Alert from 'react-bootstrap/Alert'
+
+import { register } from '@/lib/actions'
+
 import PageTitle from '@/components/ui/page-title'
 
 export default function SignUp() {
-    const registrationAction = async (formData) => {
-        'use server'
-        formData.append('redirectTo', '/user/profile/contractor')
-        const result = await signUp(formData)
-        console.log(result)
-    }
+    const [result, dispatch] = useFormState(register, undefined)
 
     return (
         <>
@@ -18,7 +20,7 @@ export default function SignUp() {
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-6 offset-lg-3">
-                            <form action={registrationAction}>
+                            <form action={dispatch}>
                                 <div className="cardify signup_form">
                                     <div className="login--header">
                                         <h3>Зарегистрируйтесь</h3>
@@ -46,6 +48,11 @@ export default function SignUp() {
                                         <button className="btn btn--md btn--round register_btn" type="submit">Зарегистрироваться</button>
 
                                         <div className="login_assist">
+                                            {result?.error && (
+                                                <Alert variant="danger">
+                                                    {result.message}
+                                                </Alert>
+                                            )}
                                             <p>
                                                 Уже зарегистрированы?{" "}
                                                 <Link href="/auth/login">Войдите</Link>

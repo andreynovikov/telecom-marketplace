@@ -14,7 +14,7 @@ def register():
     # check if user already exists
     user = User.select().filter(User.email == email).first()
     if user:
-        return jsonify(msg='User already exists, please Log in'), 409
+        return jsonify(msg='Пользователь с такими учётными данными зарегестрирован'), 409
 
     # create user
     user = User(
@@ -55,9 +55,9 @@ def login():
             set_access_cookies(response, access_token)  # cookies are used for admin interface
             return response
         else:
-            return jsonify(msg='Wrong password'), 401
+            return jsonify(msg='Неправильный пароль'), 401
     else:
-        return jsonify(msg='User does not exist'), 401
+        return jsonify(msg='Пользователя с такими учётными данными не существует'), 401
 
 
 @bp.route('/status', methods=['GET'])

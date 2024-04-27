@@ -21,17 +21,13 @@ const { handlers, signIn, signOut, auth } = NextAuth({
 
                 const result = await response.json();
 
-                if (response.ok) {
+                if (response.ok)
                     user = result
-                }
 
-                if (!user) {
-                    // No user found, so this is their first attempt to login
-                    // meaning this is also the place you could do registration
-                    throw new Error(result)
-                }
+                if (!user)
+                    throw new Error(result.msg)
 
-                // return user object with the their profile data
+                // return user object with their profile data
                 return user
             },
         }),
@@ -44,15 +40,20 @@ const { handlers, signIn, signOut, auth } = NextAuth({
             return token
         },
         session({ session, token }) {
-            console.log(token)
-            console.log(session)
+            //console.log(token)
+            //console.log(session)
             session.user = { ...session.user, ...token.data }
             return session
         },
     },
     events: {
-        async signOut() {
-            console.log('signout')
+        async signOut({ session }) {
+            await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/auth/logout`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${session?.access_token}`
+                }
+            })
         },
     },
 })
@@ -73,12 +74,14 @@ const signUp = async (formData) => {
         if (response.ok) {
             return signIn('credentials', formData)
         } else {
-            console.error(result.msg)
-            throw new Error({error})
+            return {
+                error: true,
+                message: result.msg
+            }
         }
     } catch (error) {
-        console.error("Error: " + error)
-        throw new Error({error})
+        console.error(error)
+        throw error
     }
 }
 
