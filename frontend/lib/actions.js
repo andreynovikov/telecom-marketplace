@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation'
 
-import { signUp, signIn } from '@/lib/auth'
+import { auth, signUp, signIn } from '@/lib/auth'
 
 export async function register(_currentState, formData) {
     formData.append('redirectTo', '/user/profile/contractor')
@@ -19,5 +19,7 @@ export async function login(_currentState, formData) {
             message: error.cause ? error.cause.err.message : error.message
         }
     }
-    redirect('/user/profile/contractor')
+    const session = await auth()
+    console.log(session)
+    redirect('/user/profile')
 }
