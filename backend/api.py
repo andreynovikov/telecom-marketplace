@@ -2,7 +2,7 @@ import os
 
 from flask import Blueprint, current_app, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
-from peewee import PeeweeException
+from peewee import PeeweeException, DoesNotExist
 from werkzeug.utils import secure_filename
 
 from .models import Category, Service, Subject, User, Contractor, Geography, ContractorUser
@@ -15,6 +15,11 @@ bp = Blueprint('api', __name__)
 def handle_data_error(e):
     current_app.logger.error(str(e))
     return jsonify(error=str(e)), 400
+
+
+@bp.errorhandler(DoesNotExist)
+def does_not_exist(e):
+    return jsonify(error=str(e)), 404
 
 
 @bp.errorhandler(404)
@@ -39,6 +44,39 @@ def list_services():
     return [s.serialize for s in query]
 
 
+@bp.route('/services', methods=['POST'])
+@jwt_required()
+def create_service():
+    if not current_user.admin:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    data = request.get_json()
+    service = Service.create(**data)
+    return service.serialize
+
+
+@bp.route('/services/<id>', methods=['PUT'])
+@jwt_required()
+def update_service(id):
+    if not current_user.admin:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    data = request.get_json()
+    Service.update(**data).where(Service.id == id).execute()
+    service = Service.get_by_id(id)
+    return service.serialize
+
+
+@bp.route('/services/<id>', methods=['DELETE'])
+@jwt_required()
+def delete_service(id):
+    if not current_user.admin:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    Service.delete_by_id(id)
+    return id
+
+
 @bp.route('/subjects', methods=['GET'])
 def list_subjects():
     query = (
@@ -47,33 +85,61 @@ def list_subjects():
     return [s.serialize for s in query]
 
 
+@bp.route('/subjects/<code>', methods=['GET'])
+def get_subject(code):
+    return Subject.get(Subject.code == code).serialize
+
+
 @bp.route('/user/contractors', methods=['GET', 'POST'])
 @jwt_required()
-def contractors():
-    contractor = (
+def list_contractors():
+    contractors = (
         Contractor
         .select()
         .join(ContractorUser)
         .join(User)
-        .where(User.id == current_user.id)
-        .first()
     )
+
+    if not current_user.admin:
+        contractors = contractors.where(User.id == current_user.id)
 
     if request.method == 'POST':
         data = request.get_json()
         geography = data.pop('geography', [])
-        if contractor is None:
+        if contractors.count() == 0:
             contractor = Contractor.create(**data)
             ContractorUser.create(contractor=contractor, user=current_user)
         else:
+            contractor = contractors.first()
             contractor.update(**data).execute()
             contractor.reload()
         Geography.delete().where(Geography.contractor == contractor).execute()
         for code in geography:
             subject = Subject.get(Subject.code == code)
             Geography.create(contractor=contractor, subject=subject)
-    elif contractor is None:
-        return {}
+    elif contractors is None:
+        return []
+    return [contractor.serialize for contractor in contractors]
+
+
+@bp.route('/user/contractors/<id>', methods=['GET'])
+@jwt_required()
+def get_contractor(id):
+    contractor = (
+        Contractor
+        .select(Contractor, User)
+        .where(Contractor.id == id)
+        .join(ContractorUser)
+        .join(User)
+        .get()
+    )
+
+    import logging
+    logging.error(contractor)
+
+    # if not current_user.admin:
+    #     contractor = contractors.where(User.id == current_user.id)
+
     return contractor.serialize
 
 
