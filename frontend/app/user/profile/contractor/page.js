@@ -14,7 +14,7 @@ export default function ContractorForm() {
     const [result, dispatch] = useFormState(saveContractor, undefined)
 
     useEffect(() => {
-        getContractors().then((result) => setData(result))
+        getContractors().then((result) => setData(result ? result[0] : {}))
     }, [result])
 
     return (

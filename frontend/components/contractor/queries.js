@@ -23,6 +23,27 @@ export async function getContractors() {
     return res.json()
 }
 
+export async function getContractor(id) {
+    const session = await auth()
+
+    if (!!!session)
+        return {}
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${session?.user?.access_token}`
+        }
+    })
+
+    if (!res.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        console.error(await res.json())
+        throw new Error('Failed to fetch data')
+    }
+
+    return res.json()
+}
+
 export async function saveContractor(_currentState, formData) {
     const values = {}
     for (const key of formData.keys()) {
