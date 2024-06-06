@@ -1,8 +1,11 @@
-.env
+.env*
 database.db
+files/
 
 .venv/
 __pycache__/
 
 .next/
 node_modules/
+
+frontend/public/
