@@ -1,26 +1,17 @@
-import { Inter } from 'next/font/google'
-
-import Header from '@/components/ui/header'
-
 import Providers from './providers'
 
-import '@/styles/global.scss'
-
-const inter = Inter({ subsets: ['latin', 'cyrillic'] })
+import { inter } from '@/theme/font'
 
 export const metadata = {
     title: 'SI-Telecom'
 }
 
-export default function RootLayout({ children }) {
+export default function Layout({ children }) {
     return (
         <html lang="ru">
             <body className={inter.className}>
                 <Providers>
-                    <Header />
-                    <main>
-                        {children}
-                    </main>
+                    {children}
                 </Providers>
             </body>
         </html>
