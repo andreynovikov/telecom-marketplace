@@ -1,78 +1,31 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useFormState } from 'react-dom'
+import { useState } from 'react'
 
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
-import Modal from 'react-bootstrap/Modal'
+import Edit from "@mui/icons-material/Edit";
+import Delete from "@mui/icons-material/Delete";
 
-import { createService, updateService, deleteService } from '../queries'
+import { StyledIconButton } from "@/components/theme/pages-sections/vendor-dashboard/styles";
 
-export function ServiceAction(props) {
+import ServiceEditDialog from './form'
+
+import { deleteService } from '../queries'
+
+export function ServiceActions(props) {
     const { service, categoryId } = props
-    const createServiceWithCategory = createService.bind(null, categoryId)
-    const updateServiceWithCategory = updateService.bind(null, service?.id, categoryId)
-    const deleteServiceWithCategory = deleteService.bind(null, service?.id, categoryId)
-
-    const [show, setShow] = useState(false)
-    const [result, dispatch] = useFormState(service?.id ? updateServiceWithCategory : createServiceWithCategory, service || {})
-
-    useEffect(() => {
-        if (result.id)
-            setShow(false)
-    }, [result])
-
-    const handleClose = () => {
-        setShow(false)
-    }
+    const [open, setOpen] = useState(false)
 
     return (
         <>
-            <Button onClick={() => setShow(true)}>
-                {service?.id ? 'Редактировать услугу' : 'Добавить услугу'}
-            </Button>
+            <StyledIconButton onClick={() => setOpen(true)}>
+                {service?.id ? <Edit /> : <Add />}
+            </StyledIconButton>
 
-            <Modal show={show} onHide={handleClose} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>{service?.id ? 'Редактировать услугу' : 'Добавить услугу'}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form action={dispatch} id="myForm">
-                        <Form.Group className="mb-3">
-                            <Form.Label>Название</Form.Label>
-                            <Form.Control
-                                name="name"
-                                type="text"
-                                defaultValue={service?.name}
-                                autoFocus
-                                required
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Описание</Form.Label>
-                            <Form.Control
-                                name="description"
-                                defaultValue={service?.description}
-                                as="textarea"
-                                rows={3} />
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    {service?.id && (
-                        <Button variant="danger" type="submit" form="myForm" formAction={deleteServiceWithCategory}>
-                            Удалить
-                        </Button>
-                    )}
-                    <Button variant="primary" type="submit" form="myForm">
-                        {service?.id ? 'Сохранить' : 'Добавить'}
-                    </Button>
-                    <Button onClick={handleClose}>
-                        Закрыть
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            <StyledIconButton onClick={async () => await deleteService(service?.id, categoryId)}>
+                <Delete />
+            </StyledIconButton>
+
+            <ServiceEditDialog service={service} categoryId={categoryId} open={open} setOpen={setOpen} />
         </>
     )
 }
