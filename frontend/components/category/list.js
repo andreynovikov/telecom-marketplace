@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Container from '@mui/material/Container'
 
 import ServiceList from '@/components/service/list'
 
@@ -8,7 +9,7 @@ export default async function CategoryList() {
     const data = await getCategories()
 
     return (
-        <div>
+        <Container className="mt-2">
             {data.map((category) => (
                 <div key={category.id}>
                     <Link href={`/category/${category.id}`}>
@@ -17,6 +18,6 @@ export default async function CategoryList() {
                     <ServiceList category={category.id} />
                 </div>
             ))}
-        </div>
+        </Container>
     )
 }

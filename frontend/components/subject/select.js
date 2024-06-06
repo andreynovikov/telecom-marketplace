@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
-import Form from 'react-bootstrap/Form'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormGroup from '@mui/material/FormGroup'
+import Grid from '@mui/material/Grid'
 
 import { getSubjects } from './queries'
 
@@ -21,24 +24,25 @@ export default function SubjectSelector(props) {
         const value = + event.target.value
         setSelected(selected => {
             if (event.target.checked)
-                return [...selected, value] 
+                return [...selected, value]
             else
                 return selected.filter(v => v !== value)
         })
     }
 
     return (
-        <div className="mt-3 ps-1" style={{ maxHeight: '18rem', overflowY: 'scroll' }}>
-            {subjects.map((subject) => (
-                <Form.Check
-                    type="checkbox"
+        subjects.map((subject) => (
+            <Grid item md={6} xs={12}>
+                <FormControlLabel control={
+                    <Checkbox
+                        name="geography"
+                        value={subject.code}
+                        checked={selected.includes(subject.code)}
+                        onChange={handleChange}
+                    />}
                     key={subject.code}
-                    name="geography"
-                    value={subject.code}
-                    checked={selected.includes(subject.code)}
-                    onChange={handleChange}
                     label={`${subject.code.toString().padStart(2, '0')} - ${subject.name}`} />
-            ))}
-        </div>
+            </Grid>
+        ))
     )
 }

@@ -15,7 +15,7 @@ export default function Profile() {
             if (!!!session)
                 router.refresh()
             else
-                router.push(session.user?.role === 'admin' ? '/admin/contractors' : '/user/profile/contractor')
+                router.push(session.user?.role === 'admin' ? '/admin/contractors' : '/user/profile/contractor/application')
         })()
     }, [router])
 

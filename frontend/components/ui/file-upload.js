@@ -1,8 +1,15 @@
 'use client'
 
-import { useState } from 'react'
-
+import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import LinearProgress from '@mui/material/LinearProgress'
+
+import { useDropzone } from 'react-dropzone'
+
+import { H6, Small } from '@/components/theme/Typography'
 
 function uploadFile(url, file, accessToken, onProgress) {
     return new Promise((resolve, reject) => {
@@ -25,22 +32,38 @@ function uploadFile(url, file, accessToken, onProgress) {
 export default function FileUpload(props) {
     const { name, defaultValue, description, variants } = props
 
-    const [fileName, setFileName] = useState(defaultValue || '')
+    const [fileName, setFileName] = useState(undefined)
     const [file, setFile] = useState(null)
     const [prevFile, setPrevFile] = useState(null)
     const [progress, setProgress] = useState(-1)
 
     const { data: session } = useSession()
 
-    const handleChange = (event) => {
-        setFile(event.target.files ? event.target.files[0] : null)
+    useEffect(() => {
+        if (defaultValue)
+            setFileName(defaultValue)
+    })
+
+    const handleChange = (files) => {
+        console.log(files)
+        setFile(files ? files[0] : null)
     }
+
+    const {
+        getRootProps,
+        getInputProps,
+        isDragActive
+    } = useDropzone({
+        onDrop: handleChange,
+        multiple: false,
+        maxFiles: 1
+    });
 
     if (file != prevFile) {
         setPrevFile(file)
         setProgress(0)
         uploadFile(`${process.env.NEXT_PUBLIC_API_ROOT}/user/files`, file, session?.user?.access_token, setProgress)
-            .then(({status, body}) => {
+            .then(({ status, body }) => {
                 if (status != 200)
                     throw new Error(body)
                 const result = JSON.parse(body)
@@ -52,33 +75,49 @@ export default function FileUpload(props) {
     }
 
     return (
-            <div className="upload_wrapper">
-                <p>
-                    {description}
-                    {variants && <span>({variants})</span>}
-                </p>
+        <Box py={4} px={{
+            md: 10,
+            xs: 4
+        }} display="flex" minHeight="200px" textAlign="center" alignItems="center" borderRadius="10px" border="1.5px dashed" flexDirection="column" borderColor="grey.300" justifyContent="center" bgcolor={isDragActive ? "grey.200" : "grey.100"} sx={{
+            transition: "all 250ms ease-in-out",
+            outline: "none"
+        }} {...getRootProps()}>
+            <input {...getInputProps()} />
 
-                <div className="custom_upload">
-                    <label htmlFor="cover_letter_file">
-                        <input type="hidden" name={name} value={fileName} />
-                        <input type="file" id="cover_letter_file" className="files" onChange={handleChange} />
-                        <span className="btn btn--round btn--sm">Выбрать файл</span>
-                    </label>
-                </div>
+            <H6 mb={1} color="grey.600">
+                Перетащите сюда {description}
+            </H6>
 
-                <div className="progress_wrapper">
-                    <div className="labels clearfix">
-                        {file ? <p>{file.name}</p> : defaultValue ? <p>{defaultValue}</p> : ''}
-                        {progress >= 0 && <span data-width={progress}>{progress}%</span>}
-                    </div>
-                    {progress >= 0 && (
-                        <div className="progress">
-                            <div className="progress-bar" role="progressbar" aria-valuenow={progress} aria-valuemin="0" aria-valuemax="100" style={{ width: progress + "%" }}>
-                                <span className="visually-hidden">{progress}% Complete</span>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
+            <Divider sx={{
+                "::before, ::after": {
+                    borderColor: "grey.300",
+                    width: 70
+                }
+            }}>
+                <Small color="text.disabled" px={1}>
+                    или
+                </Small>
+            </Divider>
+
+            <Button type="button" variant="outlined" color="info" sx={{
+                px: 4,
+                my: 4,
+                textTransform: "none"
+            }}>
+                Выберите файл
+            </Button>
+
+            <Small color="grey.600" sx={{mb: 2}}>{variants}</Small>
+
+            <input type="hidden" name={name} value={fileName} />
+
+            {progress >= 0 && progress < 100 && (
+                <LinearProgress variant="determinate" value={progress} />
+            )}
+
+            <H6>
+                {file ? <p>{file.name}</p> : defaultValue ? <p>{defaultValue}</p> : ''}
+            </H6>
+        </Box>
     )
 }
