@@ -10,6 +10,7 @@ import { StyledTableHeaderCell } from '@/components/theme/pages-sections/vendor-
 
 import Scrollbar from '@/components/theme/scrollbar'
 
+import AddAction from '@/components/category/admin/add-button'
 import CategoryRow from '@/components/category/admin/row'
 
 import { getCategories } from '@/components/category/queries'
@@ -38,6 +39,7 @@ export default async function CategoryList() {
 
     return (
         <PageWrapper title="Услуги">
+            <AddAction />
             <Card>
                 <Scrollbar>
                     <TableContainer sx={{ minWidth: 900 }}>

@@ -2,7 +2,7 @@ import os
 
 from flask import Blueprint, current_app, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
-from peewee import PeeweeException, DoesNotExist
+from peewee import fn, PeeweeException, DoesNotExist
 from werkzeug.utils import secure_filename
 
 from .models import db_wrapper, Category, Service, Subject, User, Contractor, Geography, ContractorUser
@@ -42,7 +42,8 @@ def create_category():
         return jsonify(msg='Доступ запрещён'), 401
 
     data = request.get_json()
-    category = Category.create(**data)
+    seq = Category.select(fn.Max(Category.seq)).scalar() + 1
+    category = Category.create(**data, seq=seq)
     return category.serialize
 
 

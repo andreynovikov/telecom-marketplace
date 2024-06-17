@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 
 import Delete from '@mui/icons-material/Delete'
 import Edit from '@mui/icons-material/Edit'
@@ -25,7 +24,7 @@ export default function CategoryActions({ category }) {
             <StyledIconButton onClick={async () => await deleteCategory(category?.id)}>
                 <Delete />
             </StyledIconButton>
-            <StyledIconButton onClick={() => setOpen(true)}>
+            <StyledIconButton onClick={() => setServiceOpen(true)}>
                 <QueueIcon />
             </StyledIconButton>
             <CategoryEditDialog category={category} open={categoryOpen} setOpen={setCategoryOpen} />
