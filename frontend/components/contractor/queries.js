@@ -144,8 +144,72 @@ export async function deleteContractor(contracorId) {
     }
 }
 
+const catalogueSchema = z.object({
+    catalogue: z.number().positive().array().optional()
+})
+
+export async function saveCatalogue(_currentState, formData) {
+    console.log(formData)
+    const values = {}
+    for (const key of formData.keys()) {
+        if (key.startsWith('$')) // nextjs action fields
+            continue
+        if (['catalogue'].includes(key))
+            values[key] = formData.getAll(key).map(v => + v)
+        else
+            values[key] = formData.get(key)
+    }
+    console.log(values)
+    const session = await auth()
+
+    const validated = catalogueSchema.passthrough().safeParse(values)
+
+    if (!validated.success) {
+        console.log(validated.error.flatten())
+        return {
+            errors: validated.error.flatten().fieldErrors,
+        }
+    }
+
+    if (!('catalogue' in validated.data))
+        validated.data['catalogue'] = []
+
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${session?.user?.access_token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(validated.data)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            console.log(result)
+            revalidateTag('contractors')
+            return {
+                success: true,
+                data: result
+            }
+        } else {
+            console.error(result.msg)
+            return {
+                success: false,
+                error: result.msg
+            }
+        }
+    } catch (error) {
+        console.error("Error: " + error)
+        return {
+            success: false,
+            error
+        }
+    }
+}
+
 const geographySchema = z.object({
-    geography: z.number().positive().min(1).max(99).array()
+    geography: z.number().positive().min(1).max(99).array().optional()
 })
 
 export async function saveGeography(_currentState, formData) {
@@ -163,7 +227,6 @@ export async function saveGeography(_currentState, formData) {
     const session = await auth()
 
     const validated = geographySchema.passthrough().safeParse(values)
-    console.log(validated)
 
     if (!validated.success) {
         console.log(validated.error.flatten())
@@ -171,6 +234,9 @@ export async function saveGeography(_currentState, formData) {
             errors: validated.error.flatten().fieldErrors,
         }
     }
+
+    if (!('geography' in validated.data))
+        validated.data['geography'] = []
 
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors`, {

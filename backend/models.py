@@ -89,6 +89,7 @@ class Contractor(db_wrapper.Model):
             'cover_file': self.cover_file,
             'experience': self.experience,
             'experience_file': self.experience_file,
+            'services': [s.service.id for s in self.services],
             'geography': [g.subject.code for g in self.geography]
         }
         return data
@@ -106,7 +107,7 @@ class Geography(db_wrapper.Model):
     subject = ForeignKeyField(Subject, backref='contractors')
 
 
-class Catalog(db_wrapper.Model):
+class Catalogue(db_wrapper.Model):
     contractor = ForeignKeyField(Contractor, backref='services')
     service = ForeignKeyField(Service, backref='contractors')
     approved = BooleanField(default=False, verbose_name='одобрен')
@@ -141,7 +142,7 @@ def setup_db(app):
         Subject,
         Contractor,
         Geography,
-        Catalog,
+        Catalogue,
         User,
         ContractorUser
     ], safe=True)

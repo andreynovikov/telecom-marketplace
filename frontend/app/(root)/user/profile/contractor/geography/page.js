@@ -26,7 +26,7 @@ export default function ContractorForm() {
 
     return (
         <>
-            <DashboardHeader Icon={Person} href="/profile" title="Анкета поставщика" buttonText="Вернуться в профиль" />
+            <DashboardHeader Icon={Person} href="/profile" title="География услуг" buttonText="Вернуться в профиль" />
             <Card sx={{ p: 3 }}>
                 <form action={dispatch}>
                     <Grid container rowSpacing={1} columnSpacing={3}>
