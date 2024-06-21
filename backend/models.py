@@ -84,13 +84,13 @@ class Subject(db_wrapper.Model):
 class Contractor(db_wrapper.Model):
     status = SmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NEW, index=True, verbose_name='статус')
     kind = SmallIntegerField(choices=KIND_CHOICES, index=True, verbose_name='тип контрагента')
-    name = CharField(verbose_name='название')
+    name = CharField(max_length=None, verbose_name='название')
     inn = CharField(max_length=12, unique=True, verbose_name='ИНН')
-    legal_address = CharField()
-    cover_letter = CharField(null=True, verbose_name='информация о компании')
-    cover_file = CharField(null=True, verbose_name='файл с информацией о компании')
-    experience = CharField(null=True, verbose_name='опыт работы')
-    experience_file = CharField(null=True, verbose_name='файл с опытом работы')
+    legal_address = CharField(max_length=None)
+    cover_letter = CharField(max_length=None, null=True, verbose_name='информация о компании')
+    cover_file = CharField(max_length=None, null=True, verbose_name='файл с информацией о компании')
+    experience = CharField(max_length=None, null=True, verbose_name='опыт работы')
+    experience_file = CharField(max_length=None, null=True, verbose_name='файл с опытом работы')
 
     @property
     def serialize(self):
