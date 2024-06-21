@@ -1,3 +1,5 @@
+'use server'
+
 export async function getSubjects() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/subjects`, { next: { tags: 'subjects' } })
 

@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 import { auth, signUp, signIn, signOut } from '@/lib/auth'
 
 export async function register(_currentState, formData) {
-    formData.append('redirectTo', '/user/profile/contractor')
+    formData.append('redirectTo', '/user/profile/contractor/application')
     return await signUp(formData)
 }
 

@@ -18,10 +18,10 @@ export function ServiceActions(props) {
     return (
         <>
             <StyledIconButton onClick={() => setOpen(true)}>
-                {service?.id ? <Edit /> : <Add />}
+                <Edit />
             </StyledIconButton>
 
-            <StyledIconButton onClick={async () => await deleteService(service?.id, categoryId)}>
+            <StyledIconButton onClick={async () => await deleteService(service.id, categoryId)}>
                 <Delete />
             </StyledIconButton>
 
