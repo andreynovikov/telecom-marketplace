@@ -5,7 +5,18 @@ import { revalidateTag } from 'next/cache'
 import { auth } from '@/lib/auth'
 
 export async function getServices(categoryId) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services?category=${categoryId}`, { next: { tags: [`services__${categoryId}`] } })
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services?category=${categoryId}`, { next: { tags: [`services__category__${categoryId}`] } })
+
+    if (!res.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        throw new Error('Failed to fetch data')
+    }
+
+    return res.json()
+}
+
+export async function getService(serviceId) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services/${serviceId}`, { next: { tags: `services__${serviceId}` } })
 
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
@@ -34,7 +45,7 @@ export async function createService(categoryId, _currentState, formData) {
         const result = await response.json();
         if (response.ok) {
             console.log(result)
-            revalidateTag(`services__${categoryId}`)
+            revalidateTag(`services__category__${categoryId}`)
             return result
         } else {
             console.error(result.msg)
@@ -69,7 +80,8 @@ export async function updateService(serviceId, categoryId, _currentState, formDa
         const result = await response.json();
         if (response.ok) {
             console.log(result)
-            revalidateTag(`services__${categoryId}`)
+            revalidateTag(`services__category__${categoryId}`)
+            revalidateTag(`services__${serviceId}`)
             return result
         } else {
             console.error(result.msg)
@@ -99,7 +111,7 @@ export async function deleteService(serviceId, categoryId, _currentState, _formD
 
         const result = await response.json();
         if (response.ok) {
-            revalidateTag(`services__${categoryId}`)
+            revalidateTag(`services__category__${categoryId}`)
             return result
         } else {
             console.error(result.msg)

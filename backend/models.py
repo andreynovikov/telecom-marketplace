@@ -18,6 +18,20 @@ KIND_CHOICES = [
     (KIND_CONSUMER, 'заказчик')
 ]
 
+STATUS_NEW = 0
+STATUS_MODIFIED = 1
+STATUS_PROCESSING = 2
+STATUS_APPROVED = 16
+STATUS_REJECTED = 64
+
+STATUS_CHOICES = [
+    (STATUS_NEW, 'новая'),
+    (STATUS_MODIFIED, 'обновлённая'),
+    (STATUS_PROCESSING, 'на рассмотрении'),
+    (STATUS_APPROVED, 'подтверждённая'),
+    (STATUS_REJECTED, 'отклонённая')
+]
+
 
 class Category(db_wrapper.Model):
     name = CharField(verbose_name='название')
@@ -68,6 +82,7 @@ class Subject(db_wrapper.Model):
 
 
 class Contractor(db_wrapper.Model):
+    status = SmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NEW, index=True, verbose_name='статус')
     kind = SmallIntegerField(choices=KIND_CHOICES, index=True, verbose_name='тип контрагента')
     name = CharField(verbose_name='название')
     inn = CharField(max_length=12, unique=True, verbose_name='ИНН')
@@ -82,6 +97,7 @@ class Contractor(db_wrapper.Model):
         data = {
             'id': self.id,
             'kind': self.kind,
+            'status': self.status,
             'name': self.name,
             'inn': self.inn,
             'legal_address': self.legal_address,

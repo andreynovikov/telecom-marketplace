@@ -5,6 +5,8 @@ import Typography from '@mui/material/Typography'
 import Scrollbar from '@/components/theme/scrollbar'
 import PageWrapper from '@/components/theme/pages-sections/vendor-dashboard/page-wrapper'
 
+import Actions from '@/components/contractor/admin/buttons'
+import Service from '@/components/service'
 import Subject from '@/components/subject'
 
 import { getContractor } from '@/components/contractor/queries'
@@ -14,6 +16,7 @@ export default async function Contractor({ params }) {
 
     return (
         <PageWrapper title={contractor.name}>
+            <Actions contractor={contractor} />
             <Card sx={{ p: 3 }}>
                 <Scrollbar>
                     <Grid container spacing={3}>
@@ -48,6 +51,18 @@ export default async function Contractor({ params }) {
                         </Grid>
                         <Grid item sm={9} xs={12}>
                             {contractor.experience}
+                        </Grid>
+                        <Grid item sm={3} xs={12}>
+                            <Typography color="grey.600">
+                                Перечень услуг
+                            </Typography>
+                        </Grid>
+                        <Grid item sm={9} xs={12}>
+                            {contractor.services.map((id) => (
+                                <div key={id}>
+                                    <Service id={id} />
+                                </div>
+                            ))}
                         </Grid>
                         <Grid item sm={3} xs={12}>
                             <Typography color="grey.600">

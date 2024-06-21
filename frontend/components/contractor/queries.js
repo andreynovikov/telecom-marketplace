@@ -114,6 +114,37 @@ export async function saveContractor(_currentState, formData) {
     }
 }
 
+export async function setContractorStatus(contracorId, status) {
+    const session = await auth()
+
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors/${contracorId}`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${session?.user?.access_token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            revalidateTag('contractors')
+            return result
+        } else {
+            console.error(result.msg)
+            return {
+                error: result.msg
+            }
+        }
+    } catch (error) {
+        console.error("Error: " + error)
+        return {
+            error
+        }
+    }
+}
+
 export async function deleteContractor(contracorId) {
     const session = await auth()
 

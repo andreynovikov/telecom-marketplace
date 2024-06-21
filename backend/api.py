@@ -6,7 +6,7 @@ from peewee import fn, PeeweeException, DoesNotExist
 from werkzeug.utils import secure_filename
 
 from .models import db_wrapper, Category, Service, Subject, User, Contractor, Catalogue, Geography, ContractorUser
-
+from .models import STATUS_MODIFIED
 
 bp = Blueprint('api', __name__)
 
@@ -80,6 +80,11 @@ def list_services():
     return [s.serialize for s in query]
 
 
+@bp.route('/services/<id>', methods=['GET'])
+def get_service(id):
+    return Service.get_by_id(id).serialize
+
+
 @bp.route('/services', methods=['POST'])
 @jwt_required()
 def create_service():
@@ -136,6 +141,8 @@ def list_contractors():
         .join(User)
     )
 
+    current_app.logger.error(contractors.sql())
+
     if not current_user.admin:
         contractors = contractors.where(User.id == current_user.id)
 
@@ -150,7 +157,7 @@ def list_contractors():
         else:
             contractor = contractors.first()
             if data.keys():
-                contractor.update(**data).where(Contractor.id == contractor.id).execute()
+                contractor.update(**data, status=STATUS_MODIFIED).where(Contractor.id == contractor.id).execute()
                 contractor.reload()
         if catalogue is not None:
             Catalogue.delete().where(Catalogue.contractor == contractor, ~(Catalogue.service << catalogue)).execute()
@@ -184,6 +191,27 @@ def get_contractor(id):
 
     # if not current_user.admin:
     #     contractor = contractors.where(User.id == current_user.id)
+
+    return contractor.serialize
+
+
+@bp.route('/user/contractors/<id>', methods=['PATCH'])
+@jwt_required()
+def update_contractor_status(id):
+    if not current_user.admin:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    data = request.get_json()
+
+    contractor = (
+        Contractor
+        .select()
+        .where(Contractor.id == id)
+        .get()
+    )
+
+    contractor.status = data['status']
+    contractor.save()
 
     return contractor.serialize
 

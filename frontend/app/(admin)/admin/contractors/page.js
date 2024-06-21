@@ -25,6 +25,10 @@ const tableHeading = [{
     label: "ИНН",
     align: "left"
 }, {
+    id: "status",
+    label: "Статус анкеты",
+    align: "center"
+}, {
     id: "action",
     label: "Действия",
     align: "center"
