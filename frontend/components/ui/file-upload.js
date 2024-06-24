@@ -32,7 +32,7 @@ function uploadFile(url, file, accessToken, onProgress) {
 export default function FileUpload(props) {
     const { name, defaultValue, description, variants } = props
 
-    const [fileName, setFileName] = useState(undefined)
+    const [fileName, setFileName] = useState('')
     const [file, setFile] = useState(null)
     const [prevFile, setPrevFile] = useState(null)
     const [progress, setProgress] = useState(-1)
@@ -42,10 +42,9 @@ export default function FileUpload(props) {
     useEffect(() => {
         if (defaultValue)
             setFileName(defaultValue)
-    })
+    }, [defaultValue])
 
     const handleChange = (files) => {
-        console.log(files)
         setFile(files ? files[0] : null)
     }
 
@@ -59,20 +58,30 @@ export default function FileUpload(props) {
         maxFiles: 1
     });
 
-    if (file != prevFile) {
+    useEffect(() => {
+        if (file === null)
+            return
+        if (prevFile !== null &&
+            file.path === prevFile.path &&
+            file.size === prevFile.size &&
+            file.lastModified === prevFile.lastModified &&
+            file.type === prevFile.type)
+            return
+
         setPrevFile(file)
         setProgress(0)
-        uploadFile(`${process.env.NEXT_PUBLIC_API_ROOT}/user/files`, file, session?.user?.access_token, setProgress)
+        uploadFile(process.env.NEXT_PUBLIC_API_FILES, file, session?.user?.access_token, setProgress)
             .then(({ status, body }) => {
                 if (status != 200)
                     throw new Error(body)
                 const result = JSON.parse(body)
                 setFileName(result.name)
+                setFile(null)
             })
             .catch((error) => {
                 console.error(error.message)
             })
-    }
+    }, [file])
 
     return (
         <Box py={4} px={{
@@ -107,7 +116,7 @@ export default function FileUpload(props) {
                 Выберите файл
             </Button>
 
-            <Small color="grey.600" sx={{mb: 2}}>{variants}</Small>
+            <Small color="grey.600" sx={{ mb: 2 }}>{variants}</Small>
 
             <input type="hidden" name={name} value={fileName} />
 
@@ -116,7 +125,7 @@ export default function FileUpload(props) {
             )}
 
             <H6>
-                {file ? <p>{file.name}</p> : defaultValue ? <p>{defaultValue}</p> : ''}
+                {file ? <p>{file.name}</p> : fileName ? <p>{fileName}</p> : ''}
             </H6>
         </Box>
     )

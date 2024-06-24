@@ -106,7 +106,8 @@ class Contractor(db_wrapper.Model):
             'experience': self.experience,
             'experience_file': self.experience_file,
             'services': [s.service.id for s in self.services],
-            'geography': [g.subject.code for g in self.geography]
+            'geography': [g.subject.code for g in self.geography],
+            'users': [u.user.id for u in self.users]
         }
         return data
 

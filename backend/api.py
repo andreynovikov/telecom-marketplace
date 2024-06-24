@@ -1,12 +1,14 @@
+import re
 import os
 
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, current_app, jsonify, request, send_from_directory
 from flask_jwt_extended import current_user, jwt_required
 from peewee import fn, PeeweeException, DoesNotExist
-from werkzeug.utils import secure_filename
 
 from .models import db_wrapper, Category, Service, Subject, User, Contractor, Catalogue, Geography, ContractorUser
 from .models import STATUS_MODIFIED
+
+secure_file_name = re.compile(r"[/\\?%*:|\"<>\x7F\x00-\x1F]")
 
 bp = Blueprint('api', __name__)
 
@@ -231,6 +233,16 @@ def delete_contractor(id):
     return id
 
 
+@bp.route('/user/files/<user>/<filename>', methods=['GET'])
+@jwt_required()
+def download_file(user, filename):
+    if not current_user.admin and current_user.id != user:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    dirname = os.path.join(current_app.config['USER_UPLOAD_FOLDER'], str(user))
+    return send_from_directory(dirname, filename)
+
+
 @bp.route('/user/files', methods=['POST'])
 @jwt_required()
 def upload_file():
@@ -245,6 +257,6 @@ def upload_file():
 
     dirname = os.path.join(current_app.config['USER_UPLOAD_FOLDER'], str(current_user.id))
     os.makedirs(dirname, exist_ok=True)
-    filename = secure_filename(file.filename)
+    filename = secure_file_name.sub('-', file.filename)
     file.save(os.path.join(dirname, filename))
     return {'name': filename}

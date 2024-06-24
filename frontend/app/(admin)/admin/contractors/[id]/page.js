@@ -10,6 +10,7 @@ import Service from '@/components/service'
 import Subject from '@/components/subject'
 
 import { getContractor } from '@/components/contractor/queries'
+import FileDownload from '@/components/ui/file-download'
 
 export default async function Contractor({ params }) {
     const contractor = await getContractor(params.id)
@@ -76,6 +77,30 @@ export default async function Contractor({ params }) {
                                 </div>
                             ))}
                         </Grid>
+                        {contractor.cover_file && (
+                            <>
+                                <Grid item sm={3} xs={12}>
+                                    <Typography color="grey.600">
+                                        Файл с информацией о компании
+                                    </Typography>
+                                </Grid>
+                                <Grid item sm={9} xs={12}>
+                                    <FileDownload owner={contractor.users[0]} fileName={contractor.cover_file} />
+                                </Grid>
+                            </>
+                        )}
+                        {contractor.experience_file && (
+                            <>
+                                <Grid item sm={3} xs={12}>
+                                    <Typography color="grey.600">
+                                        Файл с опытом работы
+                                    </Typography>
+                                </Grid>
+                                <Grid item sm={9} xs={12}>
+                                    <FileDownload owner={contractor.users[0]} fileName={contractor.experience_file} />
+                                </Grid>
+                            </>
+                        )}
                     </Grid>
                 </Scrollbar>
             </Card>
