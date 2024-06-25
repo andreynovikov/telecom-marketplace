@@ -58,7 +58,7 @@ export default function FileDownload(props) {
 
     return (
         <Button onClick={handleClick} color="secondary" variant="outlined" size="small" startIcon={makeSvgIcon(IconDownload)} sx={{textTransform: 'none'}}>
-            Скачать '{fileName}'
+            Скачать &lsquo;{fileName}&rsquo;
         </Button>
     )
 }
