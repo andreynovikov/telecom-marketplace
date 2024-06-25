@@ -260,3 +260,54 @@ def upload_file():
     filename = secure_file_name.sub('-', file.filename)
     file.save(os.path.join(dirname, filename))
     return {'name': filename}
+
+
+@bp.route('/users', methods=['GET'])
+@jwt_required()
+def list_users():
+    if not current_user.admin:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    query = (
+        User.select()
+    )
+    return [u.serialize for u in query]
+
+
+@bp.route('/users', methods=['POST'])
+@jwt_required()
+def create_user():
+    if not current_user.admin:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    data = request.get_json()
+    user = User.create(**data)
+    return user.serialize
+
+
+@bp.route('/users/<id>', methods=['PUT'])
+@jwt_required()
+def update_user(id):
+    if not current_user.admin:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    data = request.get_json()
+    password = data.get('password', '')
+    del data['password']
+    User.update(**data).where(User.id == id).execute()
+    user = User.get_by_id(id)
+    if password != '':
+        user.password = password
+        user.save()
+    return user.serialize
+
+
+@bp.route('/users/<id>', methods=['DELETE'])
+@jwt_required()
+def delete_user(id):
+    if not current_user.admin:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    with db_wrapper.database.atomic():
+        User.delete_by_id(id)
+    return id

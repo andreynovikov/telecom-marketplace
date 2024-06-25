@@ -135,6 +135,15 @@ class User(db_wrapper.Model):
     password = PasswordField(verbose_name='пароль')
     admin = BooleanField(default=False, verbose_name='администратор')
 
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'email': self.email,
+            'admin': self.admin
+        }
+        return data
+
 
 class ContractorUser(db_wrapper.Model):
     contractor = ForeignKeyField(Contractor, backref='users')
