@@ -1,15 +1,24 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import create_access_token, create_refresh_token, current_user, jwt_required, set_access_cookies, unset_jwt_cookies
 
+from .altcha import challenge_altcha, validate_altcha
 from .models import bcrypt, User
 
 
 bp = Blueprint('auth', __name__)
 
 
+@bp.route('/captcha/challenge', methods=['GET'])
+def captcha_challenge():
+    return challenge_altcha()
+
+
 @bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
+    if not validate_altcha(data.get('altcha')):
+        return jsonify(msg='Ошибка проверки на человечность'), 400
+
     email = data.get('email')
     # check if user already exists
     user = User.select().filter(User.email == email).first()

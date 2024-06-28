@@ -1,6 +1,8 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useFormState } from 'react-dom'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 
 import EyeToggleButton from '@/components/theme/pages-sections/sessions/components/eye-toggle-button'
@@ -9,12 +11,25 @@ import BazaarTextField from '@/components/theme/BazaarTextField'
 
 import { register } from '@/lib/actions'
 
+const altchaStrings = {
+    "error": "Проверка не удалясь, попробуйте позже",
+    "expired": "Проверка устарела, попробуйте снова",
+    "label": "Я не робот",
+    "verified": "Успешная проверка",
+    "verifying": "Проверяем...",
+    "waitAlert": "Проверяем... пожалуйста, подождите"
+}
+
 export default function SignUp() {
     const [result, dispatch] = useFormState(register, undefined)
     const { visiblePassword, togglePasswordVisible } = usePasswordVisible()
     const inputProps = {
         endAdornment: <EyeToggleButton show={visiblePassword} click={togglePasswordVisible} />
     }
+
+    useEffect(() => {
+	import('altcha')
+    }, [])
 
     return (
         <form action={dispatch}>
@@ -52,6 +67,15 @@ export default function SignUp() {
                 placeholder="*********"
                 type={visiblePassword ? "text" : "password"}
                 InputProps={inputProps} />
+
+	    <Box sx={{ mb: 2 }}>
+                <altcha-widget
+                    challengeurl={process.env.NEXT_PUBLIC_API_CAPTCHA_CHALLENGE}
+                    strings={JSON.stringify(altchaStrings)}
+                    debug
+                    workers={2}
+                    hidefooter />
+            </Box>
 
             <Button fullWidth type="submit" color="primary" variant="contained" size="large">
                 Зарегистрироваться
