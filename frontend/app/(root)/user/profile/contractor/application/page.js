@@ -59,7 +59,7 @@ export default function ContractorForm() {
                                 InputLabelProps={{ shrink: !!data.inn ? true : undefined }} />
                         </Grid>
 
-                        <Grid item xs={12}>
+                        <Grid item md={6} xs={12}>
                             <TextField
                                 fullWidth
                                 name="legal_address"
@@ -67,6 +67,16 @@ export default function ContractorForm() {
                                 label="Юридический адрес"
                                 defaultValue={data.legal_address}
                                 InputLabelProps={{ shrink: !!data.legal_address ? true : undefined }} />
+                        </Grid>
+
+                        <Grid item md={6} xs={12}>
+                            <TextField
+                                fullWidth
+                                name="contact_phone"
+                                type="text"
+                                label="Контактный телефон"
+                                defaultValue={data.contact_phone}
+                                InputLabelProps={{ shrink: !!data.contact_phone ? true : undefined }} />
                         </Grid>
 
                         <Grid item md={6} xs={12}>

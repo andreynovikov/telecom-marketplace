@@ -86,11 +86,13 @@ class Contractor(db_wrapper.Model):
     kind = SmallIntegerField(choices=KIND_CHOICES, index=True, verbose_name='тип контрагента')
     name = CharField(max_length=None, verbose_name='название')
     inn = CharField(max_length=12, unique=True, verbose_name='ИНН')
-    legal_address = CharField(max_length=None)
+    legal_address = CharField(max_length=None, verbose_name='юридический адрес')
+    contact_phone = CharField(max_length=None, verbose_name='контактный телефон')
     cover_letter = CharField(max_length=None, null=True, verbose_name='информация о компании')
     cover_file = CharField(max_length=None, null=True, verbose_name='файл с информацией о компании')
     experience = CharField(max_length=None, null=True, verbose_name='опыт работы')
     experience_file = CharField(max_length=None, null=True, verbose_name='файл с опытом работы')
+    comment = CharField(max_length=None, null=True, verbose_name='комментарий')
 
     @property
     def serialize(self):
@@ -101,13 +103,15 @@ class Contractor(db_wrapper.Model):
             'name': self.name,
             'inn': self.inn,
             'legal_address': self.legal_address,
+            'contact_phone': self.contact_phone,
             'cover_letter': self.cover_letter,
             'cover_file': self.cover_file,
             'experience': self.experience,
             'experience_file': self.experience_file,
-            'services': [s.service.id for s in self.services],
-            'geography': [g.subject.code for g in self.geography],
-            'users': [u.user.id for u in self.users]
+            'services': [{'id': s.service.id, 'approved': s.approved} for s in self.services],
+            'geography': [{'code': g.subject.code, 'approved': g.approved} for g in self.geography],
+            'users': [u.user.id for u in self.users],
+            'comment': self.comment
         }
         return data
 
@@ -122,6 +126,7 @@ class Contractor(db_wrapper.Model):
 class Geography(db_wrapper.Model):
     contractor = ForeignKeyField(Contractor, backref='geography')
     subject = ForeignKeyField(Subject, backref='contractors')
+    approved = BooleanField(default=False, verbose_name='одобрен')
 
 
 class Catalogue(db_wrapper.Model):

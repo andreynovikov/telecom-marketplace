@@ -143,8 +143,6 @@ def list_contractors():
         .join(User)
     )
 
-    current_app.logger.error(contractors.sql())
-
     if not current_user.admin:
         contractors = contractors.where(User.id == current_user.id)
 
@@ -153,6 +151,8 @@ def list_contractors():
         current_app.logger.error(data)
         catalogue = data.pop('catalogue', None)
         geography = data.pop('geography', None)
+        if not current_user.admin:
+            data.pop('comment', None)
         if contractors.count() == 0:
             contractor = Contractor.create(**data)
             ContractorUser.create(contractor=contractor, user=current_user)
@@ -173,7 +173,11 @@ def list_contractors():
                 Geography.create(contractor=contractor, subject=code)
     elif contractors is None:
         return []
-    return [contractor.serialize for contractor in contractors]
+    data = [contractor.serialize for contractor in contractors]
+    if not current_user.admin:
+        for item in data:
+            item.pop('comment', None)
+    return data
 
 
 @bp.route('/user/contractors/<id>', methods=['GET'])
@@ -188,32 +192,33 @@ def get_contractor(id):
         .get()
     )
 
-    import logging
-    logging.error(contractor)
-
-    # if not current_user.admin:
-    #     contractor = contractors.where(User.id == current_user.id)
-
-    return contractor.serialize
+    data = contractor.serialize
+    if not current_user.admin:
+        data.pop('comment', None)
+    return data
 
 
-@bp.route('/user/contractors/<id>', methods=['PATCH'])
+@bp.route('/user/contractors/<id>', methods=['PUT'])
 @jwt_required()
-def update_contractor_status(id):
+def update_contractor(id):
     if not current_user.admin:
         return jsonify(msg='Доступ запрещён'), 401
 
     data = request.get_json()
+    catalogue = data.pop('catalogue', None)
+    geography = data.pop('geography', None)
 
-    contractor = (
-        Contractor
-        .select()
-        .where(Contractor.id == id)
-        .get()
-    )
+    Contractor.update(**data).where(Contractor.id == id).execute()
 
-    contractor.status = data['status']
-    contractor.save()
+    if catalogue is not None:
+        Catalogue.update(approved=False).where(Catalogue.contractor == id, ~(Catalogue.service << catalogue)).execute()
+        Catalogue.update(approved=True).where(Catalogue.contractor == id, Catalogue.service << catalogue).execute()
+
+    if geography is not None:
+        Geography.update(approved=False).where(Geography.contractor == id, ~(Geography.subject << geography)).execute()
+        Geography.update(approved=True).where(Geography.contractor == id, Geography.subject << geography).execute()
+
+    contractor = Contractor.get_by_id(id)
 
     return contractor.serialize
 

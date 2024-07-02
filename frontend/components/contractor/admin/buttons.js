@@ -5,7 +5,7 @@ import useMediaQuery from "@mui/material/useMediaQuery"
 
 import { FlexBox } from "@/components/theme/flex-box"
 
-import { setContractorStatus } from '../queries'
+import { updateContractor } from '../queries'
 
 export default function Actions(props) {
     const { contractor } = props
@@ -17,22 +17,24 @@ export default function Actions(props) {
         sx: { minHeight: 44 }
     }
 
+    async function setContractorStatus(status) {
+        return updateContractor(contractor.id, { status })
+    }
+
     return (
         <FlexBox mb={2} gap={2} justifyContent="space-between" flexWrap="wrap">
             <div />
             <FlexBox gap={2} justifyContent="space-between" flexWrap="wrap">
-                {contractor.status < 2 && (
-                    <Button onClick={async () => await setContractorStatus(contractor.id, 2)} color="primary" {...buttonProps}>
-                        Начать рассмотрение
-                    </Button>
-                )}
+                <Button onClick={async () => await setContractorStatus(2)} color="primary" {...buttonProps}>
+                    {contractor.status < 2 ? 'Начать' : 'Вернуть на'} рассмотрение
+                </Button>
                 {contractor.status !== 16 && (
-                    <Button onClick={async () => await setContractorStatus(contractor.id, 16)} color="success" {...buttonProps}>
+                    <Button onClick={async () => await setContractorStatus(16)} color="success" {...buttonProps}>
                         Подтвердить
                     </Button>
                 )}
                 {contractor.status !== 64 && (
-                    <Button onClick={async () => await setContractorStatus(contractor.id, 64)} color="error" {...buttonProps}>
+                    <Button onClick={async () => await setContractorStatus(64)} color="error" {...buttonProps}>
                         Отклонить
                     </Button>
                 )}

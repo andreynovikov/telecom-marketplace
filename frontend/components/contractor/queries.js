@@ -114,42 +114,47 @@ export async function saveContractor(_currentState, formData) {
     }
 }
 
-export async function setContractorStatus(contracorId, status) {
+export async function updateContractor(contractorId, values) {
     const session = await auth()
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors/${contracorId}`, {
-            method: 'PATCH',
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors/${contractorId}`, {
+            method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ status })
-        });
+            body: JSON.stringify(values)
+        })
 
         const result = await response.json();
         if (response.ok) {
             revalidateTag('contractors')
-            return result
-        } else {
-            console.error(result.msg)
             return {
+                success: true,
+                data: result
+            }
+        } else {
+            console.error("Error message", result.msg)
+            return {
+                success: false,
                 error: result.msg
             }
         }
     } catch (error) {
         console.error("Error: " + error)
         return {
+            success: false,
             error
         }
     }
 }
 
-export async function deleteContractor(contracorId) {
+export async function deleteContractor(contractorId) {
     const session = await auth()
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors/${contracorId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors/${contractorId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
