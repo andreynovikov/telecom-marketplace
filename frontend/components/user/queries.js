@@ -61,7 +61,6 @@ export async function updateUser(userId, _currentState, formData) {
     if (values.password === '')
         delete values.password
     values.admin = !!values.admin
-    console.log(values)
     const session = await auth()
 
     try {

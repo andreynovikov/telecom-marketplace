@@ -28,7 +28,9 @@ def register():
     # create user
     user = User(
         email=email,
-        password=data.get('password')
+        password=data.get('password'),
+        name=data.get('name'),
+        phone=data.get('phone', None)
     )
     user.save()
     # generate the access token
@@ -39,6 +41,7 @@ def register():
         refresh_token=refresh_token,
         id=user.id,
         email=user.email,
+        name=user.name,
         role='user'
     )
     set_access_cookies(response, access_token)
@@ -64,6 +67,7 @@ def login():
                 refresh_token=refresh_token,
                 id=user.id,
                 email=user.email,
+                name=user.name,
                 role=role
             )
             set_access_cookies(response, access_token)  # cookies are used for admin interface
@@ -80,6 +84,8 @@ def status():
     return {
         'user_id': current_user.id,
         'email': current_user.email,
+        'name': current_user.name,
+        'phone': current_user.phone,
         'admin': current_user.admin
     }
 

@@ -136,6 +136,8 @@ class Catalogue(db_wrapper.Model):
 
 
 class User(db_wrapper.Model):
+    name = CharField(max_length=None, verbose_name='ФИО')
+    phone = CharField(max_length=None, null=True, verbose_name='телефон')
     email = CharField(unique=True, verbose_name='e-mail')
     password = PasswordField(verbose_name='пароль')
     admin = BooleanField(default=False, verbose_name='администратор')
@@ -144,6 +146,8 @@ class User(db_wrapper.Model):
     def serialize(self):
         data = {
             'id': self.id,
+            'name': self.name,
+            'phone': self.phone,
             'email': self.email,
             'admin': self.admin
         }
@@ -178,7 +182,7 @@ def setup_db(app):
         ContractorUser
     ], safe=True)
     if not User.select().count():
-        admin = User(email='admin', password='admin', admin=True)
+        admin = User(name='Администратор', email='admin', password='admin', admin=True)
         admin.save()
         app.logger.warn('Default admin user created, you should change their password!')
     if not Subject.select().count():

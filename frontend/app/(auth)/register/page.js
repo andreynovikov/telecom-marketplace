@@ -28,7 +28,7 @@ export default function SignUp() {
     }
 
     useEffect(() => {
-	import('altcha')
+        import('altcha')
     }, [])
 
     return (
@@ -36,6 +36,18 @@ export default function SignUp() {
             <BazaarTextField
                 mb={1.5}
                 fullWidth
+                required
+                name="name"
+                size="small"
+                type="text"
+                variant="outlined"
+                label="Фамилия Имя Отчество"
+                placeholder="Кузнецов Пётр Иванович" />
+
+            <BazaarTextField
+                mb={1.5}
+                fullWidth
+                required
                 name="email"
                 size="small"
                 type="email"
@@ -46,6 +58,17 @@ export default function SignUp() {
             <BazaarTextField
                 mb={1.5}
                 fullWidth
+                name="phone"
+                size="small"
+                type="phone"
+                variant="outlined"
+                label="Контактный телефон"
+                placeholder="+7 999 123 45 67" />
+
+            <BazaarTextField
+                mb={1.5}
+                fullWidth
+                required
                 size="small"
                 name="password"
                 label="Пароль"
@@ -59,6 +82,7 @@ export default function SignUp() {
             <BazaarTextField
                 mb={2}
                 fullWidth
+                required
                 size="small"
                 autoComplete="on"
                 name="confirm"
@@ -68,7 +92,7 @@ export default function SignUp() {
                 type={visiblePassword ? "text" : "password"}
                 InputProps={inputProps} />
 
-	    <Box sx={{ mb: 2 }}>
+            <Box sx={{ mb: 2 }}>
                 <altcha-widget
                     challengeurl={process.env.NEXT_PUBLIC_API_CAPTCHA_CHALLENGE}
                     strings={JSON.stringify(altchaStrings)}

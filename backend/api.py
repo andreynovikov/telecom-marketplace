@@ -297,11 +297,12 @@ def update_user(id):
         return jsonify(msg='Доступ запрещён'), 401
 
     data = request.get_json()
-    password = data.get('password', '')
-    del data['password']
-    User.update(**data).where(User.id == id).execute()
+    if 'password' in data:
+        password = data.get('password')
+        del data['password']
+    User.set_by_id(id, data)
     user = User.get_by_id(id)
-    if password != '':
+    if 'password' in locals():
         user.password = password
         user.save()
     return user.serialize

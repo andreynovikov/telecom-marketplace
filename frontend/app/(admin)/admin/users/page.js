@@ -22,6 +22,14 @@ const tableHeading = [{
     label: "Эл. почта",
     align: "left"
 }, {
+    id: "name",
+    label: "ФИО",
+    align: "left"
+}, {
+    id: "phone",
+    label: "Телефон",
+    align: "left"
+}, {
     id: "admin",
     label: "Администратор",
     align: "center"

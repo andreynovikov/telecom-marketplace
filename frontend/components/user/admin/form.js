@@ -37,12 +37,31 @@ export default function UserEditDialog(props) {
                     fullWidth
                     required
                     autoFocus
+                    name="name"
+                    type="text"
+                    label="ФИО"
+                    margin="dense"
+                    defaultValue={user?.name}
+                    InputLabelProps={{ shrink: !!user?.name ? true : undefined }} />
+
+                <TextField
+                    fullWidth
+                    required
                     name="email"
                     type="text"
                     label="Электронная почта"
                     margin="dense"
                     defaultValue={user?.email}
                     InputLabelProps={{ shrink: !!user?.email ? true : undefined }} />
+
+                <TextField
+                    fullWidth
+                    name="phone"
+                    type="text"
+                    label="Телефон"
+                    margin="dense"
+                    defaultValue={user?.phone}
+                    InputLabelProps={{ shrink: !!user?.phone ? true : undefined }} />
 
                 <TextField
                     fullWidth
@@ -54,6 +73,7 @@ export default function UserEditDialog(props) {
 
                 <FormGroup>
                     <FormControlLabel control={<Checkbox name="admin" value="1" defaultChecked={user?.admin} disabled={user?.id === 1} />} label="Администратор" />
+                    {user?.id === 1 && <input type="hidden" name="admin" value="1" />}
                 </FormGroup>
 
             </DialogContent>

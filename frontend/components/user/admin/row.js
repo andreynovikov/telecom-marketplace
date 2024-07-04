@@ -11,6 +11,12 @@ export default async function UserRow({ user }) {
             <StyledTableCell align="left">
                 {user.email}
             </StyledTableCell>
+            <StyledTableCell align="left">
+                {user.name}
+            </StyledTableCell>
+            <StyledTableCell align="left">
+                {user.phone || '-'}
+            </StyledTableCell>
             <StyledTableCell align="center">
                 {user.admin && <CheckCircleOutlineIcon fontSize="small" />}
             </StyledTableCell>
