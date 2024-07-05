@@ -158,8 +158,10 @@ def list_contractors():
             ContractorUser.create(contractor=contractor, user=current_user)
         else:
             contractor = contractors.first()
+            if data.keys() or catalogue is not None or geography is not None:
+                data['status'] = STATUS_MODIFIED
             if data.keys():
-                contractor.update(**data, status=STATUS_MODIFIED).where(Contractor.id == contractor.id).execute()
+                contractor.update(**data).where(Contractor.id == contractor.id).execute()
                 contractor.reload()
         if catalogue is not None:
             Catalogue.delete().where(Catalogue.contractor == contractor, ~(Catalogue.service << catalogue)).execute()
