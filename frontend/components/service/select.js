@@ -34,7 +34,10 @@ export default function ServiceSelector(props) {
 
     useEffect(() => {
         if (!!catalogue)
-            setSelected(catalogue)
+            setSelected(catalogue.reduce((ids, service) => {
+                ids.push(service.id)
+                return ids
+            }, []))
     }, [catalogue])
 
     const handleChange = (event) => {
@@ -50,11 +53,11 @@ export default function ServiceSelector(props) {
     return (
         categories.map((category) => (
             <Fragment key={category.id}>
-                    <Paragraph fontWeight={700} mb={1}>
-                        {category.name}
-                    </Paragraph>
-                    <FormGroup sx={{mb: 2}}>
-                {services[category.id]?.map((service) => (
+                <Paragraph fontWeight={700} mb={1}>
+                    {category.name}
+                </Paragraph>
+                <FormGroup sx={{ mb: 2 }}>
+                    {services[category.id]?.map((service) => (
                         <FormControlLabel control={
                             <Checkbox
                                 name="catalogue"
@@ -64,7 +67,7 @@ export default function ServiceSelector(props) {
                             />}
                             key={service.id}
                             label={service.name} />
-                ))}
+                    ))}
                 </FormGroup>
             </Fragment>
         ))

@@ -25,9 +25,11 @@ export default function Actions(props) {
         <FlexBox mb={2} gap={2} justifyContent="space-between" flexWrap="wrap">
             <div />
             <FlexBox gap={2} justifyContent="space-between" flexWrap="wrap">
-                <Button onClick={async () => await setContractorStatus(2)} color="primary" {...buttonProps}>
-                    {contractor.status < 2 ? 'Начать' : 'Вернуть на'} рассмотрение
-                </Button>
+                {contractor.status !== 2 && (
+                    <Button onClick={async () => await setContractorStatus(2)} color="primary" {...buttonProps}>
+                        {contractor.status < 2 ? 'Начать' : 'Вернуть на'} рассмотрение
+                    </Button>
+                )}
                 {contractor.status !== 16 && (
                     <Button onClick={async () => await setContractorStatus(16)} color="success" {...buttonProps}>
                         Подтвердить

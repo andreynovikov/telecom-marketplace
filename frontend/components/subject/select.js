@@ -16,7 +16,10 @@ export default function SubjectSelector(props) {
 
     useEffect(() => {
         if (!!geography)
-            setSelected(geography)
+            setSelected(geography.reduce((codes, subject) => {
+                codes.push(subject.code)
+                return codes
+            }, []))
     }, [geography])
 
     const handleChange = (event) => {
