@@ -6,13 +6,17 @@ import Alert from '@mui/material/Alert'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
-import Person from '@mui/icons-material/Person'
 
 import DashboardHeader from '@/components/theme/pages-sections/customer-dashboard/dashboard-header'
 
 import { getContractors, saveGeography } from '@/components/contractor/queries'
 
 import SubjectSelector from '@/components/subject/select'
+
+import { IconMapPins } from '@tabler/icons-react'
+import { makeSvgIcon } from '@/theme/icons'
+
+const GeographyIcon = (props) => makeSvgIcon(IconMapPins, props)
 
 export default function ContractorForm() {
     const [data, setData] = useState({})
@@ -26,7 +30,7 @@ export default function ContractorForm() {
 
     return (
         <>
-            <DashboardHeader Icon={Person} href="/profile" title="География услуг" buttonText="Вернуться в профиль" />
+            <DashboardHeader Icon={GeographyIcon} href="/user/profile" title="География услуг" buttonText="Вернуться в профиль" />
             <Card sx={{ p: 3 }}>
                 <form action={dispatch}>
                     <Grid container rowSpacing={1} columnSpacing={3}>

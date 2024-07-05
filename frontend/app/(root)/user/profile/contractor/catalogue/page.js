@@ -5,13 +5,17 @@ import { useFormState, useFormStatus } from 'react-dom'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
-import Person from '@mui/icons-material/Person'
 
 import DashboardHeader from '@/components/theme/pages-sections/customer-dashboard/dashboard-header'
 
 import { getContractors, saveCatalogue } from '@/components/contractor/queries'
 
 import ServiceSelector from '@/components/service/select'
+
+import { IconListLetters } from '@tabler/icons-react'
+import { makeSvgIcon } from '@/theme/icons'
+
+const CatalogueIcon = (props) => makeSvgIcon(IconListLetters, props)
 
 export default function ContractorForm() {
     const [data, setData] = useState({})
@@ -25,7 +29,7 @@ export default function ContractorForm() {
 
     return (
         <>
-            <DashboardHeader Icon={Person} href="/profile" title="Каталог услуг" buttonText="Вернуться в профиль" />
+            <DashboardHeader Icon={CatalogueIcon} href="/user/profile" title="Каталог услуг" buttonText="Вернуться в профиль" />
             <Card sx={{ p: 3 }}>
                 <form action={dispatch}>
                     <ServiceSelector catalogue={data?.services} />

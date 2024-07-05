@@ -10,13 +10,17 @@ import TextField from '@mui/material/TextField'
 import { Paragraph } from '@/components/theme/Typography'
 
 import Card from '@mui/material/Card'
-import Person from '@mui/icons-material/Person'
 
 import DashboardHeader from '@/components/theme/pages-sections/customer-dashboard/dashboard-header'
 
 import { getContractors, saveContractor } from '@/components/contractor/queries'
 
 import FileUpload from '@/components/ui/file-upload'
+
+import { IconClipboardText } from '@tabler/icons-react'
+import { makeSvgIcon } from '@/theme/icons'
+
+const ApplicationIcon = (props) => makeSvgIcon(IconClipboardText, props)
 
 export default function ContractorForm() {
     const [data, setData] = useState({})
@@ -30,7 +34,7 @@ export default function ContractorForm() {
 
     return (
         <>
-            <DashboardHeader Icon={Person} href="/profile" title="Анкета поставщика" buttonText="Вернуться в профиль" />
+            <DashboardHeader Icon={ApplicationIcon} href="/user/profile" title="Анкета поставщика" buttonText="Вернуться в профиль" />
             <Card sx={{ p: 3 }}>
                 <form action={dispatch}>
                     <input type="hidden" name="kind" value="1" />
