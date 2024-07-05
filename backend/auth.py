@@ -42,6 +42,7 @@ def register():
         id=user.id,
         email=user.email,
         name=user.name,
+        phone=user.phone,
         role='user'
     )
     set_access_cookies(response, access_token)
@@ -68,6 +69,7 @@ def login():
                 id=user.id,
                 email=user.email,
                 name=user.name,
+                phone=user.phone,
                 role=role
             )
             set_access_cookies(response, access_token)  # cookies are used for admin interface
