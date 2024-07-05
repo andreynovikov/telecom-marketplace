@@ -12,7 +12,10 @@ export async function getContractors() {
         return {}
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors`, {
-        next: { tags: ['contractors'] },
+        next: {
+            revalidate: 3600,
+            tags: ['contractors']
+        },
         headers: {
             'Authorization': `Bearer ${session?.user?.access_token}`
         }
