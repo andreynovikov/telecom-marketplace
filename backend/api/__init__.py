@@ -5,8 +5,8 @@ from flask import Blueprint, current_app, jsonify, request, send_from_directory
 from flask_jwt_extended import current_user, jwt_required
 from peewee import fn, PeeweeException, DoesNotExist
 
-from .models import db_wrapper, Category, Service, Subject, User, Contractor, Catalogue, Geography, ContractorUser
-from .models import STATUS_MODIFIED
+from ..models import db_wrapper, Category, Service, Subject, User, Contractor, Catalogue, Geography, ContractorUser
+from ..models import STATUS_MODIFIED
 
 secure_file_name = re.compile(r"[/\\?%*:|\"<>\x7F\x00-\x1F]")
 
