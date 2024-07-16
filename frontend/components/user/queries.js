@@ -1,5 +1,6 @@
 'use server'
 
+import { z } from 'zod'
 import { revalidateTag } from 'next/cache'
 
 import { auth } from '@/lib/auth'
@@ -22,6 +23,34 @@ export async function getUsers() {
     return response.json()
 }
 
+export async function getUser(userId) {
+    const session = await auth()
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/users/${userId}`, {
+        headers: {
+            'Authorization': `Bearer ${session?.user?.access_token}`
+        }
+    })
+
+    if (!res.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        console.error(await res.json())
+        throw new Error('Failed to fetch data')
+    }
+
+    return res.json()
+}
+
+const userSchema = z.object({
+    name: z.string().trim().min(1),
+    email: z.string().trim().email(),
+    phone: z.string().trim().min(10),
+    admin: z.boolean()
+}).required({
+    name: true,
+    email: true
+})
+
 export async function createUser(_currentState, formData) {
     const values = Object.fromEntries(formData.entries())
     console.log(values)
@@ -41,27 +70,48 @@ export async function createUser(_currentState, formData) {
         if (response.ok) {
             console.log(result)
             revalidateTag('users')
-            return result
+            return {
+                success: true,
+                data: result
+            }
         } else {
             console.error(result.msg)
             return {
+                success: false,
                 error: result.msg
             }
         }
     } catch (error) {
         console.error("Error: " + error)
         return {
+            success: false,
             error
         }
     }
 }
 
 export async function updateUser(userId, _currentState, formData) {
-    const values = Object.fromEntries(formData.entries())
+    const values = {}
+    for (const key of formData.keys()) {
+        if (key.startsWith('$')) // nextjs action fields
+            continue
+        else
+            values[key] = formData.get(key)
+    }
     if (values.password === '')
         delete values.password
     values.admin = !!values.admin
     const session = await auth()
+
+    const validated = userSchema.passthrough().safeParse(values)
+    console.log(validated)
+
+    if (!validated.success) {
+        console.log(validated.error.flatten())
+        return {
+            errors: validated.error.flatten().fieldErrors,
+        }
+    }
 
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/users/${userId}`, {
@@ -70,23 +120,28 @@ export async function updateUser(userId, _currentState, formData) {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(values)
+            body: JSON.stringify(validated.data)
         });
 
         const result = await response.json();
         if (response.ok) {
             console.log(result)
             revalidateTag('users')
-            return result
+            return {
+                success: true,
+                data: result
+            }
         } else {
             console.error(result.msg)
             return {
+                success: false,
                 error: result.msg
             }
         }
     } catch (error) {
         console.error("Error: " + error)
         return {
+            success: false,
             error
         }
     }

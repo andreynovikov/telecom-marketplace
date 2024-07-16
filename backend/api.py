@@ -49,7 +49,7 @@ def create_category():
     return category.serialize
 
 
-@bp.route('/categories/<id>', methods=['PUT'])
+@bp.route('/categories/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_category(id):
     if not current_user.admin:
@@ -61,7 +61,7 @@ def update_category(id):
     return category.serialize
 
 
-@bp.route('/categories/<id>', methods=['DELETE'])
+@bp.route('/categories/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_category(id):
     if not current_user.admin:
@@ -82,7 +82,7 @@ def list_services():
     return [s.serialize for s in query]
 
 
-@bp.route('/services/<id>', methods=['GET'])
+@bp.route('/services/<int:id>', methods=['GET'])
 def get_service(id):
     return Service.get_by_id(id).serialize
 
@@ -98,7 +98,7 @@ def create_service():
     return service.serialize
 
 
-@bp.route('/services/<id>', methods=['PUT'])
+@bp.route('/services/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_service(id):
     if not current_user.admin:
@@ -110,7 +110,7 @@ def update_service(id):
     return service.serialize
 
 
-@bp.route('/services/<id>', methods=['DELETE'])
+@bp.route('/services/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_service(id):
     if not current_user.admin:
@@ -182,7 +182,7 @@ def list_contractors():
     return data
 
 
-@bp.route('/user/contractors/<id>', methods=['GET'])
+@bp.route('/user/contractors/<int:id>', methods=['GET'])
 @jwt_required()
 def get_contractor(id):
     contractor = (
@@ -200,7 +200,7 @@ def get_contractor(id):
     return data
 
 
-@bp.route('/user/contractors/<id>', methods=['PUT'])
+@bp.route('/user/contractors/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_contractor(id):
     if not current_user.admin:
@@ -225,7 +225,7 @@ def update_contractor(id):
     return contractor.serialize
 
 
-@bp.route('/user/contractors/<id>', methods=['DELETE'])
+@bp.route('/user/contractors/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_contractor(id):
     if not current_user.admin:
@@ -292,13 +292,28 @@ def create_user():
     return user.serialize
 
 
-@bp.route('/users/<id>', methods=['PUT'])
+@bp.route('/users/<int:id>', methods=['GET'])
+@jwt_required()
+def get_user(id):
+    if current_user.id != id and not current_user.admin:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    user = User.get_by_id(id)
+
+    return user.serialize
+
+
+@bp.route('/users/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_user(id):
-    if not current_user.admin:
+    if current_user.id != id and not current_user.admin:
         return jsonify(msg='Доступ запрещён'), 401
 
     data = request.get_json()
+
+    if not current_user.admin:
+        data.pop('admin')
+
     if 'password' in data:
         password = data.get('password')
         del data['password']
@@ -310,7 +325,7 @@ def update_user(id):
     return user.serialize
 
 
-@bp.route('/users/<id>', methods=['DELETE'])
+@bp.route('/users/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_user(id):
     if not current_user.admin:

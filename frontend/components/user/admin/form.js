@@ -20,10 +20,10 @@ export default function UserEditDialog(props) {
     const updateUserWithId = updateUser.bind(null, user?.id)
     const deleteUserWithId = deleteUser.bind(null, user?.id)
 
-    const [state, dispatch] = useFormState(user?.id ? updateUserWithId : createUser, user || {})
+    const [state, dispatch] = useFormState(user?.id ? updateUserWithId : createUser, user ? { data: user } : {})
 
     useEffect(() => {
-        if (state.id)
+        if (state.data?.id)
             setOpen(false)
     }, [state])
 
