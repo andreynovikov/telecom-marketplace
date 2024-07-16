@@ -33,6 +33,18 @@ STATUS_CHOICES = [
 ]
 
 
+class Brand(db_wrapper.Model):
+    name = CharField(verbose_name='название')
+
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'name': self.name
+        }
+        return data
+
+
 class Category(db_wrapper.Model):
     name = CharField(verbose_name='название')
     seq = SmallIntegerField(verbose_name='порядок')
@@ -172,6 +184,7 @@ def user_lookup_callback(_jwt_header, jwt_data):
 
 def setup_db(app):
     db_wrapper.database.create_tables([
+        Brand,
         Category,
         Service,
         Subject,
