@@ -49,4 +49,4 @@ def delete_brand(id):
         return jsonify(msg='Доступ запрещён'), 401
 
     Brand.delete_by_id(id)
-    return id
+    return jsonify(id)

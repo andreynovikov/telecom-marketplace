@@ -44,7 +44,7 @@ export async function getUser(userId) {
 const userSchema = z.object({
     name: z.string().trim().min(1),
     email: z.string().trim().email(),
-    phone: z.string().trim().min(10),
+    phone: z.string().trim().min(10).optional().or(z.literal('')),
     admin: z.boolean()
 }).required({
     name: true,

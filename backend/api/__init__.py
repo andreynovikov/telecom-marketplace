@@ -75,7 +75,7 @@ def delete_category(id):
     with db_wrapper.database.atomic():
         Service.delete().where(Service.category == id).execute()
         Category.delete_by_id(id)
-    return id
+    return jsonify(id)
 
 
 @bp.route('/services', methods=['GET'])
@@ -122,7 +122,7 @@ def delete_service(id):
         return jsonify(msg='Доступ запрещён'), 401
 
     Service.delete_by_id(id)
-    return id
+    return jsonify(id)
 
 
 @bp.route('/subjects', methods=['GET'])
@@ -242,7 +242,7 @@ def delete_contractor(id):
         ContractorUser.delete().where(ContractorUser.contractor == id).execute()
         Contractor.delete_by_id(id)
 
-    return id
+    return jsonify(id)
 
 
 @bp.route('/user/files/<user>/<filename>', methods=['GET'])
@@ -338,4 +338,4 @@ def delete_user(id):
 
     with db_wrapper.database.atomic():
         User.delete_by_id(id)
-    return id
+    return jsonify(id)
