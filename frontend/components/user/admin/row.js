@@ -1,4 +1,4 @@
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { IconCheck } from '@tabler/icons-react'
 
 import { StyledTableRow, StyledTableCell } from '@/components/theme/pages-sections/vendor-dashboard/styles'
 
@@ -18,7 +18,7 @@ export default async function UserRow({ user }) {
                 {user.phone || '-'}
             </StyledTableCell>
             <StyledTableCell align="center">
-                {user.admin && <CheckCircleOutlineIcon fontSize="small" />}
+                {user.admin && <IconCheck size={20} />}
             </StyledTableCell>
             <StyledTableCell align="center">
                 <UserActions user={user} />
