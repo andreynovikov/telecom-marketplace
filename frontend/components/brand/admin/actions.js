@@ -4,7 +4,6 @@ import { useState } from 'react'
 
 import Delete from '@mui/icons-material/Delete'
 import Edit from '@mui/icons-material/Edit'
-import QueueIcon from '@mui/icons-material/Queue'
 
 import { StyledIconButton } from '@/components/theme/pages-sections/vendor-dashboard/styles'
 

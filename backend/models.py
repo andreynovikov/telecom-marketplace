@@ -93,6 +93,26 @@ class Subject(db_wrapper.Model):
         return data
 
 
+class Product(db_wrapper.Model):
+    code = CharField(max_length=30, unique=True, verbose_name='код')
+    name = CharField(max_length=None, verbose_name='название')
+    brand = ForeignKeyField(Brand, verbose_name='бренд')
+    image = CharField(max_length=None, null=True, verbose_name='изображение')
+    description = CharField(max_length=None, null=True, verbose_name='описание')
+
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'code': self.code,
+            'name': self.name,
+            'brand': self.brand_id,
+            'image': self.image,
+            'description': self.description
+        }
+        return data
+
+
 class Contractor(db_wrapper.Model):
     status = SmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NEW, index=True, verbose_name='статус')
     kind = SmallIntegerField(choices=KIND_CHOICES, index=True, verbose_name='тип контрагента')
@@ -188,6 +208,7 @@ def setup_db(app):
         Category,
         Service,
         Subject,
+        Product,
         Contractor,
         Geography,
         Catalogue,

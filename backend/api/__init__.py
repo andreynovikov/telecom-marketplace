@@ -7,12 +7,15 @@ from peewee import fn, PeeweeException, DoesNotExist
 
 from ..models import db_wrapper, Category, Service, Subject, User, Contractor, Catalogue, Geography, ContractorUser
 from ..models import STATUS_MODIFIED
+
 from .brand import bp as brand_bp
+from .product import bp as product_bp
 
 secure_file_name = re.compile(r"[/\\?%*:|\"<>\x7F\x00-\x1F]")
 
 bp = Blueprint('api', __name__)
 bp.register_blueprint(brand_bp)
+bp.register_blueprint(product_bp)
 
 
 @bp.errorhandler(PeeweeException)

@@ -6,7 +6,7 @@ from ..models import Brand
 bp = Blueprint('brand', __name__, url_prefix='/brands')
 
 
-@bp.route('/', methods=['GET'])
+@bp.route('', methods=['GET'])
 def list_brands():
     query = (
         Brand.select()
@@ -14,12 +14,12 @@ def list_brands():
     return [b.serialize for b in query]
 
 
-@bp.route('/<int:id>', methods=['GET'])
+@bp.route('<int:id>', methods=['GET'])
 def get_brand(id):
     return Brand.get_by_id(id).serialize
 
 
-@bp.route('/', methods=['POST'])
+@bp.route('', methods=['POST'])
 @jwt_required()
 def create_brand():
     if not current_user.admin:
@@ -30,7 +30,7 @@ def create_brand():
     return brand.serialize
 
 
-@bp.route('/<int:id>', methods=['PUT'])
+@bp.route('<int:id>', methods=['PUT'])
 @jwt_required()
 def update_brand(id):
     if not current_user.admin:
@@ -42,7 +42,7 @@ def update_brand(id):
     return brand.serialize
 
 
-@bp.route('/<int:id>', methods=['DELETE'])
+@bp.route('<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_brand(id):
     if not current_user.admin:
