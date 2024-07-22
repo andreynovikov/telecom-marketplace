@@ -19,6 +19,9 @@ def register():
     if not validate_altcha(data.get('altcha')):
         return jsonify(msg='Ошибка проверки на человечность'), 400
 
+    if not data.get('agreement'):
+        return jsonify(msg='Необходимо подтвердить согласие на обработку персональных данных'), 400
+
     email = data.get('email')
     # check if user already exists
     user = User.select().filter(User.email == email).first()

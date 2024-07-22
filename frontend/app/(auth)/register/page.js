@@ -1,13 +1,16 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useFormState } from 'react-dom'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
 import EyeToggleButton from '@/components/theme/pages-sections/sessions/components/eye-toggle-button'
 import usePasswordVisible from '@/components/theme/pages-sections/sessions/use-password-visible'
 import BazaarTextField from '@/components/theme/BazaarTextField'
+import BoxLink from "@/components/theme/pages-sections/sessions/components/box-link";
 
 import { register } from '@/lib/actions'
 
@@ -21,6 +24,7 @@ const altchaStrings = {
 }
 
 export default function SignUp() {
+    const [agreement, setAgreement] = useState(false)
     const [result, dispatch] = useFormState(register, undefined)
     const { visiblePassword, togglePasswordVisible } = usePasswordVisible()
     const inputProps = {
@@ -101,7 +105,24 @@ export default function SignUp() {
                     hidefooter />
             </Box>
 
-            <Button fullWidth type="submit" color="primary" variant="contained" size="large">
+            <Box sx={{ mb: 2 }}>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            name="agreement"
+                            value={1}
+                            checked={agreement}
+                            onChange={(event) => setAgreement(event.target.checked)}
+                        />}
+                    label={
+                        <>
+                            Нажимая на кнопку вы даёте{' '}
+                            <BoxLink target="_blank" href="/legal/personal-data-agreement" title="согласие на обработку персональных данных" />
+                        </>
+                    } />
+            </Box>
+
+            <Button fullWidth type="submit" color="primary" variant="contained" size="large" disabled={!agreement}>
                 Зарегистрироваться
             </Button>
         </form>
