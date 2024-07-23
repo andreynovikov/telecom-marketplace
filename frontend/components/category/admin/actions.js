@@ -2,15 +2,16 @@
 
 import { useState } from 'react'
 
-import Delete from '@mui/icons-material/Delete'
-import Edit from '@mui/icons-material/Edit'
-import QueueIcon from '@mui/icons-material/Queue'
+import { EditIcon, DeleteIcon, makeSvgIcon } from '@/theme/icons'
+import { IconCopyPlus } from '@tabler/icons-react'
 
 import { StyledIconButton } from '@/components/theme/pages-sections/vendor-dashboard/styles'
 
 import ServiceEditDialog from '@/components/service/admin/form'
 import CategoryEditDialog from './form'
 import { deleteCategory } from '../queries'
+
+export const AddServiceIcon = (props) => makeSvgIcon(IconCopyPlus, props)
 
 export default function CategoryActions({ category }) {
     const [categoryOpen, setCategoryOpen] = useState(false)
@@ -19,13 +20,13 @@ export default function CategoryActions({ category }) {
     return (
         <>
             <StyledIconButton onClick={() => setCategoryOpen(true)}>
-                <Edit />
+                <EditIcon />
             </StyledIconButton>
             <StyledIconButton onClick={async () => await deleteCategory(category?.id)}>
-                <Delete />
+                <DeleteIcon />
             </StyledIconButton>
             <StyledIconButton onClick={() => setServiceOpen(true)}>
-                <QueueIcon />
+                <AddServiceIcon />
             </StyledIconButton>
             <CategoryEditDialog category={category} open={categoryOpen} setOpen={setCategoryOpen} />
             <ServiceEditDialog categoryId={category.id} open={serviceOpen} setOpen={setServiceOpen} />

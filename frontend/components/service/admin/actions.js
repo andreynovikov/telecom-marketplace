@@ -2,10 +2,9 @@
 
 import { useState } from 'react'
 
-import Edit from "@mui/icons-material/Edit";
-import Delete from "@mui/icons-material/Delete";
+import { EditIcon, DeleteIcon } from '@/theme/icons'
 
-import { StyledIconButton } from "@/components/theme/pages-sections/vendor-dashboard/styles";
+import { StyledIconButton } from '@/components/theme/pages-sections/vendor-dashboard/styles'
 
 import ServiceEditDialog from './form'
 
@@ -18,11 +17,11 @@ export function ServiceActions(props) {
     return (
         <>
             <StyledIconButton onClick={() => setOpen(true)}>
-                <Edit />
+                <EditIcon />
             </StyledIconButton>
 
             <StyledIconButton onClick={async () => await deleteService(service.id, categoryId)}>
-                <Delete />
+                <DeleteIcon />
             </StyledIconButton>
 
             <ServiceEditDialog service={service} categoryId={categoryId} open={open} setOpen={setOpen} />

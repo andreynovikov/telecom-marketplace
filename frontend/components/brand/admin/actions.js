@@ -2,8 +2,7 @@
 
 import { useState } from 'react'
 
-import Delete from '@mui/icons-material/Delete'
-import Edit from '@mui/icons-material/Edit'
+import { EditIcon, DeleteIcon } from '@/theme/icons'
 
 import { StyledIconButton } from '@/components/theme/pages-sections/vendor-dashboard/styles'
 
@@ -16,10 +15,10 @@ export default function BrandActions({ brand }) {
     return (
         <>
             <StyledIconButton onClick={() => setBrandOpen(true)}>
-                <Edit />
+                <EditIcon />
             </StyledIconButton>
             <StyledIconButton onClick={async () => await deleteBrand(brand?.id)}>
-                <Delete />
+                <DeleteIcon />
             </StyledIconButton>
             <BrandEditDialog brand={brand} open={brandOpen} setOpen={setBrandOpen} />
         </>

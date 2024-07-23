@@ -41,6 +41,24 @@ export async function getUser(userId) {
     return res.json()
 }
 
+export async function getUserContractors(userId) {
+    const session = await auth()
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/users/${userId}/contractors`, {
+        headers: {
+            'Authorization': `Bearer ${session?.user?.access_token}`
+        },
+        //next: { tags: ['users'] }
+    })
+
+    if (!response.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        throw new Error('Failed to fetch data')
+    }
+
+    return response.json()
+}
+
 const userSchema = z.object({
     name: z.string().trim().min(1),
     email: z.string().trim().email(),

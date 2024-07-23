@@ -10,6 +10,22 @@ const statuses = {
     64: 'отклонённая'
 }
 
+const statusIcons = {
+    0: IconClipboardPlus,
+    1: IconClipboardTypography,
+    2: IconClipboardData,
+    16: IconClipboardCheck,
+    64: IconClipboardX
+}
+
+const statusColors = {
+    0: 'warning',
+    1: 'warning',
+    2: 'primary',
+    16: 'success',
+    64: 'error'
+}
+
 const Switch = ({ test, children }) => {
     return children.find(child => {
         return child.props.value === test
@@ -21,17 +37,24 @@ const iconProps = {
     sx: {mr: 0.5, verticalAlign: "top"}
 }
 
-export default function ContractorStatus({status, ...props}) {
+const makeIcon = (status, hideText, props) => {
+    if (hideText)
+        return makeSvgIcon(statusIcons[status], { value: status, color: statusColors[status], ...props })
+    else
+        return makeSvgIcon(statusIcons[status], { value: status, color: statusColors[status], ...iconProps, ...props })
+}
+
+export default function ContractorStatus({status, hideText, ...props}) {
     return (
-        <span>
+        <>
             <Switch test={status}>
-                {makeSvgIcon(IconClipboardPlus, { value: 0, color: "warning", ...iconProps, ...props })}
-                {makeSvgIcon(IconClipboardTypography, { value: 1, color: "warning", ...iconProps, ...props })}
-                {makeSvgIcon(IconClipboardData, { value: 2, color: "primary", ...iconProps, ...props })}
-                {makeSvgIcon(IconClipboardCheck, { value: 16, color: "success", ...iconProps, ...props })}
-                {makeSvgIcon(IconClipboardX, { value: 64, color: "error", ...iconProps, ...props })}
+                {makeIcon(0, hideText, props)}
+                {makeIcon(1, hideText, props)}
+                {makeIcon(2, hideText, props)}
+                {makeIcon(16, hideText, props)}
+                {makeIcon(64, hideText, props)}
             </Switch>
-            {statuses[status]}
-        </span>        
+            {!hideText && statuses[status]}
+        </>        
     )
 }

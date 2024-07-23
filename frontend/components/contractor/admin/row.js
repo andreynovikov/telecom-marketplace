@@ -2,13 +2,10 @@
 
 import Link from 'next/link'
 
-import Delete from '@mui/icons-material/Delete'
-import RemoveRedEye from '@mui/icons-material/RemoveRedEye'
+import { StyledTableRow, StyledTableCell } from '@/components/theme/pages-sections/vendor-dashboard/styles'
 
-import { StyledTableRow, StyledTableCell, StyledIconButton } from '@/components/theme/pages-sections/vendor-dashboard/styles'
-
+import { ContractorActions } from './actions'
 import ContractorStatus from './status'
-import { deleteContractor } from '../queries'
 
 export default function ContractorRow({ contractor }) {
     const {
@@ -31,14 +28,7 @@ export default function ContractorRow({ contractor }) {
             <ContractorStatus status={status} />
         </StyledTableCell>
         <StyledTableCell align="center">
-            <Link href={`contractors/${contractor.id}`}>
-                <StyledIconButton>
-                    <RemoveRedEye />
-                </StyledIconButton>
-            </Link>
-            <StyledIconButton onClick={async () => await deleteContractor(id) }>
-                <Delete />
-            </StyledIconButton>
+            <ContractorActions contractor={contractor} />
         </StyledTableCell>
     </StyledTableRow>
 }

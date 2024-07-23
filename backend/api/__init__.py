@@ -10,12 +10,14 @@ from ..models import STATUS_MODIFIED
 
 from .brand import bp as brand_bp
 from .product import bp as product_bp
+from .user import bp as user_bp
 
 secure_file_name = re.compile(r"[/\\?%*:|\"<>\x7F\x00-\x1F]")
 
 bp = Blueprint('api', __name__)
 bp.register_blueprint(brand_bp)
 bp.register_blueprint(product_bp)
+bp.register_blueprint(user_bp)
 
 
 @bp.errorhandler(PeeweeException)
@@ -272,70 +274,3 @@ def upload_file():
     filename = secure_file_name.sub('-', file.filename)
     file.save(os.path.join(dirname, filename))
     return {'name': filename}
-
-
-@bp.route('/users', methods=['GET'])
-@jwt_required()
-def list_users():
-    if not current_user.admin:
-        return jsonify(msg='Доступ запрещён'), 401
-
-    query = (
-        User.select()
-    )
-    return [u.serialize for u in query]
-
-
-@bp.route('/users', methods=['POST'])
-@jwt_required()
-def create_user():
-    if not current_user.admin:
-        return jsonify(msg='Доступ запрещён'), 401
-
-    data = request.get_json()
-    user = User.create(**data)
-    return user.serialize
-
-
-@bp.route('/users/<int:id>', methods=['GET'])
-@jwt_required()
-def get_user(id):
-    if current_user.id != id and not current_user.admin:
-        return jsonify(msg='Доступ запрещён'), 401
-
-    user = User.get_by_id(id)
-
-    return user.serialize
-
-
-@bp.route('/users/<int:id>', methods=['PUT'])
-@jwt_required()
-def update_user(id):
-    if current_user.id != id and not current_user.admin:
-        return jsonify(msg='Доступ запрещён'), 401
-
-    data = request.get_json()
-
-    if not current_user.admin:
-        data.pop('admin')
-
-    if 'password' in data:
-        password = data.get('password')
-        del data['password']
-    User.set_by_id(id, data)
-    user = User.get_by_id(id)
-    if 'password' in locals():
-        user.password = password
-        user.save()
-    return user.serialize
-
-
-@bp.route('/users/<int:id>', methods=['DELETE'])
-@jwt_required()
-def delete_user(id):
-    if not current_user.admin:
-        return jsonify(msg='Доступ запрещён'), 401
-
-    with db_wrapper.database.atomic():
-        User.delete_by_id(id)
-    return jsonify(id)
