@@ -17,6 +17,19 @@ export async function getCategories() {
     return res.json()
 }
 
+export async function getCategory(categoryId) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/products/categories/${categoryId}`, {
+        next: { tags: `products__categories__${categoryId}` }
+    })
+
+    if (!res.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        throw new Error('Failed to fetch data')
+    }
+
+    return res.json()
+}
+
 export async function createCategory(_currentState, formData) {
     const values = Object.fromEntries(formData.entries())
     console.log(values)
@@ -72,6 +85,7 @@ export async function updateCategory(categoryId, _currentState, formData) {
         if (response.ok) {
             console.log(result)
             revalidateTag('products__categories')
+            revalidateTag(`products__categories__${categoryId}`)
             return result
         } else {
             console.error(result.msg)
@@ -102,6 +116,7 @@ export async function deleteCategory(categoryId) {
         const result = await response.json();
         if (response.ok) {
             revalidateTag('products__categories')
+            revalidateTag(`products__categories__${categoryId}`)
             return result
         } else {
             console.error(result.msg)

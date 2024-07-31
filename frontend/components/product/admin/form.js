@@ -12,6 +12,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 
 import BrandSelect from '@/components/brand/admin/select'
+import CategorySelect from '../category/admin/select'
 import ImageUpload from './image-upload'
 
 import { createProduct, updateProduct, deleteProduct } from '../queries'
@@ -70,12 +71,16 @@ export default function ProductEditDialog(props) {
                     defaultValue={product?.description}
                     InputLabelProps={{ shrink: !!product?.description ? true : undefined }} />
 
-                <Box>
+                <Box margin={1}>
+                    Категория *{' '}
+                    <CategorySelect name="category" defaultValue={product?.category} />
+                </Box>
+
+                <Box margin={1}>
                     Изображение:{' '}
                     {product?.image && <b>{product.image}{' '}</b>}
                     <ImageUpload name="image" />
                 </Box>
-
             </DialogContent>
             <DialogActions>
                 {product?.id && (

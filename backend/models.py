@@ -112,6 +112,7 @@ class Product(db_wrapper.Model):
     code = CharField(max_length=30, unique=True, verbose_name='код')
     name = CharField(max_length=None, verbose_name='название')
     brand = ForeignKeyField(Brand, verbose_name='бренд')
+    category = ForeignKeyField(ProductCategory, verbose_name='категория')
     image = CharField(max_length=None, null=True, verbose_name='изображение')
     description = CharField(max_length=None, null=True, verbose_name='описание')
 
@@ -122,6 +123,7 @@ class Product(db_wrapper.Model):
             'code': self.code,
             'name': self.name,
             'brand': self.brand_id,
+            'category': self.category_id,
             'image': self.image,
             'description': self.description
         }

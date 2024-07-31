@@ -3,11 +3,12 @@ import Alert from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import { useDragOver } from '@minoru/react-dnd-treeview'
 
 import { IconChevronRight, IconPoint, IconPlaylistAdd } from '@tabler/icons-react'
 import { EditIcon, DeleteIcon, makeSvgIcon } from '@/theme/icons'
+
+import { StyledIconButton } from '@/components/theme/pages-sections/vendor-dashboard/styles'
 
 import CategoryEditDialog from './form'
 import styles from './tree-node.module.css'
@@ -73,15 +74,15 @@ export const TreeNode = (props) => {
                     <Typography sx={{ mr: 1 }}>
                         {node.name}
                     </Typography>
-                    <IconButton onClick={handleEdit} size="small">
-                        <EditIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton onClick={handleDelete} size="small">
-                        <DeleteIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton onClick={handleAdd} size="small">
-                        <AddItemIcon fontSize="small" />
-                    </IconButton>
+                    <StyledIconButton onClick={handleEdit}>
+                        <EditIcon />
+                    </StyledIconButton>
+                    <StyledIconButton onClick={handleDelete}>
+                        <DeleteIcon />
+                    </StyledIconButton>
+                    <StyledIconButton onClick={handleAdd}>
+                        <AddItemIcon />
+                    </StyledIconButton>
                 </Stack>
             </Stack>
             <CategoryEditDialog category={node} open={categoryEditOpen} setOpen={setCategoryEditOpen} />

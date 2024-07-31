@@ -12,7 +12,7 @@ bp = Blueprint('product', __name__, url_prefix='/products')
 @bp.route('categories', methods=['GET'])
 def list_categories():
     query = (
-        ProductCategory.select().order_by(ProductCategory.seq)
+        ProductCategory.select().order_by(ProductCategory.parent, ProductCategory.seq)
     )
     return [c.serialize for c in query]
 
@@ -31,6 +31,11 @@ def create_category():
         seq = 1
     category = ProductCategory.create(**data, seq=seq)
     return category.serialize
+
+
+@bp.route('categories/<int:id>', methods=['GET'])
+def get_category(id):
+    return ProductCategory.get_by_id(id).serialize
 
 
 @bp.route('categories/<int:id>', methods=['PUT'])
@@ -64,9 +69,9 @@ def delete_category(id):
         return jsonify(msg='Доступ запрещён'), 401
 
     if ProductCategory.select().where(ProductCategory.parent == id).count() > 0:
-        return jsonify(msg='Категория должна быть пустой'), 400
-    # if Product.select().where(Product.category == id).count() > 0:
-    #     return jsonify(msg='Категория должна быть пустой'), 400
+        return jsonify(msg='Удаление невозможно: категория содержит подкатегории'), 400
+    if Product.select().where(Product.category == id).count() > 0:
+        return jsonify(msg='Удаление невозможно: категория содержит товары'), 400
 
     ProductCategory.delete_by_id(id)
     return jsonify(id)
