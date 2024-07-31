@@ -4,9 +4,9 @@ import { revalidateTag } from 'next/cache'
 
 import { auth } from '@/lib/auth'
 
-export async function getServices(categoryId) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services?category=${categoryId}`, {
-        next: { tags: [`services__category__${categoryId}`] }
+export async function getCategories() {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/products/categories`, {
+        next: { tags: ['products__categories'] }
     })
 
     if (!res.ok) {
@@ -17,27 +17,13 @@ export async function getServices(categoryId) {
     return res.json()
 }
 
-export async function getService(serviceId) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services/${serviceId}`, {
-        next: { tags: `services__${serviceId}` }
-    })
-
-    if (!res.ok) {
-        // This will activate the closest `error.js` Error Boundary
-        throw new Error('Failed to fetch data')
-    }
-
-    return res.json()
-}
-
-export async function createService(categoryId, _currentState, formData) {
+export async function createCategory(_currentState, formData) {
     const values = Object.fromEntries(formData.entries())
-    values['category'] = categoryId
     console.log(values)
     const session = await auth()
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/products/categories`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
@@ -49,7 +35,7 @@ export async function createService(categoryId, _currentState, formData) {
         const result = await response.json();
         if (response.ok) {
             console.log(result)
-            revalidateTag(`services__category__${categoryId}`)
+            revalidateTag('products__categories')
             return result
         } else {
             console.error(result.msg)
@@ -65,14 +51,15 @@ export async function createService(categoryId, _currentState, formData) {
     }
 }
 
-export async function updateService(serviceId, categoryId, _currentState, formData) {
+export async function updateCategory(categoryId, _currentState, formData) {
     const values = Object.fromEntries(formData.entries())
-    values['category'] = categoryId
+    if (values.parent === 'null')
+        values.parent = null
     console.log(values)
     const session = await auth()
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services/${serviceId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/products/categories/${categoryId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
@@ -84,8 +71,7 @@ export async function updateService(serviceId, categoryId, _currentState, formDa
         const result = await response.json();
         if (response.ok) {
             console.log(result)
-            revalidateTag(`services__category__${categoryId}`)
-            revalidateTag(`services__${serviceId}`)
+            revalidateTag('products__categories')
             return result
         } else {
             console.error(result.msg)
@@ -101,11 +87,11 @@ export async function updateService(serviceId, categoryId, _currentState, formDa
     }
 }
 
-export async function deleteService(serviceId, categoryId, _currentState, _formData) {
+export async function deleteCategory(categoryId) {
     const session = await auth()
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services/${serviceId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/products/categories/${categoryId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
@@ -115,7 +101,7 @@ export async function deleteService(serviceId, categoryId, _currentState, _formD
 
         const result = await response.json();
         if (response.ok) {
-            revalidateTag(`services__category__${categoryId}`)
+            revalidateTag('products__categories')
             return result
         } else {
             console.error(result.msg)

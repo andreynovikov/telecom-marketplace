@@ -10,10 +10,10 @@ import { StyledTableHeaderCell } from '@/components/theme/pages-sections/vendor-
 
 import Scrollbar from '@/components/theme/scrollbar'
 
-import AddAction from '@/components/category/admin/add-button'
-import CategoryRow from '@/components/category/admin/row'
+import AddAction from '@/components/service/category/admin/add-button'
+import CategoryRow from '@/components/service/category/admin/row'
 
-import { getCategories } from '@/components/category/queries'
+import { getCategories } from '@/components/service/category/queries'
 
 import { auth } from '@/lib/auth'
 

@@ -43,7 +43,7 @@ const tableHeading = [{
     align: "center"
 }];
 
-export default async function productList() {
+export default async function ProductList() {
     const session = await auth()
     if (session?.user?.role !== "admin") return <div>Not authenticated</div>
 

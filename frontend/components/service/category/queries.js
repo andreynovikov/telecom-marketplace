@@ -5,7 +5,9 @@ import { revalidateTag } from 'next/cache'
 import { auth } from '@/lib/auth'
 
 export async function getCategories() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/categories`, { next: { tags: ['categories'] } })
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services/categories`, {
+        next: { tags: ['services__categories'] }
+    })
 
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
@@ -21,7 +23,7 @@ export async function createCategory(_currentState, formData) {
     const session = await auth()
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/categories`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services/categories`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
@@ -33,7 +35,7 @@ export async function createCategory(_currentState, formData) {
         const result = await response.json();
         if (response.ok) {
             console.log(result)
-            revalidateTag('categories')
+            revalidateTag('services__categories')
             return result
         } else {
             console.error(result.msg)
@@ -55,7 +57,7 @@ export async function updateCategory(categoryId, _currentState, formData) {
     const session = await auth()
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/categories/${categoryId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services/categories/${categoryId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
@@ -67,7 +69,7 @@ export async function updateCategory(categoryId, _currentState, formData) {
         const result = await response.json();
         if (response.ok) {
             console.log(result)
-            revalidateTag('categories')
+            revalidateTag('services__categories')
             return result
         } else {
             console.error(result.msg)
@@ -87,7 +89,7 @@ export async function deleteCategory(categoryId) {
     const session = await auth()
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/categories/${categoryId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services/categories/${categoryId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
@@ -97,8 +99,7 @@ export async function deleteCategory(categoryId) {
 
         const result = await response.json();
         if (response.ok) {
-            revalidateTag('categories')
-            revalidateTag(`services__${categoryId}`)
+            revalidateTag('services__categories')
             return result
         } else {
             console.error(result.msg)

@@ -3,13 +3,14 @@ import os
 
 from flask import Blueprint, current_app, jsonify, request, send_from_directory
 from flask_jwt_extended import current_user, jwt_required
-from peewee import fn, PeeweeException, DoesNotExist
+from peewee import PeeweeException, DoesNotExist
 
-from ..models import db_wrapper, Category, Service, Subject, User, Contractor, Catalogue, Geography, ContractorUser
+from ..models import db_wrapper, Subject, User, Contractor, Catalogue, Geography, ContractorUser
 from ..models import STATUS_MODIFIED
 
 from .brand import bp as brand_bp
 from .product import bp as product_bp
+from .service import bp as service_bp
 from .user import bp as user_bp
 
 secure_file_name = re.compile(r"[/\\?%*:|\"<>\x7F\x00-\x1F]")
@@ -17,6 +18,7 @@ secure_file_name = re.compile(r"[/\\?%*:|\"<>\x7F\x00-\x1F]")
 bp = Blueprint('api', __name__)
 bp.register_blueprint(brand_bp)
 bp.register_blueprint(product_bp)
+bp.register_blueprint(service_bp)
 bp.register_blueprint(user_bp)
 
 
@@ -34,97 +36,6 @@ def does_not_exist(e):
 @bp.errorhandler(404)
 def resource_not_found(e):
     return jsonify(msg=str(e)), 404
-
-
-@bp.route('/categories', methods=['GET'])
-def list_categories():
-    query = (
-        Category.select()
-    )
-    return [c.serialize for c in query]
-
-
-@bp.route('/categories', methods=['POST'])
-@jwt_required()
-def create_category():
-    if not current_user.admin:
-        return jsonify(msg='Доступ запрещён'), 401
-
-    data = request.get_json()
-    seq = Category.select(fn.Max(Category.seq)).scalar() + 1
-    category = Category.create(**data, seq=seq)
-    return category.serialize
-
-
-@bp.route('/categories/<int:id>', methods=['PUT'])
-@jwt_required()
-def update_category(id):
-    if not current_user.admin:
-        return jsonify(msg='Доступ запрещён'), 401
-
-    data = request.get_json()
-    Category.update(**data).where(Category.id == id).execute()
-    category = Category.get_by_id(id)
-    return category.serialize
-
-
-@bp.route('/categories/<int:id>', methods=['DELETE'])
-@jwt_required()
-def delete_category(id):
-    if not current_user.admin:
-        return jsonify(msg='Доступ запрещён'), 401
-
-    with db_wrapper.database.atomic():
-        Service.delete().where(Service.category == id).execute()
-        Category.delete_by_id(id)
-    return jsonify(id)
-
-
-@bp.route('/services', methods=['GET'])
-def list_services():
-    category = request.args.getlist('category')
-    query = (
-        Service.select().where(Service.category == category)
-    )
-    return [s.serialize for s in query]
-
-
-@bp.route('/services/<int:id>', methods=['GET'])
-def get_service(id):
-    return Service.get_by_id(id).serialize
-
-
-@bp.route('/services', methods=['POST'])
-@jwt_required()
-def create_service():
-    if not current_user.admin:
-        return jsonify(msg='Доступ запрещён'), 401
-
-    data = request.get_json()
-    service = Service.create(**data)
-    return service.serialize
-
-
-@bp.route('/services/<int:id>', methods=['PUT'])
-@jwt_required()
-def update_service(id):
-    if not current_user.admin:
-        return jsonify(msg='Доступ запрещён'), 401
-
-    data = request.get_json()
-    Service.update(**data).where(Service.id == id).execute()
-    service = Service.get_by_id(id)
-    return service.serialize
-
-
-@bp.route('/services/<int:id>', methods=['DELETE'])
-@jwt_required()
-def delete_service(id):
-    if not current_user.admin:
-        return jsonify(msg='Доступ запрещён'), 401
-
-    Service.delete_by_id(id)
-    return jsonify(id)
 
 
 @bp.route('/subjects', methods=['GET'])

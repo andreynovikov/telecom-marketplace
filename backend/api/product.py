@@ -2,10 +2,74 @@ import os
 
 from flask import Blueprint, current_app, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
+from peewee import fn
 
-from ..models import Product
+from ..models import ProductCategory, Product
 
 bp = Blueprint('product', __name__, url_prefix='/products')
+
+
+@bp.route('categories', methods=['GET'])
+def list_categories():
+    query = (
+        ProductCategory.select().order_by(ProductCategory.seq)
+    )
+    return [c.serialize for c in query]
+
+
+@bp.route('categories', methods=['POST'])
+@jwt_required()
+def create_category():
+    if not current_user.admin:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    data = request.get_json()
+    current_app.logger.error(data)
+    if ProductCategory.select().count() > 0:
+        seq = ProductCategory.select(fn.Max(ProductCategory.seq)).scalar() + 1
+    else:
+        seq = 1
+    category = ProductCategory.create(**data, seq=seq)
+    return category.serialize
+
+
+@bp.route('categories/<int:id>', methods=['PUT'])
+@jwt_required()
+def update_category(id):
+    if not current_user.admin:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    data = request.get_json()
+    before = data.pop('before', None)
+    ProductCategory.update(**data).where(ProductCategory.id == id).execute()
+    if before is not None:
+        if int(before) < 0:
+            seq = ProductCategory.select(ProductCategory.seq).where(ProductCategory.id == id).scalar()
+            ProductCategory.update(seq=ProductCategory.seq - 1).where(ProductCategory.seq >= seq).execute()
+            seq = ProductCategory.select(fn.Max(ProductCategory.seq)).scalar() + 1
+        else:
+            seq = ProductCategory.select(ProductCategory.seq).where(ProductCategory.id == before).scalar()
+            ProductCategory.update(seq=ProductCategory.seq + 1).where(ProductCategory.seq >= seq).execute()
+        current_app.logger.error(seq)
+        ProductCategory.update(seq=seq).where(ProductCategory.id == id).execute()
+    category = ProductCategory.get_by_id(id)
+    current_app.logger.error(category.serialize)
+    return category.serialize
+
+
+@bp.route('categories/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_category(id):
+    if not current_user.admin:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    if ProductCategory.select().where(ProductCategory.parent == id).count() > 0:
+        return jsonify(msg='Категория должна быть пустой'), 400
+    # if Product.select().where(Product.category == id).count() > 0:
+    #     return jsonify(msg='Категория должна быть пустой'), 400
+
+    ProductCategory.delete_by_id(id)
+    return jsonify(id)
 
 
 @bp.route('', methods=['GET'])

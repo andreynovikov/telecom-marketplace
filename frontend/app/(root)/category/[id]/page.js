@@ -1,4 +1,4 @@
-import { getCategories } from '@/components/category/queries'
+import { getCategories } from '@/components/service/category/queries'
 import ServiceList from '@/components/service/list'
 
 export default async function Services({ params }) {

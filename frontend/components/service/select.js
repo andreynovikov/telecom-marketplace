@@ -5,7 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 
 import { Paragraph } from "@/components/theme/Typography"
 
-import { getCategories } from '../category/queries'
+import { getCategories } from './category/queries'
 import { getServices } from './queries'
 
 export default function ServiceSelector(props) {

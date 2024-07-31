@@ -1,0 +1,7 @@
+.draggingSource {
+    opacity: 0.3;
+}
+
+.placeholderContainer {
+    position: relative;
+}

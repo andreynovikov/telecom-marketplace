@@ -45,12 +45,9 @@ class Brand(db_wrapper.Model):
         return data
 
 
-class Category(db_wrapper.Model):
+class ServiceCategory(db_wrapper.Model):
     name = CharField(verbose_name='название')
     seq = SmallIntegerField(verbose_name='порядок')
-
-    class Meta:
-        order_by = ['seq']
 
     def __str__(self):
         return self.name
@@ -65,7 +62,7 @@ class Category(db_wrapper.Model):
 
 
 class Service(db_wrapper.Model):
-    category = ForeignKeyField(Category, verbose_name='категория')
+    category = ForeignKeyField(ServiceCategory, verbose_name='категория')
     name = CharField(verbose_name='название')
     description = CharField(null=True, verbose_name='описание')
 
@@ -89,6 +86,24 @@ class Subject(db_wrapper.Model):
         data = {
             'code': self.code,
             'name': self.name
+        }
+        return data
+
+
+class ProductCategory(db_wrapper.Model):
+    name = CharField(verbose_name='название')
+    seq = SmallIntegerField(verbose_name='порядок')
+    parent = ForeignKeyField('self', backref='children', null=True, verbose_name='родитель')
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'parent': self.parent_id
         }
         return data
 
@@ -205,9 +220,10 @@ def user_lookup_callback(_jwt_header, jwt_data):
 def setup_db(app):
     db_wrapper.database.create_tables([
         Brand,
-        Category,
+        ServiceCategory,
         Service,
         Subject,
+        ProductCategory,
         Product,
         Contractor,
         Geography,
