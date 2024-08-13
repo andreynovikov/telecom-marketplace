@@ -11,7 +11,7 @@ export async function getContractors() {
     if (!!!session)
         return {}
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/contractors`, {
         next: {
             revalidate: 3600,
             tags: ['contractors']
@@ -36,7 +36,7 @@ export async function getContractor(id) {
     if (!!!session)
         return {}
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/contractors/${id}`, {
         next: { tags: ['contractors'] },
         headers: {
             'Authorization': `Bearer ${session?.user?.access_token}`
@@ -84,7 +84,7 @@ export async function saveContractor(_currentState, formData) {
     }
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/contractors`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
@@ -121,7 +121,7 @@ export async function updateContractor(contractorId, values) {
     const session = await auth()
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors/${contractorId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/contractors/${contractorId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
@@ -157,7 +157,7 @@ export async function deleteContractor(contractorId) {
     const session = await auth()
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors/${contractorId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/contractors/${contractorId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
@@ -214,7 +214,7 @@ export async function saveCatalogue(_currentState, formData) {
         validated.data['catalogue'] = []
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/contractors`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
@@ -278,7 +278,7 @@ export async function saveGeography(_currentState, formData) {
         validated.data['geography'] = []
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/user/contractors`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/contractors`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
