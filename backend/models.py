@@ -1,7 +1,7 @@
 import csv
 
 from flask_jwt_extended import JWTManager
-from peewee import BooleanField, CharField, ForeignKeyField, SmallIntegerField
+from peewee import BooleanField, CharField, DecimalField, ForeignKeyField, SmallIntegerField
 from playhouse.flask_utils import FlaskDB
 
 from .fields import bcrypt, PasswordField  # noqa F401
@@ -208,6 +208,20 @@ class ContractorUser(db_wrapper.Model):
     user = ForeignKeyField(User, backref='contractors')
 
 
+class PriceFactor(db_wrapper.Model):
+    name = CharField(verbose_name='название')
+    factor = DecimalField(max_digits=4, decimal_places=2, verbose_name='коэффициент')
+
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'factor': self.factor
+        }
+        return data
+
+
 @jwt.user_identity_loader
 def user_identity_lookup(user):
     return user.id
@@ -231,7 +245,8 @@ def setup_db(app):
         Geography,
         Catalogue,
         User,
-        ContractorUser
+        ContractorUser,
+        PriceFactor
     ], safe=True)
     if not User.select().count():
         admin = User(name='Администратор', email='admin', password='admin', admin=True)

@@ -10,6 +10,7 @@ from ..models import STATUS_MODIFIED
 
 from .brand import bp as brand_bp
 from .product import bp as product_bp
+from .price_factor import bp as price_factor_bp
 from .service import bp as service_bp
 from .user import bp as user_bp
 
@@ -18,6 +19,7 @@ secure_file_name = re.compile(r"[/\\?%*:|\"<>\x7F\x00-\x1F]")
 bp = Blueprint('api', __name__)
 bp.register_blueprint(brand_bp)
 bp.register_blueprint(product_bp)
+bp.register_blueprint(price_factor_bp)
 bp.register_blueprint(service_bp)
 bp.register_blueprint(user_bp)
 
