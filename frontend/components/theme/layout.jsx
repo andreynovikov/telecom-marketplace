@@ -19,8 +19,12 @@ export default function ThemeLayout({ children }) {
     const { status } = useSession()
 
     const HEADER_SLOT = status === "authenticated" ? null : <div style={{ marginInline: "auto" }}>
-        <Button component={Link} href="/register" variant="contained" color="primary">
+        <Button component={Link} href="/register?as=provider" variant="contained" color="primary">
             Стать поставщиком
+        </Button>
+        {' '}
+        <Button component={Link} href="/register?as=consumer" variant="contained" color="secondary">
+            Зарегистрировать заказчика
         </Button>
     </div>
 
