@@ -1,41 +1,37 @@
-'use client'
+import Card from '@mui/material/Card'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { getSession } from 'next-auth/react'
-
+import { H5, Paragraph } from '@/components/theme/Typography'
 import DashboardHeader from '@/components/theme/pages-sections/customer-dashboard/dashboard-header'
 
-import ContractorStatus from '@/components/contractor/status'
+import ConsumerStatus from '@/components/contractor/consumer-status'
+import ProviderStatus from '@/components/contractor/provider-status'
 import UserInfo from '@/components/user/info'
 
 import { IconUser } from '@tabler/icons-react'
-import { makeSvgIcon } from '@/theme/icons'
 
-const UserIcon = (props) => makeSvgIcon(IconUser, props)
+import { auth } from '@/lib/auth'
 
-export default function Profile() {
-    const [user, setUser] = useState({})
-    const router = useRouter()
-
-    useEffect(() => {
-        (async () => {
-            const session = await getSession()
-            console.log(session)
-            if (!!!session)
-                router.refresh()
-            else if (session.user?.role === 'admin')
-                router.push('/admin/contractors')
-            else
-                setUser(session.user)
-        })()
-    }, [router])
+export default async function Profile() {
+    const session = await auth()
 
     return (
         <>
-            <DashboardHeader Icon={UserIcon} title="Мой профиль" buttonText="Редактировать профиль" href="/user/profile/edit" />
-            {user && <UserInfo user={user} />}
-            <ContractorStatus />
+            <DashboardHeader Icon={<IconUser />} title="Мой профиль" buttonText="Редактировать профиль" href="/user/profile/edit" />
+            <UserInfo user={session.user} />
+            {session.user.provider && <ProviderStatus />}
+            {session.user.consumer && (
+                <>
+                    <ConsumerStatus />
+                    {!session.user.position && (
+                        <Card sx={{ my: 3, px: 4, py: 2 }}>
+                            <H5 mb={0.5} color="primary.main" fontWeight={600}>Требуется дополнительная информация</H5>
+                            <Paragraph color="grey.600">
+                                Необходимо указать должность в профиле пользователя
+                            </Paragraph>
+                        </Card>
+                    )}
+                </>
+            )}
         </>
     )
 }

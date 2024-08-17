@@ -10,7 +10,7 @@ import { StyledTableHeaderCell } from '@/components/theme/pages-sections/vendor-
 
 import Scrollbar from '@/components/theme/scrollbar'
 
-import ContractorRow from '@/components/contractor/admin/row'
+import { ConsumerRow } from '@/components/contractor/admin/row'
 
 import { getContractors } from '@/components/contractor/queries'
 
@@ -25,8 +25,16 @@ const tableHeading = [{
     label: "ИНН",
     align: "left"
 }, {
+    id: "end_consumer",
+    label: "Конечный потребитель",
+    align: "center"
+}, {
+    id: "price_factor",
+    label: "Категория цен",
+    align: "center"
+}, {
     id: "status",
-    label: "Статус анкеты",
+    label: "Статус",
     align: "center"
 }, {
     id: "action",
@@ -34,14 +42,15 @@ const tableHeading = [{
     align: "center"
 }];
 
-export default async function ContractorList() {
+export default async function ConsumerList() {
     const session = await auth()
     if (session?.user?.role !== "admin") return <div>Not authenticated</div>
 
-    const contractors = await getContractors()
+    const contractors = await getContractors([{ field: 'kind', value: 2 }])
 
+    console.log(contractors)
     return (
-        <PageWrapper title="Поставщики">
+        <PageWrapper title="Заказчики">
             <Card>
                 <Scrollbar>
                     <TableContainer sx={{ minWidth: 900 }}>
@@ -50,13 +59,13 @@ export default async function ContractorList() {
                                 <TableRow>
                                     {tableHeading.map(headCell => (
                                         <StyledTableHeaderCell key={headCell.id} align={headCell.align}>
-                                                {headCell.label}
+                                            {headCell.label}
                                         </StyledTableHeaderCell>)
                                     )}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {contractors.map(contractor => <ContractorRow key={contractor.id} contractor={contractor} />)}
+                                {contractors.map(contractor => <ConsumerRow key={contractor.id} contractor={contractor} />)}
                             </TableBody>
                         </Table>
                     </TableContainer>

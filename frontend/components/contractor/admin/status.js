@@ -1,13 +1,23 @@
+'use client'
+
 import { makeSvgIcon } from '@/theme/icons'
 
 import { IconClipboardPlus, IconClipboardTypography, IconClipboardData, IconClipboardCheck, IconClipboardX } from '@tabler/icons-react'
 
-const statuses = {
+const providerStatuses = {
     0: 'новая',
     1: 'обновлённая',
     2: 'на рассмотрении',
     16: 'подтверждённая',
     64: 'отклонённая'
+}
+
+const consumerStatuses = {
+    0: 'новый',
+    1: 'обновлён',
+    2: 'на рассмотрении',
+    16: 'подтверждён',
+    64: 'отклонён'
 }
 
 const statusIcons = {
@@ -44,7 +54,7 @@ const makeIcon = (status, hideText, props) => {
         return makeSvgIcon(statusIcons[status], { value: status, color: statusColors[status], ...iconProps, ...props })
 }
 
-export default function ContractorStatus({status, hideText, ...props}) {
+export default function ContractorStatus({status, kind, hideText, ...props}) {
     return (
         <>
             <Switch test={status}>
@@ -54,7 +64,7 @@ export default function ContractorStatus({status, hideText, ...props}) {
                 {makeIcon(16, hideText, props)}
                 {makeIcon(64, hideText, props)}
             </Switch>
-            {!hideText && statuses[status]}
+            {!hideText && (kind === 1 ? providerStatuses[status] : consumerStatuses[status])}
         </>        
     )
 }

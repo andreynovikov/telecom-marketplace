@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from 'react'
 
 import Card from '@mui/material/Card'
@@ -5,14 +7,14 @@ import { H5, Paragraph } from '@/components/theme/Typography'
 
 import { getContractors } from '@/components/contractor/queries'
 
-export default function ContractorStatus() {
+export default function ProviderStatus() {
     const [contractor, setContractor] = useState({})
 
     useEffect(() => {
         getContractors().then((result) => setContractor(result.length > 0 ? result[0] : {}))
     }, [])
 
-    return <Card sx={{px: 4, py: 2}}>
+    return <Card sx={{my: 3, px: 4, py: 2}}>
         <H5 mb={0.5} color="primary.main" fontWeight={600}>
             {contractor.status === 64 ? "Анкета поставщика отклонена" :
                 contractor.status === 16 ? "Анкета поставщика подтверждена" :

@@ -13,7 +13,7 @@ export function ContractorActions(props) {
 
     return (
         <>
-            <Link href={`contractors/${contractor.id}`}>
+            <Link href={`${contractor.id}`}>
                 <StyledIconButton>
                     <EditIcon />
                 </StyledIconButton>

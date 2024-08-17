@@ -63,7 +63,9 @@ const userSchema = z.object({
     name: z.string().trim().min(1),
     email: z.string().trim().email(),
     phone: z.string().trim().min(10).optional().or(z.literal('')),
-    admin: z.boolean()
+    provider: z.boolean().optional(),
+    consumer: z.boolean().optional(),
+    admin: z.boolean().optional()
 }).required({
     name: true,
     email: true
@@ -119,6 +121,9 @@ export async function updateUser(userId, _currentState, formData) {
     if (values.password === '')
         delete values.password
     values.admin = !!values.admin
+    values.provider = !!values.provider
+    values.consumer = !!values.consumer
+
     const session = await auth()
 
     const validated = userSchema.passthrough().safeParse(values)

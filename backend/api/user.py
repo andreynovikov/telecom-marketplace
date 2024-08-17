@@ -67,6 +67,8 @@ def update_user(id):
 
     if not current_user.admin:
         data.pop('admin')
+        data.pop('provider')
+        data.pop('consumer')
 
     if 'password' in data:
         password = data.get('password')

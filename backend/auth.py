@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import create_access_token, create_refresh_token, current_user, jwt_required, set_access_cookies, unset_jwt_cookies
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, set_access_cookies, unset_jwt_cookies
 
 from .altcha import challenge_altcha, validate_altcha
 from .models import bcrypt, User
@@ -33,7 +33,9 @@ def register():
         email=email,
         password=data.get('password'),
         name=data.get('name'),
-        phone=data.get('phone', None)
+        phone=data.get('phone', None),
+        provider=data.get('provider', False),
+        consumer=data.get('consumer', False)
     )
     user.save()
     # generate the access token
@@ -42,11 +44,8 @@ def register():
     response = jsonify(
         access_token=access_token,
         refresh_token=refresh_token,
-        id=user.id,
-        email=user.email,
-        name=user.name,
-        phone=user.phone,
-        role='user'
+        role='user',
+        **user.serialize
     )
     set_access_cookies(response, access_token)
     return response, 201
@@ -69,11 +68,8 @@ def login():
             response = jsonify(
                 access_token=access_token,
                 refresh_token=refresh_token,
-                id=user.id,
-                email=user.email,
-                name=user.name,
-                phone=user.phone,
-                role=role
+                role=role,
+                **user.serialize
             )
             set_access_cookies(response, access_token)  # cookies are used for admin interface
             return response
@@ -81,18 +77,6 @@ def login():
             return jsonify(msg='Неправильный пароль'), 401
     else:
         return jsonify(msg='Пользователя с такими учётными данными не существует'), 401
-
-
-@bp.route('/status', methods=['GET'])
-@jwt_required()
-def status():
-    return {
-        'user_id': current_user.id,
-        'email': current_user.email,
-        'name': current_user.name,
-        'phone': current_user.phone,
-        'admin': current_user.admin
-    }
 
 
 @bp.route('/logout', methods=['POST'])

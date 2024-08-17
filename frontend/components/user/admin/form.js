@@ -9,6 +9,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
+import Divider from '@mui/material/Divider'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import TextField from '@mui/material/TextField'
@@ -54,14 +55,36 @@ export default function UserEditDialog(props) {
                     defaultValue={user?.email}
                     InputLabelProps={{ shrink: !!user?.email ? true : undefined }} />
 
-                <TextField
-                    fullWidth
-                    name="phone"
-                    type="text"
-                    label="Телефон"
-                    margin="dense"
-                    defaultValue={user?.phone}
-                    InputLabelProps={{ shrink: !!user?.phone ? true : undefined }} />
+                {user?.id > 1 && (
+                    <>
+                        <TextField
+                            fullWidth
+                            name="phone"
+                            type="text"
+                            label="Телефон"
+                            margin="dense"
+                            defaultValue={user?.phone}
+                            InputLabelProps={{ shrink: !!user?.phone ? true : undefined }} />
+
+                        <TextField
+                            fullWidth
+                            name="position"
+                            type="text"
+                            label="Должность"
+                            margin="dense"
+                            defaultValue={user?.position}
+                            InputLabelProps={{ shrink: !!user?.position ? true : undefined }} />
+
+                        <FormGroup>
+                            <FormControlLabel control={<Checkbox name="provider" value="1" defaultChecked={user?.provider} />} label="Представитель поставщика" />
+                        </FormGroup>
+                        <FormGroup>
+                            <FormControlLabel control={<Checkbox name="consumer" value="1" defaultChecked={user?.consumer} />} label="Представитель заказчика" />
+                        </FormGroup>
+                    </>
+                )}
+
+                <Divider sx={{ my: 1 }} />
 
                 <TextField
                     fullWidth

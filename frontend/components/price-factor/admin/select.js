@@ -1,6 +1,7 @@
+'use client'
+
 import { useState, useEffect } from 'react'
 
-import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
@@ -18,12 +19,9 @@ export default function PriceFactorSelect(props) {
 
     return (
         <FormControl fullWidth margin="dense" required={required}>
-            <InputLabel id="price-factor-select-label">Категория цен</InputLabel>
             <Select
-                labelId="price-factor-select-label"
                 name={name}
                 defaultValue={defaultValue || ''}
-                label="Категория цен"
             >
                 {priceFactors.map((factor) => (
                     <MenuItem key={factor.id} value={factor.id}>{factor.name}</MenuItem>

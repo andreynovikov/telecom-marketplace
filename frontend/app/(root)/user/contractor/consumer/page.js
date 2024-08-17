@@ -6,6 +6,8 @@ import { useFormState, useFormStatus } from 'react-dom'
 import Alert from '@mui/material/Alert'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import TextField from '@mui/material/TextField'
 import { Paragraph } from '@/components/theme/Typography'
 
@@ -15,29 +17,28 @@ import DashboardHeader from '@/components/theme/pages-sections/customer-dashboar
 
 import { getContractors, saveContractor } from '@/components/contractor/queries'
 
-import FileUpload from '@/components/ui/file-upload'
-
 import { IconClipboardText } from '@tabler/icons-react'
-import { makeSvgIcon } from '@/theme/icons'
-
-const ApplicationIcon = (props) => makeSvgIcon(IconClipboardText, props)
 
 export default function ContractorForm() {
     const [data, setData] = useState({})
+    const [endConsumer, setEndConsumer] = useState(false)
 
-    const [state, dispatch] = useFormState(saveContractor, {success: true})
+    const [state, dispatch] = useFormState(saveContractor, { success: true })
 
     useEffect(() => {
         if (state.success)
-            getContractors().then((result) => setData(result.length > 0 ? result[0] : {}))
+            getContractors().then((result) => {
+                setData(result.length > 0 ? result[0] : {})
+                setEndConsumer(result.length > 0 ? result[0].end_consumer : false)
+            })
     }, [state])
 
     return (
         <>
-            <DashboardHeader Icon={ApplicationIcon} href="/user/profile" title="Анкета поставщика" buttonText="Вернуться в профиль" />
+            <DashboardHeader Icon={<IconClipboardText />} href="/user/profile" title="Информация о заказчике" buttonText="Вернуться в профиль" />
             <Card sx={{ p: 3 }}>
                 <form action={dispatch}>
-                    <input type="hidden" name="kind" value="1" />
+                    <input type="hidden" name="kind" value="2" />
                     <Grid container spacing={3}>
                         <Grid item md={6} xs={12}>
                             <TextField
@@ -83,50 +84,24 @@ export default function ContractorForm() {
                                 InputLabelProps={{ shrink: !!data.contact_phone ? true : undefined }} />
                         </Grid>
 
-                        <Grid item md={6} xs={12}>
-                            <TextField
-                                fullWidth
-                                name="cover_letter"
-                                label="Краткая информация о компании"
-                                multiline
-                                rows={4}
-                                defaultValue={data.cover_letter}
-                                InputLabelProps={{ shrink: !!data.cover_letter ? true : undefined }} />
-                        </Grid>
-
-                        <Grid item md={6} xs={12}>
-                            <TextField
-                                fullWidth
-                                name="experience"
-                                label="Краткое описание опыта работы"
-                                multiline
-                                rows={4}
-                                defaultValue={data.experience}
-                                InputLabelProps={{ shrink: !!data.experience ? true : undefined }} />
-                        </Grid>
-
-                        <Grid item md={6} xs={12}>
-                            <FileUpload
-                                name="cover_file"
-                                defaultValue={data.cover_file}
-                                description="файл с информацией о компании"
-                                variants="Документ или архив" />
-                        </Grid>
-
-                        <Grid item md={6} xs={12}>
-                            <FileUpload
-                                name="experience_file"
-                                defaultValue={data.experience_file}
-                                description="файл с опытом работы"
-                                variants="Документ или архив" />
+                        <Grid item xs={12}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        name="end_consumer"
+                                        value={true}
+                                        checked={endConsumer}
+                                        onChange={(event) => setEndConsumer(event.target.checked)}
+                                    />}
+                                label="Компания является конечным потребителем товаров и услуг, предложенных на маркетплейсе" />
                         </Grid>
 
                         <Grid item xs={12}>
                             <Button type="submit" variant="contained" color="primary">
                                 Сохранить
                             </Button>
-                            { !state.success && (
-                                <Alert severity="error" sx={{my: 1}}>{JSON.stringify(state)}</Alert>                                
+                            {!state.success && (
+                                <Alert severity="error" sx={{ my: 1 }}>{JSON.stringify(state)}</Alert>
                             )}
                         </Grid>
 

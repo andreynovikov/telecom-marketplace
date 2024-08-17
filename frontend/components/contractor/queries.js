@@ -5,16 +5,27 @@ import { revalidateTag } from 'next/cache'
 
 import { auth } from '@/lib/auth'
 
-export async function getContractors() {
+export async function getContractors(filters=null) {
     const session = await auth()
 
     if (!!!session)
         return {}
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/contractors`, {
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_ROOT}/contractors`)
+
+    if (filters !== null)
+        for (const filter of filters)
+            if (Array.isArray(filter.value)) {
+                for (const value of filter.value)
+                    url.searchParams.append(filter.field, value)
+            } else {
+                url.searchParams.append(filter.field, filter.value)
+            }
+
+    const res = await fetch(url.toString(), {
         next: {
             revalidate: 3600,
-            tags: ['contractors']
+            tags: filters !== null ? undefined : ['contractors']
         },
         headers: {
             'Authorization': `Bearer ${session?.user?.access_token}`
@@ -70,6 +81,8 @@ export async function saveContractor(_currentState, formData) {
         else
             values[key] = formData.get(key)
     }
+    values.end_consumer = !!values.end_consumer
+
     console.log(values)
     const session = await auth()
 

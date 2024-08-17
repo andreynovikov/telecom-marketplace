@@ -1,3 +1,5 @@
+'use client'
+
 import Card from '@mui/material/Card'
 import useMediaQuery from '@mui/material/useMediaQuery'
 

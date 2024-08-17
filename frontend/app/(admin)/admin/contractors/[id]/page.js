@@ -13,8 +13,10 @@ import Actions from '@/components/contractor/admin/buttons'
 import Service from '@/components/service'
 import Subject from '@/components/subject'
 
-import { getContractor, updateContractor } from '@/components/contractor/queries'
+import PriceFactorSelect from '@/components/price-factor/admin/select'
 import FileDownload from '@/components/ui/file-download'
+
+import { getContractor, updateContractor } from '@/components/contractor/queries'
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
@@ -50,7 +52,7 @@ export default async function Contractor({ params }) {
     }
 
     return (
-        <PageWrapper title={contractor.name}>
+        <PageWrapper title={`${contractor.kind === 1 ? 'Поставщик' : 'Заказчик'}: ${contractor.name}`}>
             <Actions contractor={contractor} />
             <Card sx={{ p: 3 }} component="form" action={handleFormAction}>
                 <Scrollbar>
@@ -102,77 +104,95 @@ export default async function Contractor({ params }) {
                                 variant="standard"
                                 defaultValue={contractor.contact_phone} />
                         </Grid>
-                        <Grid item sm={3} xs={12}>
-                            <Typography color="grey.600">
-                                Информация о компании
-                            </Typography>
-                        </Grid>
-                        <Grid item sm={9} xs={12}>
-                            {contractor.cover_letter}
-                        </Grid>
-                        <Grid item sm={3} xs={12}>
-                            <Typography color="grey.600">
-                                Опыт работы
-                            </Typography>
-                        </Grid>
-                        <Grid item sm={9} xs={12}>
-                            {contractor.experience}
-                        </Grid>
-                        <Grid item sm={3} xs={12}>
-                            <Typography color="grey.600">
-                                Перечень услуг
-                            </Typography>
-                        </Grid>
-                        <Grid item sm={9} xs={12}>
-                            {contractor.services.map((item) => (
-                                <FlexBox key={item.id} alignItems="center">
-                                    <Checkbox
-                                        name="catalogue"
-                                        value={item.id}
-                                        defaultChecked={item.approved}
-                                        {...checkboxProps} />
-                                    <Service id={item.id} />
-                                </FlexBox>
-                            ))}
-                        </Grid>
-                        <Grid item sm={3} xs={12}>
-                            <Typography color="grey.600">
-                                География услуг
-                            </Typography>
-                        </Grid>
-                        <Grid item sm={9} xs={12}>
-                            {contractor.geography.map((item) => (
-                                <FlexBox key={item.code} alignItems="center">
-                                    <Checkbox
-                                        name="geography"
-                                        value={item.code}
-                                        defaultChecked={item.approved}
-                                        {...checkboxProps} />
-                                    <Subject code={item.code} />
-                                </FlexBox>
-                            ))}
-                        </Grid>
-                        {contractor.cover_file && (
+                        {contractor.kind === 1 && (
                             <>
                                 <Grid item sm={3} xs={12}>
                                     <Typography color="grey.600">
-                                        Файл с информацией о компании
+                                        Информация о компании
                                     </Typography>
                                 </Grid>
                                 <Grid item sm={9} xs={12}>
-                                    <FileDownload owner={contractor.users[0]} fileName={contractor.cover_file} />
+                                    {contractor.cover_letter}
                                 </Grid>
+                                <Grid item sm={3} xs={12}>
+                                    <Typography color="grey.600">
+                                        Опыт работы
+                                    </Typography>
+                                </Grid>
+                                <Grid item sm={9} xs={12}>
+                                    {contractor.experience}
+                                </Grid>
+                                <Grid item sm={3} xs={12}>
+                                    <Typography color="grey.600">
+                                        Перечень услуг
+                                    </Typography>
+                                </Grid>
+                                <Grid item sm={9} xs={12}>
+                                    {contractor.services.map((item) => (
+                                        <FlexBox key={item.id} alignItems="center">
+                                            <Checkbox
+                                                name="catalogue"
+                                                value={item.id}
+                                                defaultChecked={item.approved}
+                                                {...checkboxProps} />
+                                            <Service id={item.id} />
+                                        </FlexBox>
+                                    ))}
+                                </Grid>
+                                <Grid item sm={3} xs={12}>
+                                    <Typography color="grey.600">
+                                        География услуг
+                                    </Typography>
+                                </Grid>
+                                <Grid item sm={9} xs={12}>
+                                    {contractor.geography.map((item) => (
+                                        <FlexBox key={item.code} alignItems="center">
+                                            <Checkbox
+                                                name="geography"
+                                                value={item.code}
+                                                defaultChecked={item.approved}
+                                                {...checkboxProps} />
+                                            <Subject code={item.code} />
+                                        </FlexBox>
+                                    ))}
+                                </Grid>
+                                {contractor.cover_file && (
+                                    <>
+                                        <Grid item sm={3} xs={12}>
+                                            <Typography color="grey.600">
+                                                Файл с информацией о компании
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item sm={9} xs={12}>
+                                            <FileDownload owner={contractor.users[0]} fileName={contractor.cover_file} />
+                                        </Grid>
+                                    </>
+                                )}
+                                {contractor.experience_file && (
+                                    <>
+                                        <Grid item sm={3} xs={12}>
+                                            <Typography color="grey.600">
+                                                Файл с опытом работы
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item sm={9} xs={12}>
+                                            <FileDownload owner={contractor.users[0]} fileName={contractor.experience_file} />
+                                        </Grid>
+                                    </>
+                                )}
                             </>
                         )}
-                        {contractor.experience_file && (
+                        {contractor.kind === 2 && (
                             <>
                                 <Grid item sm={3} xs={12}>
                                     <Typography color="grey.600">
-                                        Файл с опытом работы
+                                        Категория цен
                                     </Typography>
                                 </Grid>
                                 <Grid item sm={9} xs={12}>
-                                    <FileDownload owner={contractor.users[0]} fileName={contractor.experience_file} />
+                                    <PriceFactorSelect
+                                        name="price_factor"
+                                        defaultValue={contractor.price_factor} />
                                 </Grid>
                             </>
                         )}

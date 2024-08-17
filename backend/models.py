@@ -130,9 +130,25 @@ class Product(db_wrapper.Model):
         return data
 
 
+class PriceFactor(db_wrapper.Model):
+    name = CharField(verbose_name='название')
+    factor = DecimalField(max_digits=4, decimal_places=2, verbose_name='коэффициент')
+
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'factor': self.factor
+        }
+        return data
+
+
 class Contractor(db_wrapper.Model):
     status = SmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NEW, index=True, verbose_name='статус')
     kind = SmallIntegerField(choices=KIND_CHOICES, index=True, verbose_name='тип контрагента')
+    price_factor = ForeignKeyField(PriceFactor, null=True, verbose_name='категория цен')
+    end_consumer = BooleanField(default=False, verbose_name='конечный потребитель')
     name = CharField(max_length=None, verbose_name='название')
     inn = CharField(max_length=12, unique=True, verbose_name='ИНН')
     legal_address = CharField(max_length=None, verbose_name='юридический адрес')
@@ -149,6 +165,8 @@ class Contractor(db_wrapper.Model):
             'id': self.id,
             'kind': self.kind,
             'status': self.status,
+            'price_factor': self.price_factor_id,
+            'end_consumer': self.end_consumer,
             'name': self.name,
             'inn': self.inn,
             'legal_address': self.legal_address,
@@ -189,6 +207,9 @@ class User(db_wrapper.Model):
     phone = CharField(max_length=None, null=True, verbose_name='телефон')
     email = CharField(unique=True, verbose_name='e-mail')
     password = PasswordField(verbose_name='пароль')
+    position = CharField(max_length=None, null=True, verbose_name='должность')
+    provider = BooleanField(default=False, verbose_name='представитель поставщика')
+    consumer = BooleanField(default=False, verbose_name='представитель заказчика')
     admin = BooleanField(default=False, verbose_name='администратор')
 
     @property
@@ -198,6 +219,9 @@ class User(db_wrapper.Model):
             'name': self.name,
             'phone': self.phone,
             'email': self.email,
+            'position': self.position,
+            'provider': self.provider,
+            'consumer': self.consumer,
             'admin': self.admin
         }
         return data
@@ -206,20 +230,6 @@ class User(db_wrapper.Model):
 class ContractorUser(db_wrapper.Model):
     contractor = ForeignKeyField(Contractor, backref='users')
     user = ForeignKeyField(User, backref='contractors')
-
-
-class PriceFactor(db_wrapper.Model):
-    name = CharField(verbose_name='название')
-    factor = DecimalField(max_digits=4, decimal_places=2, verbose_name='коэффициент')
-
-    @property
-    def serialize(self):
-        data = {
-            'id': self.id,
-            'name': self.name,
-            'factor': self.factor
-        }
-        return data
 
 
 @jwt.user_identity_loader

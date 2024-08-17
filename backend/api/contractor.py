@@ -20,6 +20,10 @@ def list_contractors():
     if not current_user.admin:
         contractors = contractors.where(User.id == current_user.id)
 
+    for field, values in request.args.lists():
+        if field == 'kind':
+            contractors = contractors.where(Contractor.kind == values[0])
+
     if request.method == 'POST':
         data = request.get_json()
         current_app.logger.error(data)

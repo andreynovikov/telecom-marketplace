@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from 'react'
 
 import InputLabel from '@mui/material/InputLabel'

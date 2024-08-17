@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useFormState } from 'react-dom'
+import { useSearchParams } from 'next/navigation'
+
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
@@ -27,6 +29,9 @@ export default function SignUp() {
     const [agreement, setAgreement] = useState(false)
     const [result, dispatch] = useFormState(register, undefined)
     const { visiblePassword, togglePasswordVisible } = usePasswordVisible()
+    const searchParams = useSearchParams()
+    const as = searchParams.get('as')
+
     const inputProps = {
         endAdornment: <EyeToggleButton show={visiblePassword} click={togglePasswordVisible} />
     }
@@ -37,6 +42,9 @@ export default function SignUp() {
 
     return (
         <form action={dispatch}>
+            {as === 'provider' && <input type="hidden" name="provider" value="1" />}
+            {as === 'consumer' && <input type="hidden" name="consumer" value="1" />}
+
             <BazaarTextField
                 mb={1.5}
                 fullWidth
