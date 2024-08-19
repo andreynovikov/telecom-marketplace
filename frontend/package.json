@@ -20,7 +20,7 @@
     "@tabler/icons-react": "^3.12.0",
     "altcha": "^0.6.0",
     "moment": "^2.30.1",
-    "next": "^14.2.5",
+    "next": "^14.1.4",
     "next-auth": "^5.0.0-beta.16",
     "pretty-bytes": "^6.1.1",
     "react": "^18",
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "eslint": "^8",
-    "eslint-config-next": "^14.2.5",
+    "eslint-config-next": "^14.1.4",
     "sass": "^1.77.8"
   }
 }
