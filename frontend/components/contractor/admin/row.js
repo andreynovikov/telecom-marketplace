@@ -60,7 +60,7 @@ export async function ConsumerRow({ contractor }) {
             {end_consumer && <IconCheck size={20} />}
         </StyledTableCell>
         <StyledTableCell align="center">
-            <PriceFactor id={price_factor} />
+            {price_factor ? <PriceFactor id={price_factor} /> : '-'}
         </StyledTableCell>
         <StyledTableCell align="center">
             <ContractorStatus status={status} kind={kind} />
