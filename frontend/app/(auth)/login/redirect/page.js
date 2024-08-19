@@ -17,7 +17,7 @@ export default function Profile() {
             if (!!!session)
                 router.refresh()
             else if (session.user?.role === 'admin')
-                router.push('/admin/contractors')
+                router.push('/admin/contractors/providers')
             else
                 router.push('/user/profile')
         })()
