@@ -25,7 +25,7 @@ export async function getContractors(filters=null) {
     const res = await fetch(url.toString(), {
         next: {
             revalidate: 3600,
-            tags: filters !== null ? undefined : ['contractors']
+            tags: ['contractors']
         },
         headers: {
             'Authorization': `Bearer ${session?.user?.access_token}`
