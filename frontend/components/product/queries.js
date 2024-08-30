@@ -15,6 +15,17 @@ export async function getProducts() {
     return res.json()
 }
 
+export async function getProduct(productId) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/products/${productId}`, { next: { tags: `products__${productId}` } })
+
+    if (!res.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        throw new Error('Failed to fetch data')
+    }
+
+    return res.json()
+}
+
 export async function createProduct(_currentState, formData) {
     //const values = Object.fromEntries(formData.entries())
     const session = await auth()
@@ -70,6 +81,7 @@ export async function updateProduct(productId, _currentState, formData) {
         if (response.ok) {
             console.log(result)
             revalidateTag('products')
+            revalidateTag(`products__${productId}`)
             return result
         } else {
             console.error(result.msg)
@@ -100,6 +112,7 @@ export async function deleteProduct(productId) {
         const result = await response.json();
         if (response.ok) {
             revalidateTag('products')
+            revalidateTag(`products__${productId}`)
             return result
         } else {
             console.error(result.msg)
