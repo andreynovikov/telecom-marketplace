@@ -26,7 +26,6 @@ export default function ProductCard({
         name,
         image
     } = product || {};
-    console.log(product)
 
     /*
     const {
