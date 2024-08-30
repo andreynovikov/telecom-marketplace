@@ -1,9 +1,17 @@
-import ThemeLayout from '@/components/theme/layout'
+import { Fragment } from 'react'
+
+import Footer from "@/components/theme/footer"
+//import NavigationList from "./navbar/nav-list/nav-list"
+import { MobileNavigationBar } from "@/components/theme/mobile-navigation"
+import StickyHeader from '@/components/ui/sticky-header'
 
 export default function RootLayout({ children }) {
     return (
-        <ThemeLayout>
+        <Fragment>
+            <StickyHeader scrollDistance={300} />
             {children}
-        </ThemeLayout>
+            <MobileNavigationBar />
+            <Footer />
+        </Fragment>
     )
 }
