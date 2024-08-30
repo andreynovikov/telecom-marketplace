@@ -159,4 +159,4 @@ def delete_product(id):
         return jsonify(msg='Доступ запрещён'), 401
 
     Product.delete_by_id(id)
-    return id
+    return jsonify(id)
