@@ -1,6 +1,8 @@
 import csv
+import os
 
 from flask_jwt_extended import JWTManager
+from flask_thumbnails import Thumbnail
 from peewee import BooleanField, CharField, DecimalField, ForeignKeyField, SmallIntegerField
 from playhouse.flask_utils import FlaskDB
 
@@ -8,6 +10,7 @@ from .fields import bcrypt, PasswordField  # noqa F401
 
 
 jwt = JWTManager()
+thumbnail = Thumbnail()
 db_wrapper = FlaskDB()
 
 KIND_PROVIDER = 1
@@ -124,9 +127,20 @@ class Product(db_wrapper.Model):
             'name': self.name,
             'brand': self.brand_id,
             'category': self.category_id,
-            'image': self.image,
             'description': self.description
         }
+
+        if self.image:
+            image_path = os.path.join('products', self.image)
+            data['image'] = {
+                'src': '/' + image_path,
+                'thumbnail': {
+                    'src': thumbnail.get_thumbnail(image_path, '260x280'),
+                    'width': 260,
+                    'height': 280
+                }
+            }
+
         return data
 
 
