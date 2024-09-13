@@ -25,11 +25,19 @@ export default function CategorySelect(props) {
 
     useEffect(() => {
         const { tree, refs } = categories.reduce(({ tree, refs }, category) => {
-            refs[category.id] = category
+            if (category.id in refs)
+                refs[category.id] = { ...category, ...refs[category.id] }
+            else
+                refs[category.id] = category
             if (category.parent === null) {
                 tree.push(category)
             } else {
-                if (!('children' in refs[category.parent]))
+                if (!(category.parent in refs))
+                    refs[category.parent] = {
+                        id: category.parent,
+                        children: []
+                    }
+                else if (!('children' in refs[category.parent]))
                     refs[category.parent].children = []
                 refs[category.parent].children.push(category)
             }
