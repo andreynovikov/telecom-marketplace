@@ -22,6 +22,9 @@ export default async function ProductRow({ product }) {
                 <StyledTableCell align="left">
                     <Category id={product.category} />
                 </StyledTableCell>
+                <StyledTableCell align="right">
+                    {product.price}
+                </StyledTableCell>
                 <StyledTableCell align="center">
                     {product.image ? <IconCheck size={20} /> : <IconX size={20} />}
                 </StyledTableCell>

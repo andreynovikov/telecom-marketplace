@@ -7,6 +7,8 @@ import LazyImage from '@/components/theme/LazyImage'
 
 import Brand from '@/components/brand'
 
+import { currency } from '@/lib'
+
 export default async function ProductIntro(props) {
     const { product } = props
 
@@ -52,14 +54,14 @@ export default async function ProductIntro(props) {
                     <H6><Brand id={product.brand} /></H6>
                 </FlexBox>
 
-                {/*
                 <Box pt={1} mb={3}>
                     <H2 color="primary.main" mb={0.5} lineHeight="1">
-                        {currency(price)}
+                        {currency(product.price)}
                     </H2>
-                    <Box color="inherit">Stock Available</Box>
+                    {/*<Box color="inherit">Stock Available</Box>*/}
                 </Box>
 
+                {/*
                 {!cartItem?.qty ? <Button color="primary" variant="contained" onClick={handleCartAmountChange(1)} sx={{
                     mb: 4.5,
                     px: "1.75rem",

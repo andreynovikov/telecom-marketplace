@@ -14,7 +14,7 @@ import { H6, Paragraph } from "@/components/theme/Typography";
 
 //import useProduct from "../use-product";
 
-//import { calculateDiscount, currency } from "lib";
+import { currency } from '@/lib'
 
 import { Content, PriceText } from "./styles";
 
@@ -66,7 +66,8 @@ export default function ProductCard({
                         alt={name}
                         width={image.thumbnail.width}
                         height={image.thumbnail.height}
-                        src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${image.thumbnail.src}`} />
+                        src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${image.thumbnail.src}`}
+                        sx={{p: 5}} />
                 )}
             </FlexBox>
         </Link>
@@ -76,11 +77,11 @@ export default function ProductCard({
                 {name}
             </H6>
 
-            {/*
             <PriceText>
-                { price }
+                { currency(product.price) }
             </PriceText>
 
+            {/*
             <div className={clsx({
                 "button-small": btnSmall
             })}>

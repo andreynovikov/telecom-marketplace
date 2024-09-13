@@ -3,7 +3,7 @@ import os
 
 from flask_jwt_extended import JWTManager
 from flask_thumbnails import Thumbnail
-from peewee import BooleanField, CharField, DecimalField, ForeignKeyField, SmallIntegerField
+from peewee import BooleanField, CharField, DecimalField, ForeignKeyField, IntegerField, SmallIntegerField
 from playhouse.flask_utils import FlaskDB
 
 from .fields import bcrypt, PasswordField  # noqa F401
@@ -118,6 +118,7 @@ class Product(db_wrapper.Model):
     category = ForeignKeyField(ProductCategory, verbose_name='категория')
     image = CharField(max_length=None, null=True, verbose_name='изображение')
     description = CharField(max_length=None, null=True, verbose_name='описание')
+    price = IntegerField(verbose_name='цена')
 
     @property
     def serialize(self):
@@ -127,12 +128,14 @@ class Product(db_wrapper.Model):
             'name': self.name,
             'brand': self.brand_id,
             'category': self.category_id,
-            'description': self.description
+            'description': self.description,
+            'price': self.price
         }
 
         if self.image:
             image_path = os.path.join('products', self.image)
             data['image'] = {
+                'filename': self.image,
                 'src': '/' + image_path,
                 'thumbnail': {
                     'src': thumbnail.get_thumbnail(image_path, '260x280'),

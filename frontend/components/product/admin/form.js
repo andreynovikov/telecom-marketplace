@@ -62,6 +62,15 @@ export default function ProductEditDialog(props) {
                     InputLabelProps={{ shrink: !!product?.name ? true : undefined }} />
 
                 <TextField
+                    required
+                    name="price"
+                    type="text"
+                    label="Цена"
+                    margin="dense"
+                    defaultValue={product?.price}
+                    InputLabelProps={{ shrink: !!product?.price ? true : undefined }} />
+
+                <TextField
                     fullWidth
                     name="description"
                     label="Описание"
@@ -78,7 +87,7 @@ export default function ProductEditDialog(props) {
 
                 <Box margin={1}>
                     Изображение:{' '}
-                    {product?.image && <b>{product.image}{' '}</b>}
+                    {product?.image && <b>{product.image.filename}{' '}</b>}
                     <ImageUpload name="image" />
                 </Box>
             </DialogContent>
