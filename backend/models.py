@@ -1,9 +1,11 @@
 import csv
 import os
 
+from datetime import datetime
+
 from flask_jwt_extended import JWTManager
 from flask_thumbnails import Thumbnail
-from peewee import BooleanField, CharField, DecimalField, ForeignKeyField, IntegerField, SmallIntegerField
+from peewee import BooleanField, CharField, DateTimeField, DecimalField, ForeignKeyField, IntegerField, SmallIntegerField
 from playhouse.flask_utils import FlaskDB
 
 from .fields import bcrypt, PasswordField  # noqa F401
@@ -249,6 +251,72 @@ class ContractorUser(db_wrapper.Model):
     user = ForeignKeyField(User, backref='contractors')
 
 
+class Cart(db_wrapper.Model):
+    user = ForeignKeyField(User, backref='cart')
+    product = ForeignKeyField(Product)
+    quantity = SmallIntegerField(verbose_name='количество')
+    created = DateTimeField(default=datetime.now, verbose_name='дата добавления')
+
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'product': self.product.serialize,
+            'quantity': self.quantity
+        }
+        return data
+
+
+ORDER_STATUS_NEW = 0
+ORDER_STATUS_PROCESSING = 1
+ORDER_STATUS_CANCELED = 16384
+ORDER_STATUS_DONE = 32768
+
+ORDER_STATUS_CHOICES = [
+    (ORDER_STATUS_NEW, 'новый'),
+    (ORDER_STATUS_PROCESSING, 'в обработке'),
+    (ORDER_STATUS_CANCELED, 'отменён'),
+    (ORDER_STATUS_DONE, 'выполнен')
+]
+
+
+class Order(db_wrapper.Model):
+    user = ForeignKeyField(User, backref='cart')
+    status = SmallIntegerField(choices=ORDER_STATUS_CHOICES, default=ORDER_STATUS_NEW, index=True, verbose_name='статус')
+    created = DateTimeField(default=datetime.now, verbose_name='дата создания')
+    comment = CharField(max_length=None, null=True, verbose_name='комментарий')
+
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'status': self.status,
+            'created': self.created,
+            'comment': self.comment,
+            'items': [item.serialize for item in self.items]
+        }
+        return data
+
+
+class OrderItem(db_wrapper.Model):
+    order = ForeignKeyField(Order, backref='items')
+    product = ForeignKeyField(Product)
+    quantity = SmallIntegerField(verbose_name='количество')
+    price = IntegerField(verbose_name='цена')
+    cost = IntegerField(verbose_name='стоимость')
+
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'product': self.product.serialize,
+            'quantity': self.quantity,
+            'price': self.price,
+            'cost': self.cost
+        }
+        return data
+
+
 @jwt.user_identity_loader
 def user_identity_lookup(user):
     return user.id
@@ -273,7 +341,10 @@ def setup_db(app):
         Catalogue,
         User,
         ContractorUser,
-        PriceFactor
+        PriceFactor,
+        Cart,
+        Order,
+        OrderItem
     ], safe=True)
     if not User.select().count():
         admin = User(name='Администратор', email='admin', password='admin', admin=True)

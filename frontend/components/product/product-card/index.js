@@ -1,18 +1,11 @@
 import { Fragment } from 'react'
 import Link from 'next/link'
 
-//import Button from "@mui/material/Button";
-//import ButtonBase from "@mui/material/ButtonBase";
-//import clsx from "clsx";
-
-//import Add from "@mui/icons-material/Add";
-//import Remove from "@mui/icons-material/Remove";
-
 import LazyImage from "@/components/theme/LazyImage";
 import { FlexBox } from "@/components/theme/flex-box";
 import { H6, Paragraph } from "@/components/theme/Typography";
 
-//import useProduct from "../use-product";
+import ProductCardShopping from './shopping'
 
 import { currency } from '@/lib'
 
@@ -26,37 +19,6 @@ export default function ProductCard({
         name,
         image
     } = product || {};
-
-    /*
-    const {
-        cartItem,
-        handleCartAmountChange
-    } = useProduct(slug)
-
-    const handleIncrementQuantity = () => {
-        const product = {
-            id,
-            slug,
-            price,
-            name: title,
-            imgUrl: thumbnail,
-            qty: (cartItem?.qty || 0) + 1
-        };
-        handleCartAmountChange(product);
-    }
-
-    const handleDecrementQuantity = () => {
-        const product = {
-            id,
-            slug,
-            price,
-            name: title,
-            imgUrl: thumbnail,
-            qty: (cartItem?.qty || 0) - 1
-        };
-        handleCartAmountChange(product, "remove");
-    }
-    */
 
     return <Fragment>
         <Link href={`/product/${id}`}>
@@ -81,28 +43,7 @@ export default function ProductCard({
                 { currency(product.price) }
             </PriceText>
 
-            {/*
-            <div className={clsx({
-                "button-small": btnSmall
-            })}>
-                {!cartItem?.qty ? <Button fullWidth disableElevation color="primary" variant="contained" onClick={handleIncrementQuantity}>
-                    Add To Cart
-                </Button> : <div className="button-group">
-                    <ButtonBase className="base-button" onClick={handleDecrementQuantity}>
-                        <Remove fontSize="small" />
-                    </ButtonBase>
-
-                    <Paragraph flex={1} fontWeight="600" lineHeight={1.75}>
-                        {cartItem?.qty}
-                    </Paragraph>
-
-                    <ButtonBase className="base-button" onClick={handleIncrementQuantity}>
-                        <Add fontSize="small" />
-                    </ButtonBase>
-                </div>}
-            </div>
-            */
-            }
+            <ProductCardShopping product={product} />
         </Content>
     </Fragment>
 }
