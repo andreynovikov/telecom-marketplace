@@ -14,6 +14,9 @@ export default async function Product({ params }) {
     </Container>
 }
 
+export const revalidate = 60
+export const dynamicParams = true
+
 export async function generateStaticParams() {
     const products = await getProducts()
 

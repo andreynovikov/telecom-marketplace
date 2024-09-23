@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidateTag } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
 import { auth } from '@/lib/auth'
 
@@ -82,6 +82,7 @@ export async function updateProduct(productId, _currentState, formData) {
             console.log(result)
             revalidateTag('products')
             revalidateTag(`products__${productId}`)
+            revalidatePath(`/product/${productId}`, 'page')
             return result
         } else {
             console.error(result.msg)

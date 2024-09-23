@@ -80,7 +80,7 @@ def delete_category(id):
 @bp.route('', methods=['GET'])
 def list_products():
     query = (
-        Product.select()
+        Product.select().order_by(Product.name, Product.id)
     )
     return [b.serialize for b in query]
 
