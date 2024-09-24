@@ -60,6 +60,6 @@ def update_order(id):
         data.pop('status')
         data.pop('created')
 
-    # User.set_by_id(id, data)
-    # user = User.get_by_id(id)
+    Order.set_by_id(id, data)
+    order = Order.get_by_id(id)
     return order.serialize

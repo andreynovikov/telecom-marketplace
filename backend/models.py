@@ -287,11 +287,19 @@ class Order(db_wrapper.Model):
     comment = CharField(max_length=None, null=True, verbose_name='комментарий')
 
     @property
+    def total(self):
+        total = 0
+        for item in self.items:
+            total = total + item.cost * item.quantity
+        return total
+
+    @property
     def serialize(self):
         data = {
             'id': self.id,
             'status': self.status,
             'created': self.created,
+            'total': self.total,
             'comment': self.comment,
             'items': [item.serialize for item in self.items]
         }
