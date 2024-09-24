@@ -16,16 +16,18 @@ const Wrapper = styled(BazaarCard)({
     textAlign: "center"
 })
 
-export default function OrderCompletePage() {
+function OrderNumber() {
     const searchParams = useSearchParams()
- 
     const order = searchParams.get('order')
+    return <>№{ order }</>
+}
 
+export default function OrderCompletePage() {
     return <Container className="mt-2 mb-10">
         <Wrapper>
             <Image width={116} height={116} alt="complete" src="/assets/images/illustrations/party-popper.svg" />
             <H1 lineHeight={1.1} mt="1.5rem">
-                Заказ №{order} зарегистрирован
+                Заказ <Suspense><OrderNumber /></Suspense> зарегистрирован
             </H1>
             <Paragraph color="grey.800" mt="0.3rem">
                 Ожидайте звонок менеджера. Статус заказа можно проверить в личном кабинете.

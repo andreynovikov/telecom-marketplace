@@ -17,8 +17,8 @@ export default async function ProductIntro(props) {
                 <FlexBox borderRadius={3} overflow="hidden" justifyContent="center" mb={6}>
                     <LazyImage
                         alt={product.name}
-                        width={300}
-                        height={300}
+                        width={1411}
+                        height={940}
                         loading="eager"
                         src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${product.image.src}`}
                         sx={{
