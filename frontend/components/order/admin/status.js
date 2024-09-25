@@ -9,15 +9,15 @@ import { statuses } from '.'
 const statusIcons = {
     0: IconFileImport,
     1: IconFileDots,
-    16384: IconFileX,
-    32768: IconFileCheck
+    8192: IconFileX,
+    16384: IconFileCheck
 }
 
 const statusColors = {
     0: 'warning',
     1: 'primary',
-    16384: 'disabled',
-    32768: 'success'
+    8192: 'disabled',
+    16384: 'success'
 }
 
 const Switch = ({ test, children }) => {
