@@ -104,17 +104,17 @@ export default function ContractorForm() {
 
                         <Grid item md={6} xs={12}>
                             <FileUpload
-                                name="cover_file"
-                                defaultValue={data.cover_file}
+                                name="company_info"
+                                current={data.company_info}
                                 description="файл с информацией о компании"
                                 variants="Документ или архив" />
                         </Grid>
 
                         <Grid item md={6} xs={12}>
                             <FileUpload
-                                name="experience_file"
-                                defaultValue={data.experience_file}
-                                description="файл с опытом работы"
+                                name="pricelist"
+                                current={data.pricelist}
+                                description="файл с прайслистом на услуги"
                                 variants="Документ или архив" />
                         </Grid>
 

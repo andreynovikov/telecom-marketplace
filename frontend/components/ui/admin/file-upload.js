@@ -3,17 +3,21 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
+import IconButton from '@mui/material/IconButton'
 import LinearProgress from '@mui/material/LinearProgress'
+import Typography from '@mui/material/Typography'
+
+import Add from "@mui/icons-material/Add"
 
 import { useDropzone } from 'react-dropzone'
 
-import { H6, Small } from '@/components/theme/Typography'
+import { H6 } from '@/components/theme/Typography'
 
-function uploadFile(file, previous, accessToken, onProgress) {
+import prettyBytes from 'pretty-bytes'
+
+function uploadFile(scope, instance, file, previous, accessToken, onProgress) {
     return new Promise((resolve, reject) => {
-        const url = `${process.env.NEXT_PUBLIC_API_FILES}/users`
+        const url = `${process.env.NEXT_PUBLIC_API_FILES}/${scope}/${instance}`
         const xhr = new XMLHttpRequest()
         xhr.upload.addEventListener('progress', e => onProgress(Math.round(e.loaded / e.total * 100)))
         xhr.addEventListener('load', () => resolve({ status: xhr.status, body: xhr.responseText }))
@@ -30,20 +34,20 @@ function uploadFile(file, previous, accessToken, onProgress) {
 }
 
 export default function FileUpload(props) {
-    const { name, current, description, variants } = props
+    const { scope, instance, current, onUpload } = props
 
     const [fileName, setFileName] = useState('')
+    const [fileSize, setFileSize] = useState(null)
     const [file, setFile] = useState(null)
     const [prevFile, setPrevFile] = useState(null)
     const [progress, setProgress] = useState(-1)
-    const [fileId, setFileId] = useState(null)
 
     const { data: session } = useSession()
 
     useEffect(() => {
         if (current) {
             setFileName(current.name)
-            setFileId(current.id)
+            setFileSize(current.size)
         }
     }, [current])
 
@@ -59,7 +63,7 @@ export default function FileUpload(props) {
         onDrop: handleChange,
         multiple: false,
         maxFiles: 1
-    });
+    })
 
     useEffect(() => {
         if (file === null)
@@ -73,15 +77,16 @@ export default function FileUpload(props) {
 
         setPrevFile(file)
         setProgress(0)
-        uploadFile(file, fileName, session?.user?.access_token, setProgress)
+        uploadFile(scope, instance, file, fileName, session?.user?.access_token, setProgress)
             .then(({ status, body }) => {
                 if (status != 200)
                     throw new Error(body)
                 const result = JSON.parse(body)
-                setFileId(result.id)
                 setFileName(result.name)
+                setFileSize(result.size)
                 setFile(null)
                 setProgress(-1)
+                if (onUpload !== undefined) onUpload()
             })
             .catch((error) => {
                 console.error(error.message)
@@ -89,56 +94,46 @@ export default function FileUpload(props) {
     }, [file])
 
     return (
-        <Box py={4} px={{
-            md: 10,
-            xs: 4
-        }} display="flex" minHeight="200px" textAlign="center" alignItems="center" borderRadius="10px" border="1.5px dashed" flexDirection="column" borderColor="grey.300" justifyContent="center" bgcolor={isDragActive ? "grey.200" : "grey.100"} sx={{
+        <Box pt={2} px={2} display="flex" minHeight={80} minWidth={80} textAlign="center" alignItems="center" borderRadius="10px" border="1.5px dashed" flexDirection="column" borderColor="grey.300" justifyContent="center" bgcolor={isDragActive ? "grey.200" : "grey.100"} sx={{
             transition: "all 250ms ease-in-out",
             outline: "none"
         }} {...getRootProps()}>
             <input {...getInputProps()} />
 
-            <H6 mb={1} color="grey.600">
-                Перетащите сюда {description}
-            </H6>
+            {!!!fileName && <IconButton><Add /></IconButton>}
 
-            <Divider sx={{
-                "::before, ::after": {
-                    borderColor: "grey.300",
-                    width: 70
-                }
-            }}>
-                <Small color="text.disabled" px={1}>
-                    или
-                </Small>
-            </Divider>
-
-            <Button type="button" variant="outlined" color="info" sx={{
-                px: 4,
-                mt: 2,
-                mb: 4,
-                textTransform: "none"
-            }}>
-                Выберите файл
-            </Button>
-
-            <Small color="grey.600" sx={{ mb: 2 }}>{variants}</Small>
-
-            {fileId && <input type="hidden" name={name} value={fileId} />}
-
-            <H6>
+            <H6 sx={{ mb: 2 }}>
                 {file ? (
                     <>
                         {file.name}
-                        {progress >= 0 && progress < 100 && ` (${progress}%)`}
+                        {progress >= 0 && progress < 100 && (
+                            <>
+                                {' '}
+                                <Typography component="span" color="grey.600" noWrap>
+                                    ({progress}%)
+                                </Typography>
+                            </>
+                        )}
                     </>
-                 ) : (
-                    fileName ? <>{fileName}</> : ''
+                ) : (
+                    fileName ? (
+                        <>
+                            {fileName}
+                            {fileSize && (
+                                <>
+                                    {' '}
+                                    <Typography component="span" color="grey.600" noWrap>
+                                        ({prettyBytes(fileSize)})
+                                    </Typography>
+                                </>
+                            )}
+                        </>
+                    ) : ''
                 )}
             </H6>
 
             {progress >= 0 && progress < 100 && (
-                <Box sx={{ pt: 2, width: '100%' }}>
+                <Box sx={{ width: '100%' }}>
                     <LinearProgress variant="determinate" value={progress} />
                 </Box>
             )}

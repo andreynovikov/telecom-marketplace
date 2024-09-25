@@ -5,7 +5,7 @@ from datetime import datetime
 
 from flask_jwt_extended import JWTManager
 from flask_thumbnails import Thumbnail
-from peewee import BooleanField, CharField, DateTimeField, DecimalField, ForeignKeyField, IntegerField, SmallIntegerField
+from peewee import BooleanField, CharField, DateTimeField, DecimalField, DeferredForeignKey, ForeignKeyField, IntegerField, SmallIntegerField
 from playhouse.flask_utils import FlaskDB
 
 from .fields import bcrypt, PasswordField  # noqa F401
@@ -68,6 +68,7 @@ class ServiceCategory(db_wrapper.Model):
 
 class Service(db_wrapper.Model):
     category = ForeignKeyField(ServiceCategory, verbose_name='категория')
+    short_name = CharField(verbose_name='краткое название')
     name = CharField(verbose_name='название')
     description = CharField(null=True, verbose_name='описание')
 
@@ -76,8 +77,28 @@ class Service(db_wrapper.Model):
         data = {
             'id': self.id,
             'category': self.category.id,
+            'short_name': self.short_name,
             'name': self.name,
             'description': self.description
+        }
+        return data
+
+
+class ServiceFile(db_wrapper.Model):
+    service = ForeignKeyField(Service)
+    name = CharField(max_length=None, verbose_name='имя')
+    file = CharField(max_length=None, verbose_name='файл')
+    size = IntegerField(verbose_name='размер')
+    seq = SmallIntegerField(verbose_name='порядок')
+
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'file': self.file,
+            'size': self.size,
+            'src': os.path.join('services', str(self.service.id), self.file)
         }
         return data
 
@@ -173,9 +194,9 @@ class Contractor(db_wrapper.Model):
     legal_address = CharField(max_length=None, verbose_name='юридический адрес')
     contact_phone = CharField(max_length=None, verbose_name='контактный телефон')
     cover_letter = CharField(max_length=None, null=True, verbose_name='информация о компании')
-    cover_file = CharField(max_length=None, null=True, verbose_name='файл с информацией о компании')
     experience = CharField(max_length=None, null=True, verbose_name='опыт работы')
-    experience_file = CharField(max_length=None, null=True, verbose_name='файл с опытом работы')
+    company_info = DeferredForeignKey('UserFile', null=True, verbose_name='файл с информацией о компании')
+    pricelist = DeferredForeignKey('UserFile', null=True, verbose_name='прайслист')
     comment = CharField(max_length=None, null=True, verbose_name='комментарий')
 
     @property
@@ -191,9 +212,9 @@ class Contractor(db_wrapper.Model):
             'legal_address': self.legal_address,
             'contact_phone': self.contact_phone,
             'cover_letter': self.cover_letter,
-            'cover_file': self.cover_file,
             'experience': self.experience,
-            'experience_file': self.experience_file,
+            'company_info': self.company_info.serialize if self.company_info else None,
+            'pricelist': self.pricelist.serialize if self.pricelist else None,
             'services': [{'id': s.service.id, 'approved': s.approved} for s in self.services],
             'geography': [{'code': g.subject.code, 'approved': g.approved} for g in self.geography],
             'users': [u.user.id for u in self.users],
@@ -242,6 +263,23 @@ class User(db_wrapper.Model):
             'provider': self.provider,
             'consumer': self.consumer,
             'admin': self.admin
+        }
+        return data
+
+
+class UserFile(db_wrapper.Model):
+    user = ForeignKeyField(User)
+    name = CharField(max_length=None, verbose_name='имя')
+    file = CharField(max_length=None, verbose_name='файл')
+    size = IntegerField(verbose_name='размер')
+
+    @property
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'file': self.file,
+            'size': self.size
         }
         return data
 
@@ -341,6 +379,7 @@ def setup_db(app):
         Brand,
         ServiceCategory,
         Service,
+        ServiceFile,
         Subject,
         ProductCategory,
         Product,
@@ -348,6 +387,7 @@ def setup_db(app):
         Geography,
         Catalogue,
         User,
+        UserFile,
         ContractorUser,
         PriceFactor,
         Cart,

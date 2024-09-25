@@ -30,6 +30,23 @@ export async function getService(serviceId) {
     return res.json()
 }
 
+export async function getServiceFiles(serviceId) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services/${serviceId}/files`, {
+        next: { tags: [`services__files__${serviceId}`] }
+    })
+
+    if (!res.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        throw new Error('Failed to fetch data')
+    }
+
+    return res.json()
+}
+
+export async function revalidateFiles(serviceId) {
+    revalidateTag(`services__files__${serviceId}`)
+}
+
 export async function createService(categoryId, _currentState, formData) {
     const values = Object.fromEntries(formData.entries())
     values['category'] = categoryId

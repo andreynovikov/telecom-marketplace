@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
 
-from ..models import db_wrapper, Contractor, Catalogue, Geography, ContractorUser, User
+from ..models import db_wrapper, Contractor, Catalogue, Geography, ContractorUser, User, UserFile
 from ..models import STATUS_MODIFIED
 
 bp = Blueprint('contractor', __name__, url_prefix='/contractors')
@@ -15,6 +15,8 @@ def list_contractors():
         .select()
         .join(ContractorUser)
         .join(User)
+        .join(UserFile)
+        .distinct()
     )
 
     if not current_user.admin:

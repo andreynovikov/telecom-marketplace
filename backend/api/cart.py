@@ -15,6 +15,7 @@ def get_cart():
         .join(Product)
         .where(Cart.user == current_user.id)
         .order_by(Cart.id)
+        .distinct()
     )
     if items is None:
         return []

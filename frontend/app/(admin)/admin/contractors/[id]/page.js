@@ -156,7 +156,7 @@ export default async function Contractor({ params }) {
                                         </FlexBox>
                                     ))}
                                 </Grid>
-                                {contractor.cover_file && (
+                                {contractor.company_info && (
                                     <>
                                         <Grid item sm={3} xs={12}>
                                             <Typography color="grey.600">
@@ -164,19 +164,19 @@ export default async function Contractor({ params }) {
                                             </Typography>
                                         </Grid>
                                         <Grid item sm={9} xs={12}>
-                                            <FileDownload owner={contractor.users[0]} fileName={contractor.cover_file} />
+                                            <FileDownload scope="users" file={contractor.company_info} />
                                         </Grid>
                                     </>
                                 )}
-                                {contractor.experience_file && (
+                                {contractor.pricelist && (
                                     <>
                                         <Grid item sm={3} xs={12}>
                                             <Typography color="grey.600">
-                                                Файл с опытом работы
+                                                Файл с прайслистом
                                             </Typography>
                                         </Grid>
                                         <Grid item sm={9} xs={12}>
-                                            <FileDownload owner={contractor.users[0]} fileName={contractor.experience_file} />
+                                            <FileDownload scope="users" file={contractor.pricelist} />
                                         </Grid>
                                     </>
                                 )}

@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
 from peewee import fn
 
-from ..models import ServiceCategory, Service
+from ..models import ServiceCategory, Service, ServiceFile
 
 bp = Blueprint('service', __name__, url_prefix='/services')
 
@@ -67,6 +67,14 @@ def list_services():
 @bp.route('<int:id>', methods=['GET'])
 def get_service(id):
     return Service.get_by_id(id).serialize
+
+
+@bp.route('<int:id>/files', methods=['GET'])
+def get_service_files(id):
+    query = (
+        ServiceFile.select().where(ServiceFile.service == id).order_by(ServiceFile.seq)
+    )
+    return [f.serialize for f in query]
 
 
 @bp.route('', methods=['POST'])

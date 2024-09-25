@@ -4,10 +4,11 @@ import { useSession } from 'next-auth/react'
 
 import Button from '@mui/material/Button'
 
-import Add from "@mui/icons-material/Add"
 import { IconDownload } from '@tabler/icons-react'
 
 import { makeSvgIcon } from '@/theme/icons'
+
+import prettyBytes from 'pretty-bytes'
 
 function downloadFile(url, accessToken) {
     return new Promise((resolve, reject) => {
@@ -23,12 +24,12 @@ function downloadFile(url, accessToken) {
 }
 
 export default function FileDownload(props) {
-    const { owner, fileName } = props
+    const { scope, file } = props
 
     const { data: session } = useSession()
 
     const handleClick = () => {
-        downloadFile(`${process.env.NEXT_PUBLIC_API_FILES}/${owner}/${fileName}`, session?.user?.access_token)
+        downloadFile(`${process.env.NEXT_PUBLIC_API_FILES}/${scope}/${file.id}`, session?.user?.access_token)
             .then((xhr) => {
                 if (xhr.status != 200)
                     throw new Error(body)
@@ -43,7 +44,7 @@ export default function FileDownload(props) {
                     window.location = downloadUrl
                 } else {
                     a.href = downloadUrl
-                    a.download = fileName
+                    a.download = file.name
                     a.style.display = 'none'
                     document.body.appendChild(a)
                     a.click()
@@ -58,7 +59,7 @@ export default function FileDownload(props) {
 
     return (
         <Button onClick={handleClick} color="secondary" variant="outlined" size="small" startIcon={makeSvgIcon(IconDownload)} sx={{textTransform: 'none'}}>
-            Скачать &lsquo;{fileName}&rsquo;
+            Скачать &lsquo;{file.name}&rsquo; ({prettyBytes(file.size)})
         </Button>
     )
 }

@@ -52,6 +52,7 @@ def get_user_contractors(id):
         .join(ContractorUser)
         .join(User)
         .where(User.id == id)
+        .distinct()
     )
 
     return [{'id': contractor.id, 'status': contractor.status} for contractor in contractors]
