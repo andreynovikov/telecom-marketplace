@@ -5,11 +5,14 @@ import OrderStatus from './status'
 
 import moment from 'moment'
 
+import { currency } from '@/lib'
+
 export async function OrderRow({ order }) {
     const {
         id,
         created,
-        status
+        status,
+        total
     } = order || {}
 
     return <StyledTableRow tabIndex={-1}>
@@ -18,6 +21,9 @@ export async function OrderRow({ order }) {
         </StyledTableCell>
         <StyledTableCell align="left">
             {moment(created).format('L LT')}
+        </StyledTableCell>
+        <StyledTableCell align="right">
+            {currency(total)}
         </StyledTableCell>
         <StyledTableCell align="center">
             <OrderStatus status={status} />

@@ -25,6 +25,10 @@ const tableHeading = [{
     label: "Дата создания",
     align: "left"
 }, {
+    id: "total",
+    label: "Сумма",
+    align: "right"
+}, {
     id: "status",
     label: "Статус",
     align: "center"
@@ -32,7 +36,7 @@ const tableHeading = [{
     id: "action",
     label: "Действия",
     align: "center"
-}];
+}]
 
 export default async function OrderList() {
     const session = await auth()
@@ -50,7 +54,7 @@ export default async function OrderList() {
                                 <TableRow>
                                     {tableHeading.map(headCell => (
                                         <StyledTableHeaderCell key={headCell.id} align={headCell.align}>
-                                                {headCell.label}
+                                            {headCell.label}
                                         </StyledTableHeaderCell>)
                                     )}
                                 </TableRow>
