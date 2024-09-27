@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
+    "@mdxeditor/editor": "^3.11.5",
     "@minoru/react-dnd-treeview": "^3.4.4",
     "@mui/icons-material": "^5.16.7",
     "@mui/lab": "^5.0.0-alpha.170",
@@ -29,6 +30,10 @@
     "react-dnd": "^16.0.1",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
+    "react-easy-sort": "^1.6.0",
+    "react-markdown": "^9.0.1",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.0",
     "sharp": "^0.33.5",
     "simplebar-react": "^3.2.6",
     "zod": "^3.23.8"
