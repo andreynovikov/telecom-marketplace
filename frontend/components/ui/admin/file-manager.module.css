@@ -1,0 +1,45 @@
+.list {
+    user-select: none;
+    display: flex;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-top: -16px;
+    width: calc(100% + 16px);
+    margin-left: -16px;
+    margin-bottom: 16px;
+}
+
+.item {
+    position: relative;
+    display: flex;
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    padding-left: 16px;
+    padding-top: 16px;
+}
+
+.knob {
+    cursor: grab;
+    position: absolute;
+    left: 16px;
+}
+
+.dragged {
+    z-index: 1400;
+}
+
+.dragged>div:first-child {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.dropTarget {
+    min-height: 80px;
+    min-width: 80px;
+    margin-left: 16px;
+    margin-top: 16px;
+    border: 2px dashed rgb(84, 84, 241);
+    box-sizing: border-box;
+}

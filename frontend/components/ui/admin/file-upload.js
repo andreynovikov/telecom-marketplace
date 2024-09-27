@@ -8,6 +8,7 @@ import LinearProgress from '@mui/material/LinearProgress'
 import Typography from '@mui/material/Typography'
 
 import Add from "@mui/icons-material/Add"
+import { DeleteIcon } from '@/theme/icons'
 
 import { useDropzone } from 'react-dropzone'
 
@@ -34,7 +35,7 @@ function uploadFile(scope, instance, file, previous, accessToken, onProgress) {
 }
 
 export default function FileUpload(props) {
-    const { scope, instance, current, onUpload } = props
+    const { scope, instance, current, onUpload, onDelete } = props
 
     const [fileName, setFileName] = useState('')
     const [fileSize, setFileSize] = useState(null)
@@ -93,14 +94,27 @@ export default function FileUpload(props) {
             })
     }, [file])
 
+    const handleDelete = (e) => {
+        e.stopPropagation()
+        onDelete(fileName)
+    }
+
     return (
         <Box pt={2} px={2} display="flex" minHeight={80} minWidth={80} textAlign="center" alignItems="center" borderRadius="10px" border="1.5px dashed" flexDirection="column" borderColor="grey.300" justifyContent="center" bgcolor={isDragActive ? "grey.200" : "grey.100"} sx={{
             transition: "all 250ms ease-in-out",
-            outline: "none"
+            outline: "none",
+            position: "relative",
+            ...props?.sx
         }} {...getRootProps()}>
             <input {...getInputProps()} />
 
-            {!!!fileName && <IconButton><Add /></IconButton>}
+            {fileName ? (
+                <IconButton size="small" sx={{ position: "absolute", top: 0, right: 0 }} onClick={handleDelete}>
+                    <DeleteIcon sx={{ fontSize: 16 }} />
+                </IconButton>
+            ) : (
+                <IconButton><Add /></IconButton>
+            )}
 
             <H6 sx={{ mb: 2 }}>
                 {file ? (

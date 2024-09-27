@@ -29,7 +29,7 @@ export default function FileDownload(props) {
     const { data: session } = useSession()
 
     const handleClick = () => {
-        downloadFile(`${process.env.NEXT_PUBLIC_API_FILES}/${scope}/${file.id}`, session?.user?.access_token)
+        downloadFile(`${process.env.NEXT_PUBLIC_API_FILES}/get/${scope}/${file.id}`, session?.user?.access_token)
             .then((xhr) => {
                 if (xhr.status != 200)
                     throw new Error(body)

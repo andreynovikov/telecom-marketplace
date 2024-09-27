@@ -25,7 +25,7 @@ SCOPES = {
 }
 
 
-@bp.route('/<scope>/<int:id>', methods=['GET'])
+@bp.route('/get/<scope>/<int:id>', methods=['GET'])
 @jwt_required()
 def download_file(scope, id):
     if scope not in SCOPES:
@@ -43,6 +43,46 @@ def download_file(scope, id):
     instance = getattr(file_object, SCOPES[scope]['instance'].name)
     dirname = os.path.join(current_app.config['FILES_FOLDER'], scope, str(instance.id))
     return send_from_directory(dirname, file_object.file)
+
+
+@bp.route('/<scope>/<instance>', methods=['GET'])
+# @jwt_required()
+def list_files(scope, instance):
+    if scope not in SCOPES:
+        return jsonify(msg='Unknown scope'), 400
+
+    model = SCOPES[scope]['model']
+    files = model.select().where(SCOPES[scope]['instance'] == instance)
+    if SCOPES[scope]['sorted']:
+        seq_field = getattr(model, 'seq')
+        files = files.order_by(seq_field)
+    if files is None:
+        return []
+    return [f.serialize for f in files]
+
+
+@bp.route('/reorder/<scope>/<instance>', methods=['PUT'])
+# @jwt_required()
+def reorder_files(scope, instance):
+    if scope not in SCOPES:
+        return jsonify(msg='Unknown scope'), 400
+
+    if not SCOPES[scope]['sorted']:
+        return jsonify(msg='Unsorted scope'), 400
+
+    model = SCOPES[scope]['model']
+    id_field = getattr(model, 'id')
+    seq_field = getattr(model, 'seq')
+
+    data = request.get_json()
+    current_app.logger.error(data)
+    seq = 1
+    for item in data:
+        model.update(seq=seq).where(id_field == item['id']).execute()
+        seq = seq + 1
+
+    files = model.select().where(SCOPES[scope]['instance'] == instance).order_by(seq_field)
+    return [f.serialize for f in files]
 
 
 @bp.route('/<scope>', defaults={'instance': None}, methods=['POST'])
@@ -74,7 +114,13 @@ def upload_file(scope, instance):
     if 'previous' in request.form:
         name_field = getattr(model, 'name')
         file_object = model.select().where(SCOPES[scope]['instance'] == instance, name_field == request.form['previous']).first()
-        current_app.logger.error(file_object)
+        if file_object is not None:
+            old_file_path = os.path.join(current_app.config['FILES_FOLDER'], scope, instance, file_object.file)
+            if old_file_path != file_path:
+                try:
+                    os.remove(old_file_path)
+                except FileNotFoundError:
+                    pass
     if file_object is None:
         data = {}
         data[SCOPES[scope]['instance'].name] = instance
@@ -90,3 +136,31 @@ def upload_file(scope, instance):
     file_object.save()
 
     return file_object.serialize
+
+
+@bp.route('/<scope>/<instance>/<file>', methods=['DELETE'])
+# @jwt_required()
+def delete_file(scope, instance, file):
+    if scope not in SCOPES:
+        return jsonify(msg='Unknown scope'), 400
+
+    model = SCOPES[scope]['model']
+    file_field = getattr(model, 'file')
+    file_object = model.select().where(SCOPES[scope]['instance'] == instance, file_field == file).first()
+    if file_object is None:
+        return jsonify(msg='Файл не найден'), 404
+
+    file_path = os.path.join(current_app.config['FILES_FOLDER'], scope, instance, file)
+    try:
+        os.remove(file_path)
+    except FileNotFoundError:
+        pass
+    file_object.delete_instance()
+
+    files = model.select().where(SCOPES[scope]['instance'] == instance)
+    if SCOPES[scope]['sorted']:
+        seq_field = getattr(model, 'seq')
+        files = files.order_by(seq_field)
+    if files is None:
+        return []
+    return [f.serialize for f in files]
