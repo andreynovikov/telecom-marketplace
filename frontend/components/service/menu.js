@@ -12,8 +12,8 @@ export default async function ServiceSidebarMenu() {
             path: `/category/${category.id}`,
             children: services.map(service => {
                 return {
-                    name: service.name,
-                    path: `/category/${category.id}/${service.id}`
+                    name: service.short_name,
+                    path: `/service/${service.id}`
                 }
             })
         }
