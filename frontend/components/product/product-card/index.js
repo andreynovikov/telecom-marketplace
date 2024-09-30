@@ -17,18 +17,18 @@ export default function ProductCard({
     const {
         id,
         name,
-        image
+        images
     } = product || {};
 
     return <Fragment>
         <Link href={`/product/${id}`}>
             <FlexBox bgcolor="grey.50" borderRadius={3} mb={2}>
-                {image && (
+                {images.length > 0 && (
                     <LazyImage
                         alt={name}
-                        width={image.thumbnail.width}
-                        height={image.thumbnail.height}
-                        src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${image.thumbnail.src}`}
+                        width={images[0].thumbnail.width}
+                        height={images[0].thumbnail.height}
+                        src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${images[0].thumbnail.src}`}
                         sx={{p: 5}} />
                 )}
             </FlexBox>

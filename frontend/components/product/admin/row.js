@@ -4,8 +4,6 @@ import Brand from '@/components/brand'
 import Category from '../category'
 import ProductActions from './actions'
 
-import { IconCheck, IconX } from '@tabler/icons-react'
-
 export default async function ProductRow({ product }) {
     return (
         <>
@@ -26,10 +24,10 @@ export default async function ProductRow({ product }) {
                     {product.price}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                    {product.image ? <IconCheck size={20} /> : <IconX size={20} />}
+                    {product.images.length > 0 ? product.images.length : '-'}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                    {product.description ? <IconCheck size={20} /> : <IconX size={20} />}
+                    {product.description ? 'есть' : '-'}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                     <ProductActions product={product} />

@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useFormState } from 'react-dom'
+import dynamic from 'next/dynamic'
 
 import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -13,12 +15,15 @@ import TextField from '@mui/material/TextField'
 
 import BrandSelect from '@/components/brand/admin/select'
 import CategorySelect from '../category/admin/select'
-import ImageUpload from './image-upload'
+
+const MDXEditor = dynamic(() => import('@/components/ui/admin/mdx-editor'), { ssr: false })
 
 import { createProduct, updateProduct, deleteProduct } from '../queries'
 
 export default function ProductEditDialog(props) {
     const { product, open, setOpen } = props
+    const [description, setDescription] = useState('')
+
     const updateProductWithId = updateProduct.bind(null, product?.id)
     const deleteProductWithId = deleteProduct.bind(null, product?.id)
 
@@ -29,8 +34,13 @@ export default function ProductEditDialog(props) {
             setOpen(false)
     }, [state, setOpen])
 
+    useEffect(() => {
+        if (product)
+            setDescription(product.description)
+    }, [product])
+
     return (
-        <Dialog open={open} onClose={() => setOpen(false)} PaperProps={{ component: 'form', action: dispatch }}>
+        <Dialog maxWidth="lg" open={open} onClose={() => setOpen(false)} PaperProps={{ component: 'form', action: dispatch }}>
             <DialogTitle variant="h6" component="h2">
                 {product?.id ? 'Редактировать товар' : 'Добавить товар'}
             </DialogTitle>
@@ -70,26 +80,27 @@ export default function ProductEditDialog(props) {
                     defaultValue={product?.price}
                     InputLabelProps={{ shrink: !!product?.price ? true : undefined }} />
 
-                <TextField
-                    fullWidth
-                    name="description"
-                    label="Описание"
-                    multiline
-                    rows={4}
-                    margin="dense"
-                    defaultValue={product?.description}
-                    InputLabelProps={{ shrink: !!product?.description ? true : undefined }} />
-
                 <Box margin={1}>
                     Категория *{' '}
                     <CategorySelect name="category" defaultValue={product?.category} />
                 </Box>
 
-                <Box margin={1}>
-                    Изображение:{' '}
-                    {product?.image && <b>{product.image.filename}{' '}</b>}
-                    <ImageUpload name="image" />
-                </Box>
+                <Suspense fallback={
+                    <TextField
+                        fullWidth
+                        name="description"
+                        label="Описание"
+                        multiline
+                        rows={4}
+                        margin="dense"
+                        defaultValue={product?.description}
+                        InputLabelProps={{ shrink: !!product?.description ? true : undefined }} />
+                }>
+                    <Card raised={false} sx={{ mt: 1, p: 1 }}>
+                        <input type="hidden" name="description" value={description} />
+                        <MDXEditor markdown={product?.description} onChange={setDescription} />
+                    </Card>
+                </Suspense>
             </DialogContent>
             <DialogActions>
                 {product?.id && (

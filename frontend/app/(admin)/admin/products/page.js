@@ -39,7 +39,7 @@ const tableHeading = [{
     align: "right"
 }, {
     id: "image",
-    label: "Изображение",
+    label: "Изображения",
     align: "center"
 }, {
     id: "description",

@@ -139,7 +139,6 @@ class Product(db_wrapper.Model):
     name = CharField(max_length=None, verbose_name='название')
     brand = ForeignKeyField(Brand, verbose_name='бренд')
     category = ForeignKeyField(ProductCategory, verbose_name='категория')
-    image = CharField(max_length=None, null=True, verbose_name='изображение')
     description = CharField(max_length=None, null=True, verbose_name='описание')
     price = IntegerField(verbose_name='цена')
 
@@ -152,21 +151,34 @@ class Product(db_wrapper.Model):
             'brand': self.brand_id,
             'category': self.category_id,
             'description': self.description,
-            'price': self.price
+            'price': self.price,
+            'images': [image.serialize for image in self.images]
         }
+        return data
 
-        if self.image:
-            image_path = os.path.join('products', self.image)
-            data['image'] = {
-                'filename': self.image,
-                'src': '/' + image_path,
-                'thumbnail': {
-                    'src': thumbnail.get_thumbnail(image_path, '260x280'),
-                    'width': 260,
-                    'height': 280
-                }
+
+class ProductImage(db_wrapper.Model):
+    product = ForeignKeyField(Product, backref='images')
+    file = CharField(max_length=None, verbose_name='файл')
+    width = SmallIntegerField(verbose_name='ширина')
+    height = SmallIntegerField(verbose_name='высота')
+    seq = SmallIntegerField(verbose_name='порядок')
+
+    @property
+    def serialize(self):
+        image_path = os.path.join('products', str(self.product.id), self.file)
+        data = {
+            'id': self.id,
+            'file': self.file,
+            'width': self.width,
+            'height': self.height,
+            'src': '/' + image_path,
+            'thumbnail': {
+                'src': thumbnail.get_thumbnail(image_path, '260x280'),
+                'width': 260,
+                'height': 280
             }
-
+        }
         return data
 
 
@@ -383,6 +395,7 @@ def setup_db(app):
         Subject,
         ProductCategory,
         Product,
+        ProductImage,
         Contractor,
         Geography,
         Catalogue,

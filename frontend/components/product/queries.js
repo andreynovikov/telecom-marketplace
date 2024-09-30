@@ -26,20 +26,23 @@ export async function getProduct(productId) {
     return res.json()
 }
 
+export async function revalidateImages(productId) {
+    revalidateTag(`products__images__${productId}`)
+    revalidatePath(`/product/${productId}`, 'page')
+}
+
 export async function createProduct(_currentState, formData) {
-    //const values = Object.fromEntries(formData.entries())
+    const values = Object.fromEntries(formData.entries())
     const session = await auth()
-    if (formData.get('image')?.size === 0)
-        formData.delete('image')
 
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/products`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
-                //'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
-            body: formData //JSON.stringify(values)
+            body: JSON.stringify(values)
         });
 
         const result = await response.json();
@@ -62,19 +65,17 @@ export async function createProduct(_currentState, formData) {
 }
 
 export async function updateProduct(productId, _currentState, formData) {
-    //const values = Object.fromEntries(formData.entries())
+    const values = Object.fromEntries(formData.entries())
     const session = await auth()
-    if (formData.get('image')?.size === 0)
-        formData.delete('image')
 
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/products/${productId}`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
-                //'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
-            body: formData //JSON.stringify(values)
+            body: JSON.stringify(values)
         })
 
         const result = await response.json()
