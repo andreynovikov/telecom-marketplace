@@ -15,7 +15,7 @@ const DropTarget = () => {
 
 
 export default function FilesManager(props) {
-    const { scope, instance } = props
+    const { scope, instance, accept } = props
     const [files, setFiles] = useState([])
     const [slots, setSlots] = useState(1)
 
@@ -68,12 +68,9 @@ export default function FilesManager(props) {
         setSlots((slots) => slots + 1)
     }
 
-    const onDelete = (fileName) => {
-        const file = files.find((file) => file.name === fileName)
-        if (file) {
-            deleteFile(file.file)
-            setSlots((slots) => slots + 1)
-        }
+    const onDelete = (file) => {
+        deleteFile(file.file)
+        setSlots((slots) => slots + 1)
     }
 
     return (
@@ -81,7 +78,7 @@ export default function FilesManager(props) {
             {files.map((file) => (
                 <SortableItem key={file.id}>
                     <div className={styles.item}>
-                        <FileUpload current={file} scope={scope} instance={instance} sx={{ pl: 4 }} onDelete={onDelete} />
+                        <FileUpload current={file} scope={scope} instance={instance} sx={{ pl: 4 }} onDelete={onDelete} accept={accept} />
                         <SortableKnob>
                             <div className={styles.knob}>
                                 <DragIndicator />
@@ -91,7 +88,7 @@ export default function FilesManager(props) {
                 </SortableItem>
             ))}
             <div key={slots} className={styles.item}>
-                <FileUpload scope={scope} instance={instance} onUpload={onUpload} />
+                <FileUpload scope={scope} instance={instance} onUpload={onUpload} accept={accept} />
             </div>
         </SortableList>
     )

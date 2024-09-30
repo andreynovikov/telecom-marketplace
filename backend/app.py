@@ -95,4 +95,7 @@ def create_app(context=None):
     from .admin import create_admin
     create_admin(app)
 
+    from .api.files import setup_files
+    setup_files(app)
+
     return app

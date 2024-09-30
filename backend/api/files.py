@@ -4,25 +4,39 @@ import os
 from flask import Blueprint, current_app, jsonify, request, send_from_directory
 from flask_jwt_extended import current_user, jwt_required
 from peewee import fn
+from PIL import Image
 
-from ..models import ServiceFile, UserFile
+from ..models import ProductImage, ServiceFile, UserFile
 
 secure_file_name = re.compile(r"[/\\?%*:|\"<>\x7F\x00-\x1F]")
 
 bp = Blueprint('file', __name__, url_prefix='/files')
 
-SCOPES = {
-    'services': {
+SCOPES = {}
+
+
+def setup_files(app):
+    SCOPES['products'] = {
+        'root': app.config['MEDIA_FOLDER'],
+        'model': ProductImage,
+        'instance': ProductImage.product,
+        'image': True,
+        'sorted': True
+    }
+    SCOPES['services'] = {
+        'root': app.config['FILES_FOLDER'],
         'model': ServiceFile,
         'instance': ServiceFile.service,
+        'image': False,
         'sorted': True
-    },
-    'users': {
+    }
+    SCOPES['users'] = {
+        'root': app.config['FILES_FOLDER'],
         'model': UserFile,
         'instance': UserFile.user,
+        'image': False,
         'sorted': False
     }
-}
 
 
 @bp.route('/get/<scope>/<int:id>', methods=['GET'])
@@ -41,7 +55,7 @@ def download_file(scope, id):
         return jsonify(msg='Файл не найден'), 404
 
     instance = getattr(file_object, SCOPES[scope]['instance'].name)
-    dirname = os.path.join(current_app.config['FILES_FOLDER'], scope, str(instance.id))
+    dirname = os.path.join(SCOPES[scope]['root'], scope, str(instance.id))
     return send_from_directory(dirname, file_object.file)
 
 
@@ -103,7 +117,7 @@ def upload_file(scope, instance):
 
     if scope == 'users':
         instance = str(current_user.id)
-    dirname = os.path.join(current_app.config['FILES_FOLDER'], scope, instance)
+    dirname = os.path.join(SCOPES[scope]['root'], scope, instance)
     os.makedirs(dirname, exist_ok=True)
     filename = secure_file_name.sub('-', file.filename)
     file_path = os.path.join(dirname, filename)
@@ -112,10 +126,9 @@ def upload_file(scope, instance):
     model = SCOPES[scope]['model']
     file_object = None
     if 'previous' in request.form:
-        name_field = getattr(model, 'name')
-        file_object = model.select().where(SCOPES[scope]['instance'] == instance, name_field == request.form['previous']).first()
+        file_object = model.select().where(SCOPES[scope]['instance'] == instance, model.file == request.form['previous']).first()
         if file_object is not None:
-            old_file_path = os.path.join(current_app.config['FILES_FOLDER'], scope, instance, file_object.file)
+            old_file_path = os.path.join(SCOPES[scope]['root'], scope, instance, file_object.file)
             if old_file_path != file_path:
                 try:
                     os.remove(old_file_path)
@@ -130,9 +143,14 @@ def upload_file(scope, instance):
             seq = 1 if seq is None else seq + 1
             data['seq'] = seq
         file_object = model(**data)
-    file_object.name = file.filename
     file_object.file = filename
-    file_object.size = os.stat(file_path).st_size
+    if hasattr(file_object, 'name'):
+        file_object.name = file.filename
+    if hasattr(file_object, 'size'):
+        file_object.size = os.stat(file_path).st_size
+    if SCOPES[scope]['image']:
+        image = Image.open(file_path)
+        file_object.width, file_object.height = image.size
     file_object.save()
 
     return file_object.serialize
@@ -150,7 +168,7 @@ def delete_file(scope, instance, file):
     if file_object is None:
         return jsonify(msg='Файл не найден'), 404
 
-    file_path = os.path.join(current_app.config['FILES_FOLDER'], scope, instance, file)
+    file_path = os.path.join(SCOPES[scope]['root'], scope, instance, file)
     try:
         os.remove(file_path)
     except FileNotFoundError:
