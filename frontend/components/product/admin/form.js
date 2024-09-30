@@ -98,7 +98,7 @@ export default function ProductEditDialog(props) {
                 }>
                     <Card raised={false} sx={{ mt: 1, p: 1 }}>
                         <input type="hidden" name="description" value={description} />
-                        <MDXEditor markdown={product?.description} onChange={setDescription} />
+                        <MDXEditor markdown={product?.description || ''} onChange={setDescription} />
                     </Card>
                 </Suspense>
             </DialogContent>

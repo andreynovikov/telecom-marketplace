@@ -80,7 +80,7 @@ export default function ServiceEditDialog(props) {
                 }>
                     <Card raised={false} sx={{ mt: 1, p: 1 }}>
                         <input type="hidden" name="description" value={description} />
-                        <MDXEditor markdown={service?.description} onChange={hanldeDescriptionChange} />
+                        <MDXEditor markdown={service?.description || ''} onChange={hanldeDescriptionChange} />
                     </Card>
                 </Suspense>
             </DialogContent>
