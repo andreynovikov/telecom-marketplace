@@ -26,6 +26,7 @@ export default function BrandSelect(props) {
                 name={name}
                 defaultValue={defaultValue || ''}
                 label="Бренд"
+                size="small"
             >
                 {brands.map((brand) => (
                     <MenuItem key={brand.id} value={brand.id}>{brand.name}</MenuItem>
