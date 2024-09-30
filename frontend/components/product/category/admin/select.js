@@ -18,13 +18,15 @@ export default function CategorySelect(props) {
 
     const [categories, setCategories] = useState([])
     const [categoryTree, setCategoryTree] = useState([])
+    const [categoryRefs, setCategoryRefs] = useState({})
 
     useEffect(() => {
         getCategories().then((result) => setCategories(result))
     }, [])
 
     useEffect(() => {
-        const { tree, refs } = categories.reduce(({ tree, refs }, category) => {
+        const { tree, refs } = categories.reduce(({ tree, refs }, c) => {
+            const category = { ...c, id: c.id.toString(), parent: c.parent ? c.parent.toString() : null }
             if (category.id in refs)
                 refs[category.id] = { ...category, ...refs[category.id] }
             else
@@ -39,19 +41,25 @@ export default function CategorySelect(props) {
                     }
                 else if (!('children' in refs[category.parent]))
                     refs[category.parent].children = []
-                refs[category.parent].children.push(category)
+                const child = refs[category.parent].children.find((child) => child.id === category.id)
+                if (child === undefined)
+                    refs[category.parent].children.push(category)
             }
             return { tree, refs }
         }, { tree: [], refs: {} })
         setCategoryTree(tree)
+        setCategoryRefs(refs)
+    }, [categories])
+
+    useEffect(() => {
         const expand = []
-        let parent = refs[defaultValue]
+        let parent = categoryRefs[defaultValue.toString()]
         while (parent !== undefined) {
             expand.push(parent.id)
-            parent = refs[parent.parent]
+            parent = categoryRefs[parent.parent]
         }
         setExpandedItems((expandedItems) => [...expandedItems, ...expand])
-    }, [defaultValue, categories])
+    }, [defaultValue, categoryRefs])
 
     const handleExpandedItemsChange = (event, itemIds) => {
         setExpandedItems(itemIds)
@@ -64,7 +72,7 @@ export default function CategorySelect(props) {
                 items={categoryTree}
                 getItemLabel={(item) => item.name}
                 onItemSelectionToggle={handleItemSelectionToggle}
-                defaultSelectedItems={defaultValue ? [defaultValue] : []}
+                defaultSelectedItems={defaultValue ? [defaultValue.toString()] : []}
                 expandedItems={expandedItems}
                 onExpandedItemsChange={handleExpandedItemsChange}
                 expansionTrigger="iconContainer"
