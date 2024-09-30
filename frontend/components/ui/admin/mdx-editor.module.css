@@ -1,5 +1,8 @@
-.editor {
+.editor :global(.mdxeditor-root-contenteditable) {
     min-width: 400px;
+    min-height: 150px;
+    max-height: 30vh;
+    overflow-y: scroll;
 }
 
 .prose ul {
