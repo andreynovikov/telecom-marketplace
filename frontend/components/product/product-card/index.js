@@ -31,11 +31,9 @@ export default function ProductCard({
                         width={images[0].width}
                         height={images[0].height}
                         src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${images[0].src}`}
-                        sx={{p: 5, objectFit: "contain" }} />
+                        sx={{objectFit: "contain" }} />
                 ) : (
-                    <>
-                        <IconCamera color='grey' size={150} strokeWidth={1.5} />
-                    </>
+                    <IconCamera color='grey' size={150} strokeWidth={1.5} />
                 )}
             </FlexRowCenter>
         </Link>

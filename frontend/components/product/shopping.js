@@ -15,7 +15,7 @@ export default function ProductShopping(props) {
 
     const { status } = useSession()
     const { cart, modify } = useCart()
-    const cartItem = cart.find(item => item.product === product.id)
+    const cartItem = cart.find(item => item.product.id === product.id)
 
     const handleCartAmountChange = amount => () => modify(product.id, amount)
 
