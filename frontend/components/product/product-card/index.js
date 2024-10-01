@@ -31,7 +31,7 @@ export default function ProductCard({
                         width={images[0].width}
                         height={images[0].height}
                         src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${images[0].src}`}
-                        sx={{objectFit: "contain" }} />
+                        sx={{p: 2, objectFit: "contain" }} />
                 ) : (
                     <IconCamera color='grey' size={150} strokeWidth={1.5} />
                 )}

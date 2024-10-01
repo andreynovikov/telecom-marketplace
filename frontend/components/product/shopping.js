@@ -14,7 +14,7 @@ export default function ProductShopping(props) {
     const { product } = props
 
     const { status } = useSession()
-    const { cart, modify } = useCart()
+    const { cart, available, modify } = useCart()
     const cartItem = cart.find(item => item.product.id === product.id)
 
     const handleCartAmountChange = amount => () => modify(product.id, amount)
@@ -28,7 +28,7 @@ export default function ProductShopping(props) {
                 {/*<Box color="inherit">Stock Available</Box>*/}
             </Box>
 
-            {status === 'authenticated' ? (
+            {available && status === 'authenticated' ? (
                 <Button color="primary" variant="contained" onClick={handleCartAmountChange(1)} disabled={cartItem !== undefined} sx={{
                     mb: 4.5,
                     px: "1.75rem",

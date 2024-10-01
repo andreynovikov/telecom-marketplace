@@ -18,6 +18,7 @@ export default function ProductCardShopping(props) {
     } = product || {}
 
     const {
+        available,
         cartItem,
         handleCartAmountChange
     } = useProduct(id)
@@ -29,6 +30,9 @@ export default function ProductCardShopping(props) {
     const handleDecrementQuantity = () => {
         handleCartAmountChange((cartItem?.quantity || 0) - 1, 'remove')
     }
+
+    if (!available)
+        return null
 
     return (
         <div>
