@@ -5,7 +5,7 @@ from flask import Flask, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, set_access_cookies
 
-from .models import bcrypt, db_wrapper, jwt, thumbnail, setup_db
+from .models import bcrypt, db_wrapper, jwt, setup_db
 
 
 cors = CORS()
@@ -28,7 +28,6 @@ def create_app(context=None):
     cors.init_app(app, supports_credentials=True)
     bcrypt.init_app(app)
     jwt.init_app(app)
-    thumbnail.init_app(app)
 
     # Initialize database
     db_wrapper.init_app(app)

@@ -7,6 +7,7 @@ import Avatar from '@mui/material/Avatar'
 import { FlexBox, FlexRowCenter } from '@/components/theme/flex-box'
 import LazyImage from '@/components/theme/LazyImage'
 
+import { IconCamera } from '@tabler/icons-react'
 
 export default function ProductImage({ name, images }) {
     const [selectedImage, setSelectedImage] = useState(0)
@@ -25,11 +26,11 @@ export default function ProductImage({ name, images }) {
                             objectFit: "contain"
                         }} />
                 ) : (
-                    null
+                    <IconCamera color='grey' size={350} strokeWidth={1.0} />
                 )}
             </FlexBox>
 
-            {images.length > 0 && (
+            {images.length > 1 && (
                 <FlexBox overflow="auto">
                     {images.map((image, index) => (
                         <FlexRowCenter

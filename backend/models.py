@@ -4,7 +4,6 @@ import os
 from datetime import datetime
 
 from flask_jwt_extended import JWTManager
-from flask_thumbnails import Thumbnail
 from peewee import BooleanField, CharField, DateTimeField, DecimalField, DeferredForeignKey, ForeignKeyField, IntegerField, SmallIntegerField
 from playhouse.flask_utils import FlaskDB
 
@@ -12,7 +11,6 @@ from .fields import bcrypt, PasswordField  # noqa F401
 
 
 jwt = JWTManager()
-thumbnail = Thumbnail()
 db_wrapper = FlaskDB()
 
 KIND_PROVIDER = 1
@@ -172,12 +170,12 @@ class ProductImage(db_wrapper.Model):
             'file': self.file,
             'width': self.width,
             'height': self.height,
-            'src': '/' + image_path,
-            'thumbnail': {
-                'src': thumbnail.get_thumbnail(image_path, '260x280'),
-                'width': 260,
-                'height': 280
-            }
+            'src': '/' + image_path
+            # 'thumbnail': {
+            #     'src': thumbnail.get_thumbnail(image_path, '260x280', crop="pad", background=0xffffff),
+            #     'width': 260,
+            #     'height': 280
+            # }
         }
         return data
 

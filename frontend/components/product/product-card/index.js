@@ -2,10 +2,12 @@ import { Fragment } from 'react'
 import Link from 'next/link'
 
 import LazyImage from "@/components/theme/LazyImage";
-import { FlexBox } from "@/components/theme/flex-box";
-import { H6, Paragraph } from "@/components/theme/Typography";
+import { FlexRowCenter } from "@/components/theme/flex-box";
+import { H6 } from "@/components/theme/Typography";
 
 import ProductCardShopping from './shopping'
+
+import { IconCamera } from '@tabler/icons-react'
 
 import { currency } from '@/lib'
 
@@ -22,16 +24,20 @@ export default function ProductCard({
 
     return <Fragment>
         <Link href={`/product/${id}`}>
-            <FlexBox bgcolor="grey.50" borderRadius={3} mb={2}>
-                {images.length > 0 && (
+            <FlexRowCenter bgcolor="grey.50" borderRadius={3} mb={2} sx={{ aspectRatio: 1 }}>
+                {images.length > 0 ? (
                     <LazyImage
                         alt={name}
-                        width={images[0].thumbnail.width}
-                        height={images[0].thumbnail.height}
-                        src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${images[0].thumbnail.src}`}
-                        sx={{p: 5}} />
+                        width={images[0].width}
+                        height={images[0].height}
+                        src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${images[0].src}`}
+                        sx={{p: 5, objectFit: "contain" }} />
+                ) : (
+                    <>
+                        <IconCamera color='grey' size={150} strokeWidth={1.5} />
+                    </>
                 )}
-            </FlexBox>
+            </FlexRowCenter>
         </Link>
 
         <Content>
