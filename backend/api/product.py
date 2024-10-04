@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
 from peewee import fn
 
@@ -22,7 +22,6 @@ def create_category():
         return jsonify(msg='Доступ запрещён'), 401
 
     data = request.get_json()
-    current_app.logger.error(data)
     if ProductCategory.select().count() > 0:
         seq = ProductCategory.select(fn.Max(ProductCategory.seq)).scalar() + 1
     else:
@@ -53,10 +52,8 @@ def update_category(id):
         else:
             seq = ProductCategory.select(ProductCategory.seq).where(ProductCategory.id == before).scalar()
             ProductCategory.update(seq=ProductCategory.seq + 1).where(ProductCategory.seq >= seq).execute()
-        current_app.logger.error(seq)
         ProductCategory.update(seq=seq).where(ProductCategory.id == id).execute()
     category = ProductCategory.get_by_id(id)
-    current_app.logger.error(category.serialize)
     return category.serialize
 
 

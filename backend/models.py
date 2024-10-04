@@ -51,6 +51,7 @@ class Brand(db_wrapper.Model):
 class ServiceCategory(db_wrapper.Model):
     name = CharField(verbose_name='название')
     seq = SmallIntegerField(verbose_name='порядок')
+    parent = ForeignKeyField('self', backref='children', null=True, verbose_name='родитель')
 
     def __str__(self):
         return self.name
@@ -59,7 +60,8 @@ class ServiceCategory(db_wrapper.Model):
     def serialize(self):
         data = {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'parent': self.parent_id
         }
         return data
 

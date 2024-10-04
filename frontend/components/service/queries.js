@@ -2,11 +2,27 @@
 
 import { revalidateTag } from 'next/cache'
 
+import stringify from 'json-sorted-stringify'
+
 import { auth } from '@/lib/auth'
 
-export async function getServices(categoryId) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services?category=${categoryId}`, {
-        next: { tags: [`services__category__${categoryId}`] }
+export async function getServices(filters=null) {
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_ROOT}/services`)
+
+    let key = ''
+    if (filters !== null) {
+        for (const filter of filters)
+            if (Array.isArray(filter.value)) {
+                for (const value of filter.value)
+                    url.searchParams.append(filter.field, value)
+            } else {
+                url.searchParams.append(filter.field, filter.value)
+            }
+        key = '__' + stringify(filters)
+    }
+
+    const res = await fetch(url.toString(), {
+        next: { tags: [`services__${key}`] }
     })
 
     if (!res.ok) {
@@ -47,9 +63,8 @@ export async function revalidateFiles(serviceId) {
     revalidateTag(`services__files__${serviceId}`)
 }
 
-export async function createService(categoryId, _currentState, formData) {
+export async function createService(_currentState, formData) {
     const values = Object.fromEntries(formData.entries())
-    values['category'] = categoryId
     console.log(values)
     const session = await auth()
 
@@ -66,7 +81,7 @@ export async function createService(categoryId, _currentState, formData) {
         const result = await response.json();
         if (response.ok) {
             console.log(result)
-            revalidateTag(`services__category__${categoryId}`)
+            revalidateTag(`services`)
             return result
         } else {
             console.error(result.msg)
@@ -82,9 +97,8 @@ export async function createService(categoryId, _currentState, formData) {
     }
 }
 
-export async function updateService(serviceId, categoryId, _currentState, formData) {
+export async function updateService(serviceId, _currentState, formData) {
     const values = Object.fromEntries(formData.entries())
-    values['category'] = categoryId
     console.log(values)
     const session = await auth()
 
@@ -101,7 +115,7 @@ export async function updateService(serviceId, categoryId, _currentState, formDa
         const result = await response.json();
         if (response.ok) {
             console.log(result)
-            revalidateTag(`services__category__${categoryId}`)
+            revalidateTag(`services`)
             revalidateTag(`services__${serviceId}`)
             return result
         } else {
@@ -118,7 +132,7 @@ export async function updateService(serviceId, categoryId, _currentState, formDa
     }
 }
 
-export async function deleteService(serviceId, categoryId, _currentState, _formData) {
+export async function deleteService(serviceId, _currentState, _formData) {
     const session = await auth()
 
     try {
@@ -132,7 +146,7 @@ export async function deleteService(serviceId, categoryId, _currentState, _formD
 
         const result = await response.json();
         if (response.ok) {
-            revalidateTag(`services__category__${categoryId}`)
+            revalidateTag(`services`)
             return result
         } else {
             console.error(result.msg)

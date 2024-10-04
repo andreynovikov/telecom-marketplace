@@ -13,7 +13,7 @@ import TextField from '@mui/material/TextField'
 import { createCategory, updateCategory, deleteCategory } from '../queries'
 
 export default function CategoryEditDialog(props) {
-    const { category, open, setOpen } = props
+    const { category, parent, open, setOpen } = props
     const updateCategoryWithId = updateCategory.bind(null, category?.id)
     const deleteCategoryWithId = deleteCategory.bind(null, category?.id)
 
@@ -22,10 +22,11 @@ export default function CategoryEditDialog(props) {
     useEffect(() => {
         if (state.id)
             setOpen(false)
-    }, [state])
+    }, [state, setOpen])
 
     return (
         <Dialog open={open} onClose={() => setOpen(false)} PaperProps={{ component: 'form', action: dispatch }}>
+            {parent && <input type="hidden" name="parent" value={parent} />}
             <DialogTitle variant="h6" component="h2">
                 {category?.id ? 'Редактировать категорию' : 'Добавить категорию'}
             </DialogTitle>

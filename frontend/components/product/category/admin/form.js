@@ -22,7 +22,7 @@ export default function CategoryEditDialog(props) {
     useEffect(() => {
         if (state.id)
             setOpen(false)
-    }, [state])
+    }, [state, setOpen])
 
     return (
         <Dialog open={open} onClose={() => setOpen(false)} PaperProps={{ component: 'form', action: dispatch }}>

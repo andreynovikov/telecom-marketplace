@@ -10,32 +10,36 @@ import { StyledTableHeaderCell } from '@/components/theme/pages-sections/vendor-
 
 import Scrollbar from '@/components/theme/scrollbar'
 
-import AddAction from '@/components/service/category/admin/add-button'
-import CategoryRow from '@/components/service/category/admin/row'
+import AddAction from '@/components/service/admin/add-button'
+import ServiceRow from '@/components/service/admin/row'
 
-import { getCategories } from '@/components/service/category/queries'
+import { getServices } from '@/components/service/queries'
 
 import { auth } from '@/lib/auth'
 
 const tableHeading = [{
     id: "name",
-    label: "Категория",
+    label: "Название",
     align: "left"
 }, {
-    id: "services",
-    label: "Услуги",
-    align: "left"
+    id: "attachment",
+    label: "Вложения",
+    align: "center"
+}, {
+    id: "description",
+    label: "Описание",
+    align: "center"
 }, {
     id: "action",
     label: "Действия",
     align: "center"
 }];
 
-export default async function CategoryList() {
+export default async function ServiceList() {
     const session = await auth()
     if (session?.user?.role !== "admin") return <div>Not authenticated</div>
 
-    const categories = await getCategories()
+    const services = await getServices()
 
     return (
         <PageWrapper title="Услуги">
@@ -54,7 +58,7 @@ export default async function CategoryList() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {categories.map(category => <CategoryRow key={category.id} category={category} />)}
+                                {services.map(service => <ServiceRow key={service.id} service={service} />)}
                             </TableBody>
                         </Table>
                     </TableContainer>

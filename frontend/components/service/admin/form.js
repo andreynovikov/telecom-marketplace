@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useFormState } from 'react-dom'
 import dynamic from 'next/dynamic'
 
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import Dialog from '@mui/material/Dialog'
@@ -12,33 +13,30 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 
+import CategorySelect from '../category/admin/select'
+
 const MDXEditor = dynamic(() => import('@/components/ui/admin/mdx-editor'), { ssr: false })
 
 import { createService, updateService, deleteService } from '../queries'
 
 export default function ServiceEditDialog(props) {
-    const { service, categoryId, open, setOpen } = props
+    const { service, open, setOpen } = props
     const [description, setDescription] = useState('')
 
-    const createServiceWithCategory = createService.bind(null, categoryId)
-    const updateServiceWithCategory = updateService.bind(null, service?.id, categoryId)
-    const deleteServiceWithCategory = deleteService.bind(null, service?.id, categoryId)
+    const updateServiceWithId = updateService.bind(null, service?.id)
+    const deleteServiceWithId = deleteService.bind(null, service?.id)
 
-    const [state, dispatch] = useFormState(service?.id ? updateServiceWithCategory : createServiceWithCategory, service || {})
+    const [state, dispatch] = useFormState(service?.id ? updateServiceWithId : createService, service || {})
 
     useEffect(() => {
         if (state.id)
             setOpen(false)
-    }, [state])
+    }, [state, setOpen])
 
     useEffect(() => {
         if (service)
             setDescription(service.description)
     }, [service])
-
-    const hanldeDescriptionChange = (value) => {
-        setDescription(value)
-    }
 
     return (
         <Dialog open={open} maxWidth="lg" onClose={() => setOpen(false)} PaperProps={{ component: 'form', action: dispatch }}>
@@ -67,6 +65,11 @@ export default function ServiceEditDialog(props) {
                     defaultValue={service?.name}
                     InputLabelProps={{ shrink: !!service?.name ? true : undefined }} />
 
+                <Box margin={1}>
+                    Категория *{' '}
+                    <CategorySelect name="category" defaultValue={service?.category} />
+                </Box>
+
                 <Suspense fallback={
                     <TextField
                         fullWidth
@@ -80,13 +83,13 @@ export default function ServiceEditDialog(props) {
                 }>
                     <Card raised={false} sx={{ mt: 1, p: 1 }}>
                         <input type="hidden" name="description" value={description} />
-                        <MDXEditor markdown={service?.description || ''} onChange={hanldeDescriptionChange} />
+                        <MDXEditor markdown={service?.description || ''} onChange={setDescription} />
                     </Card>
                 </Suspense>
             </DialogContent>
             <DialogActions>
                 {service?.id && (
-                    <Button color="error" type="submit" formAction={deleteServiceWithCategory}>
+                    <Button color="error" type="submit" formAction={deleteServiceWithId}>
                         Удалить
                     </Button>
                 )}

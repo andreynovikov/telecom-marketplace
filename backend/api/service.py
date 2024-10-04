@@ -10,7 +10,7 @@ bp = Blueprint('service', __name__, url_prefix='/services')
 @bp.route('categories', methods=['GET'])
 def list_categories():
     query = (
-        ServiceCategory.select().order_by(ServiceCategory.seq)
+        ServiceCategory.select().order_by(ServiceCategory.parent, ServiceCategory.seq)
     )
     return [c.serialize for c in query]
 
@@ -30,6 +30,11 @@ def create_category():
     return category.serialize
 
 
+@bp.route('categories/<int:id>', methods=['GET'])
+def get_category(id):
+    return ServiceCategory.get_by_id(id).serialize
+
+
 @bp.route('categories/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_category(id):
@@ -37,7 +42,17 @@ def update_category(id):
         return jsonify(msg='Доступ запрещён'), 401
 
     data = request.get_json()
+    before = data.pop('before', None)
     ServiceCategory.update(**data).where(ServiceCategory.id == id).execute()
+    if before is not None:
+        if int(before) < 0:
+            seq = ServiceCategory.select(ServiceCategory.seq).where(ServiceCategory.id == id).scalar()
+            ServiceCategory.update(seq=ServiceCategory.seq - 1).where(ServiceCategory.seq >= seq).execute()
+            seq = ServiceCategory.select(fn.Max(ServiceCategory.seq)).scalar() + 1
+        else:
+            seq = ServiceCategory.select(ServiceCategory.seq).where(ServiceCategory.id == before).scalar()
+            ServiceCategory.update(seq=ServiceCategory.seq + 1).where(ServiceCategory.seq >= seq).execute()
+        ServiceCategory.update(seq=seq).where(ServiceCategory.id == id).execute()
     category = ServiceCategory.get_by_id(id)
     return category.serialize
 
@@ -48,6 +63,8 @@ def delete_category(id):
     if not current_user.admin:
         return jsonify(msg='Доступ запрещён'), 401
 
+    if ServiceCategory.select().where(ServiceCategory.parent == id).count() > 0:
+        return jsonify(msg='Удаление невозможно: категория содержит подкатегории'), 400
     if Service.select().where(Service.category == id).count() > 0:
         return jsonify(msg='Категория должна быть пустой'), 400
 
@@ -57,11 +74,15 @@ def delete_category(id):
 
 @bp.route('', methods=['GET'])
 def list_services():
-    category = request.args.getlist('category')
-    query = (
-        Service.select().where(Service.category == category)
+    services = (
+        Service.select()
     )
-    return [s.serialize for s in query]
+
+    for field, values in request.args.lists():
+        if field == 'category':
+            services = services.where(Service.category == values)
+
+    return [s.serialize for s in services]
 
 
 @bp.route('<int:id>', methods=['GET'])
