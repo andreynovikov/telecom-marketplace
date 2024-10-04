@@ -5,6 +5,8 @@ import Footer from "@/components/theme/footer"
 import { MobileNavigationBar } from "@/components/theme/mobile-navigation"
 import StickyHeader from '@/components/ui/sticky-header'
 
+export const revalidate = 0
+
 export default function RootLayout({ children }) {
     return (
         <Fragment>

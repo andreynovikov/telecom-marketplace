@@ -6,6 +6,8 @@ import ProductCard from '@/components/product/product-card'
 
 import { getProducts } from '@/components/product/queries'
 
+export const revalidate = 0
+
 export default async function Index() {
     const products = await getProducts()
 
