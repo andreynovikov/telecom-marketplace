@@ -2,10 +2,28 @@
 
 import { revalidatePath, revalidateTag } from 'next/cache'
 
+import stringify from 'json-sorted-stringify'
+
 import { auth } from '@/lib/auth'
 
-export async function getProducts() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/products`, { next: { tags: ['products'] } })
+export async function getProducts(filters=null) {
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_ROOT}/products`)
+
+    let key = ''
+    if (filters !== null) {
+        for (const filter of filters)
+            if (Array.isArray(filter.value)) {
+                for (const value of filter.value)
+                    url.searchParams.append(filter.field, value)
+            } else {
+                url.searchParams.append(filter.field, filter.value)
+            }
+        key = '__' + stringify(filters)
+    }
+
+    const res = await fetch(url.toString(), {
+        next: { tags: [`products__${key}`] }
+    })
 
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary

@@ -74,10 +74,15 @@ def delete_category(id):
 
 @bp.route('', methods=['GET'])
 def list_products():
-    query = (
+    products = (
         Product.select().order_by(Product.name, Product.id)
     )
-    return [b.serialize for b in query]
+
+    for field, values in request.args.lists():
+        if field == 'category':
+            products = products.where(Product.category == values)
+
+    return [p.serialize for p in products]
 
 
 @bp.route('<int:id>', methods=['GET'])
