@@ -70,7 +70,7 @@ class Service(db_wrapper.Model):
     category = ForeignKeyField(ServiceCategory, verbose_name='категория')
     short_name = CharField(verbose_name='краткое название')
     name = CharField(verbose_name='название')
-    description = CharField(null=True, verbose_name='описание')
+    description = CharField(max_length=None, null=True, verbose_name='описание')
 
     @property
     def serialize(self):

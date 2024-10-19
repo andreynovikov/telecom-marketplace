@@ -7,12 +7,15 @@ export default async function ServiceSidebarMenu() {
     const categories = await getCategories()
 
     const { tree, refs } = categories.reduce(({ tree, refs }, category) => {
+        category.id = category.id.toString()
+        if (category.parent)
+            category.parent = category.parent.toString()
         if (category.id in refs)
             refs[category.id] = { ...category, ...refs[category.id] }
         else
             refs[category.id] = category
         if (category.parent === null) {
-            tree.push(category)
+            tree.push(refs[category.id])
         } else {
             if (!(category.parent in refs))
                 refs[category.parent] = {

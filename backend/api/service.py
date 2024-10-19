@@ -75,7 +75,7 @@ def delete_category(id):
 @bp.route('', methods=['GET'])
 def list_services():
     services = (
-        Service.select()
+        Service.select().order_by(Service.name)
     )
 
     for field, values in request.args.lists():
