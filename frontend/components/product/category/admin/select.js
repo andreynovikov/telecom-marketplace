@@ -32,7 +32,7 @@ export default function CategorySelect(props) {
             else
                 refs[category.id] = category
             if (category.parent === null) {
-                tree.push(category)
+                tree.push(refs[category.id])
             } else {
                 if (!(category.parent in refs))
                     refs[category.parent] = {
@@ -52,6 +52,8 @@ export default function CategorySelect(props) {
     }, [categories])
 
     useEffect(() => {
+        if (defaultValue === undefined)
+            return
         const expand = []
         let parent = categoryRefs[defaultValue.toString()]
         while (parent !== undefined) {
