@@ -24,12 +24,11 @@ export default function ProductCard({
 
     return <Fragment>
         <Link href={`/product/${id}`}>
-            <FlexRowCenter bgcolor="grey.50" borderRadius={3} mb={2} sx={{ aspectRatio: 1 }}>
+            <FlexRowCenter bgcolor="grey.50" borderRadius={3} mb={2} sx={{ aspectRatio: 1, position: "relative" }}>
                 {images.length > 0 ? (
                     <LazyImage
                         alt={name}
-                        width={images[0].width}
-                        height={images[0].height}
+                        fill
                         src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${images[0].src}`}
                         sx={{p: 2, objectFit: "contain" }} />
                 ) : (
