@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+import Link from 'next/link'
 
 import StickyWrapper from '@/components/theme/sticky-wrapper'
 import { MobileNavigationBar } from '@/components/theme/mobile-navigation'
@@ -20,7 +21,7 @@ export default function HomeLayout({
         }}>
             <H5 sx={{my: 1}}>Услуги</H5>
             <ServiceSidebarMenu />
-            <H5 sx={{mt: 2, mb: 1}}>Товары</H5>
+            <H5 sx={{mt: 2, mb: 1}}><Link href="/">Товары</Link></H5>
             <ProductSidebarMenu />
         </Scrollbar>
         <Footer />

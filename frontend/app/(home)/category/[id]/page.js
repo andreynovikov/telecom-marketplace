@@ -1,5 +1,9 @@
+import Link from 'next/link'
+
+import { Button } from '@mui/material'
 import Grid from '@mui/material/Grid'
 
+import { FlexBetween } from '@/components/theme/flex-box'
 import { Paragraph } from '@/components/theme/Typography'
 
 import ProductCard from '@/components/product/product-card'
@@ -19,9 +23,16 @@ export default async function Products({ params }) {
 
     return (
         <div className="mb-4">
-            <Paragraph fontSize={18} fontWeight={600} mb={3}>
-                {category.name}
-            </Paragraph>
+            <FlexBetween mb={3}>
+                <Paragraph fontSize={18} fontWeight={600}>
+                    {category.name}
+                </Paragraph>
+                <Link href="/" passHref>
+                    <Button variant="outlined" size="small" color="secondary" sx={{ textTransform: "none" }}>
+                        Все товары
+                    </Button>
+                </Link>
+            </FlexBetween>
 
             <Grid container spacing={3}>
                 {products.map(product => <Grid item xl={3} md={4} sm={6} xs={12} key={product.id}>
