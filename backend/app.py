@@ -19,6 +19,7 @@ def create_app(context=None):
     app = Flask(__name__)
     app.config.from_prefixed_env()
     app.config.update({
+        'FLASKDB_EXCLUDED_ROUTES': ('/media/<path:path>',),
         'JWT_TOKEN_LOCATION': ('headers', 'cookies'),
         'JWT_ACCESS_TOKEN_EXPIRES': timedelta(hours=2400),  # TODO: Refactor with refresh token
         'JWT_COOKIE_CSRF_PROTECT': False  # TODO: FIX!
@@ -34,11 +35,6 @@ def create_app(context=None):
     setup_db(app)
     db = db_wrapper.database
 
-    @app.before_request
-    def _db_connect():
-        if db.is_closed():
-            db.connect()
-
     @app.after_request
     def _refresh_expiring_jwts(response):
         try:
@@ -53,11 +49,6 @@ def create_app(context=None):
             # Case where there is not a valid JWT. Just return the original response
             return response
 
-    @app.teardown_request
-    def _db_close(e):
-        if not db.is_closed():
-            db.close()
-
     @app.route('/healthcheck', methods=['GET'])
     def healthcheck():
         database = {**db.connect_params}
@@ -65,6 +56,11 @@ def create_app(context=None):
             database['password'] = '*****'
         database['connected'] = db.is_connection_usable()
         database['name'] = db.database
+        database['pool'] = {
+            'max': db._max_connections,
+            'idle': len(db._connections),
+            'active': len(db._in_use)
+        }
 
         if database['connected']:
             status = 'ok'
