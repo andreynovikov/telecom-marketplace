@@ -6,11 +6,14 @@ import dynamic from 'next/dynamic'
 
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
+import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
+import FormGroup from '@mui/material/FormGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import TextField from '@mui/material/TextField'
 
 import BrandSelect from '@/components/brand/admin/select'
@@ -79,6 +82,12 @@ export default function ProductEditDialog(props) {
                     margin="dense"
                     defaultValue={product?.price}
                     InputLabelProps={{ shrink: !!product?.price ? true : undefined }} />
+
+                <FormGroup>
+                    <FormControlLabel
+                        control={<Checkbox name="add_watermark" value="1" defaultChecked={product?.add_watermark} />}
+                        label="Добавлять водяной знак" />
+                </FormGroup>
 
                 <Box margin={1}>
                     Категория *{' '}

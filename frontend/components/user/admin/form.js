@@ -26,7 +26,7 @@ export default function UserEditDialog(props) {
     useEffect(() => {
         if (state.data?.id)
             setOpen(false)
-    }, [state])
+    }, [state, setOpen])
 
     return (
         <Dialog open={open} onClose={() => setOpen(false)} PaperProps={{ component: 'form', action: dispatch }}>

@@ -6,7 +6,8 @@ from flask_jwt_extended import current_user, jwt_required
 from peewee import fn
 from PIL import Image
 
-from ..models import ProductImage, ServiceFile, UserFile
+from ..models import Product, ProductImage, ServiceFile, UserFile
+from ..images import add_watermark
 
 secure_file_name = re.compile(r"[/\\?%*:|\"<>\x7F\x00-\x1F]")
 
@@ -21,6 +22,10 @@ def setup_files(app):
         'model': ProductImage,
         'instance': ProductImage.product,
         'image': True,
+        'watermark': {
+            'model': Product,
+            'condition_field': 'add_watermark'
+        },
         'sorted': True
     }
     SCOPES['services'] = {
@@ -151,6 +156,13 @@ def upload_file(scope, instance):
     if SCOPES[scope]['image']:
         image = Image.open(file_path)
         file_object.width, file_object.height = image.size
+        if 'watermark' in SCOPES[scope]:
+            model = SCOPES[scope]['watermark']['model']
+            id_field = getattr(model, 'id')
+            condition_object = model.select().where(id_field == instance).first()
+            if getattr(condition_object, SCOPES[scope]['watermark']['condition_field']):
+                add_watermark(image, file_path)
+
     file_object.save()
 
     return file_object.serialize

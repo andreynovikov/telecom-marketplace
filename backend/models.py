@@ -141,6 +141,7 @@ class Product(db_wrapper.Model):
     category = ForeignKeyField(ProductCategory, verbose_name='категория')
     description = CharField(max_length=None, null=True, verbose_name='описание')
     price = IntegerField(verbose_name='цена')
+    add_watermark = BooleanField(default=False, verbose_name='добавлять водяной знак')
 
     @property
     def serialize(self):
@@ -152,6 +153,7 @@ class Product(db_wrapper.Model):
             'category': self.category_id,
             'description': self.description,
             'price': self.price,
+            'add_watermark': self.add_watermark,
             'images': [image.serialize for image in self.images]
         }
         return data
