@@ -32,6 +32,6 @@ export default function HomeLayout({
 
         <StickyWrapper SideNav={Sidebar}>{children}</StickyWrapper>
 
-        <MobileNavigationBar />
+        {/* <MobileNavigationBar /> SET mb xs: 7 IN footer WHEN uncommented */ }
     </div>
 }

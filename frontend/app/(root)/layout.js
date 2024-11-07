@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
         <Fragment>
             <StickyHeader scrollDistance={300} />
             {children}
-            <MobileNavigationBar />
+            {/* <MobileNavigationBar /> SET mb xs: 7 IN footer WHEN uncommented */ }
             <Footer />
         </Fragment>
     )
