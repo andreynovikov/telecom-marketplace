@@ -8,7 +8,7 @@ import Button from '@mui/material/Button'
 // import Add from "@mui/icons-material/Add"
 // import Remove from "@mui/icons-material/Remove"
 
-import useProduct from "@/components/theme/product-cards/use-product"
+import useProduct from '@/components/theme/product-cards/use-product'
 
 export default function ProductCardShopping(props) {
     const { product } = props

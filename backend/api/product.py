@@ -122,3 +122,21 @@ def delete_product(id):
 
     Product.delete_by_id(id)
     return jsonify(id)
+
+
+@bp.route('<int:id>/related', methods=['GET'])
+def list_related_products(id):
+    product = Product.get_by_id(id)
+    related = []
+
+    category = product.category
+    while len(related) < 4:
+        related.extend(list(Product.select().where(Product.id != id, Product.category == category).order_by(fn.Random()).limit(4 - len(related))))
+        if category.parent is None:
+            break
+        category = category.parent
+
+    if len(related) < 4:
+        related.extend(list(Product.select().where(Product.id != id).order_by(fn.Random()).limit(4 - len(related))))
+
+    return [p.serialize for p in related]

@@ -19,6 +19,7 @@ export default function ProductCard({
     const {
         id,
         name,
+        price,
         images
     } = product || {};
 
@@ -43,7 +44,7 @@ export default function ProductCard({
             </H6>
 
             <PriceText>
-                { currency(product.price) }
+                { currency(price) }
             </PriceText>
 
             <ProductCardShopping product={product} />

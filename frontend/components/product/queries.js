@@ -44,6 +44,19 @@ export async function getProduct(productId) {
     return res.json()
 }
 
+export async function getRelatedProducts(productId) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/products/${productId}/related`, {
+        next: { tags: [`products__${productId}__related`] }
+    })
+
+    if (!res.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        throw new Error('Failed to fetch data')
+    }
+
+    return res.json()
+}
+
 export async function revalidateImages(productId) {
     revalidateTag(`products__images__${productId}`)
     revalidatePath(`/product/${productId}`, 'page')
