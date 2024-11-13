@@ -2,6 +2,7 @@ import csv
 import os
 
 from datetime import datetime
+from decimal import Decimal
 
 from flask_jwt_extended import JWTManager
 from peewee import BooleanField, CharField, DateTimeField, DecimalField, DeferredForeignKey, ForeignKeyField, IntegerField, SmallIntegerField
@@ -214,11 +215,18 @@ class Contractor(db_wrapper.Model):
     comment = CharField(max_length=None, null=True, verbose_name='комментарий')
 
     def serialize(self, admin=False):
+        if admin:
+            price_factor = self.price_factor_id
+        elif self.price_factor is not None:
+            price_factor = self.price_factor.factor
+        else:
+            price_factor = Decimal('1')
+            
         data = {
             'id': self.id,
             'kind': self.kind,
             'status': self.status,
-            'price_factor': self.price_factor_id if admin else self.price_factor.factor,
+            'price_factor': price_factor,
             'end_consumer': self.end_consumer,
             'name': self.name,
             'inn': self.inn,

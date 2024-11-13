@@ -46,8 +46,6 @@ export default function ProductCardShopping(props) {
 
     return (
         <div>
-            {priceFactor}
-            
             <PriceText>
                 { currency(price * priceFactor) }
             </PriceText>
