@@ -8,17 +8,23 @@ import Button from '@mui/material/Button'
 // import Add from "@mui/icons-material/Add"
 // import Remove from "@mui/icons-material/Remove"
 
-import useProduct from '@/components/theme/product-cards/use-product'
+import useProduct from '../use-product'
+
+import { PriceText } from './styles'
+
+import { currency } from '@/lib'
 
 export default function ProductCardShopping(props) {
     const { product } = props
 
     const {
-        id
+        id,
+        price
     } = product || {}
 
     const {
         available,
+        priceFactor,
         cartItem,
         handleCartAmountChange
     } = useProduct(id)
@@ -32,10 +38,20 @@ export default function ProductCardShopping(props) {
     }
 
     if (!available)
-        return null
+        return (
+            <PriceText>
+                { currency(price) }
+            </PriceText>
+        )
 
     return (
         <div>
+            {priceFactor}
+            
+            <PriceText>
+                { currency(price * priceFactor) }
+            </PriceText>
+
             <Button disableElevation color="primary" variant="contained" disabled={cartItem?.quantity > 0} onClick={handleIncrementQuantity}>
                 {cartItem?.quantity > 0 ? 'В корзине' : 'В корзину'}
             </Button>

@@ -22,7 +22,7 @@ function ListItem({
 }
 
 export default function CheckoutSummary() {
-    const { cart, total } = useCart()
+    const { cart, priceFactor, total } = useCart()
 
     return <div>
         <Paragraph color="secondary.900" fontWeight={700} mb={2}>
@@ -35,7 +35,7 @@ export default function CheckoutSummary() {
                     {/*<Span fontWeight="700">{item.quantity}</Span> x */}{item.product.name}
                 </Paragraph>
 
-                <Paragraph>{currency(item.product.price)}</Paragraph>
+                <Paragraph>{currency(item.product.price * priceFactor)}</Paragraph>
             </FlexBetween>
         ))}
 
@@ -51,6 +51,6 @@ export default function CheckoutSummary() {
           */
         }
 
-        <ListItem title="Всего" value={total} color="inherit" />
+        <ListItem title="Всего" value={total * priceFactor} color="inherit" />
     </div>
 }

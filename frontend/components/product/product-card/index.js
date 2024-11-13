@@ -9,9 +9,7 @@ import ProductCardShopping from './shopping'
 
 import { IconCamera } from '@tabler/icons-react'
 
-import { currency } from '@/lib'
-
-import { Content, PriceText } from "./styles";
+import { Content } from './styles'
 
 export default function ProductCard({
     product
@@ -19,7 +17,6 @@ export default function ProductCard({
     const {
         id,
         name,
-        price,
         images
     } = product || {};
 
@@ -42,10 +39,6 @@ export default function ProductCard({
             <H6 fontSize={17} fontWeight={700}>
                 {name}
             </H6>
-
-            <PriceText>
-                { currency(price) }
-            </PriceText>
 
             <ProductCardShopping product={product} />
         </Content>

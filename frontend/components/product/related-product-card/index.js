@@ -11,7 +11,7 @@ import ProductViewDialog from '../view-dialog'
 import HoverActions from './components/hover-actions'
 import QuantityButtons from './components/quantity-buttons'
 
-import useProduct from '@/components/theme/product-cards/use-product'
+import useProduct from '../use-product'
 
 import { currency } from '@/lib'
 
@@ -32,6 +32,7 @@ export default function ProductCard({
 
     const {
         available,
+        priceFactor,
         cartItem,
         isFavorite,
         toggleFavorite,
@@ -79,7 +80,7 @@ export default function ProductCard({
                 </Link>
 
                 <Paragraph fontWeight={600} color="primary.main" mt={0.5}>
-                    {currency(price)}
+                    {currency(price * priceFactor)}
                 </Paragraph>
 
             </Box>

@@ -213,13 +213,12 @@ class Contractor(db_wrapper.Model):
     pricelist = DeferredForeignKey('UserFile', null=True, verbose_name='прайслист')
     comment = CharField(max_length=None, null=True, verbose_name='комментарий')
 
-    @property
-    def serialize(self):
+    def serialize(self, admin=False):
         data = {
             'id': self.id,
             'kind': self.kind,
             'status': self.status,
-            'price_factor': self.price_factor_id,
+            'price_factor': self.price_factor_id if admin else self.price_factor.factor,
             'end_consumer': self.end_consumer,
             'name': self.name,
             'inn': self.inn,
@@ -231,9 +230,10 @@ class Contractor(db_wrapper.Model):
             'pricelist': self.pricelist.serialize if self.pricelist else None,
             'services': [{'id': s.service.id, 'approved': s.approved} for s in self.services],
             'geography': [{'code': g.subject.code, 'approved': g.approved} for g in self.geography],
-            'users': [u.user.id for u in self.users],
-            'comment': self.comment
         }
+        if admin:
+            data['users'] = [u.user.id for u in self.users],
+            data['comment'] = self.comment
         return data
 
     def reload(self):

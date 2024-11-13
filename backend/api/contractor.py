@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
 
-from ..models import db_wrapper, Contractor, Catalogue, Geography, ContractorUser, User, UserFile
+from ..models import db_wrapper, Contractor, Catalogue, Geography, ContractorUser, User
 from ..models import STATUS_MODIFIED
 
 bp = Blueprint('contractor', __name__, url_prefix='/contractors')
@@ -13,14 +13,11 @@ def list_contractors():
     contractors = (
         Contractor
         .select()
-        .join(ContractorUser)
-        .join(User)
-        .join(UserFile)
         .distinct()
     )
 
     if not current_user.admin:
-        contractors = contractors.where(User.id == current_user.id)
+        contractors = contractors.join(ContractorUser).join(User).where(User.id == current_user.id)
 
     for field, values in request.args.lists():
         if field == 'kind':
@@ -56,11 +53,7 @@ def list_contractors():
                 Geography.create(contractor=contractor, subject=code)
     elif contractors is None:
         return []
-    data = [contractor.serialize for contractor in contractors]
-    if not current_user.admin:
-        for item in data:
-            item.pop('comment', None)
-            item.pop('price_factor', None)
+    data = [contractor.serialize(current_user.admin) for contractor in contractors]
     return data
 
 
@@ -76,10 +69,7 @@ def get_contractor(id):
         .get()
     )
 
-    data = contractor.serialize
-    if not current_user.admin:
-        data.pop('comment', None)
-        data.pop('price_factor', None)
+    data = contractor.serialize(current_user.admin)
     return data
 
 
@@ -105,7 +95,7 @@ def update_contractor(id):
 
     contractor = Contractor.get_by_id(id)
 
-    return contractor.serialize
+    return contractor.serialize(current_user.admin)
 
 
 @bp.route('<int:id>', methods=['DELETE'])
