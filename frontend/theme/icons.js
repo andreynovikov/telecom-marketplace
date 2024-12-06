@@ -5,6 +5,7 @@ import {
     IconPaperclip,
     IconPencil,
     IconPlus,
+    IconSearch,
     IconTrash,
     IconEye,
     IconX
@@ -21,3 +22,4 @@ export const ViewIcon = (props) => makeSvgIcon(IconEye, props)
 export const CloseIcon = (props) => makeSvgIcon(IconX, props)
 export const PlusIcon = (props) => makeSvgIcon(IconPlus, props)
 export const MinusIcon = (props) => makeSvgIcon(IconMinus, props)
+export const SearchIcon = (props) => makeSvgIcon(IconSearch, props)

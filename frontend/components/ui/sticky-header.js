@@ -10,6 +10,7 @@ import Divider from '@mui/material/Divider'
 
 import Sticky from '@/components/theme/sticky'
 import Header from '@/components/theme/header/header'
+import { SearchInputWithCategory } from '@/components/ui/search-box'
 
 export default function StickyHeader(props) {
     const { scrollDistance, divider } = props
@@ -19,6 +20,7 @@ export default function StickyHeader(props) {
 
     const { status } = useSession()
 
+    /*
     const HEADER_SLOT = status === "authenticated" ? null : <div style={{ marginInline: "auto" }}>
         <Button component={Link} href="/register?as=provider" variant="contained" color="primary">
             Стать поставщиком
@@ -28,6 +30,11 @@ export default function StickyHeader(props) {
             Зарегистрировать заказчика
         </Button>
     </div>
+    */
+
+    const HEADER_SLOT = (
+        <SearchInputWithCategory />
+    )
 
     return (
         <Sticky fixedOn={0} onSticky={toggleIsFixed} scrollDistance={scrollDistance}>

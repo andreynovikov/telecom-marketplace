@@ -5,8 +5,9 @@ from datetime import datetime
 from decimal import Decimal
 
 from flask_jwt_extended import JWTManager
-from peewee import BooleanField, CharField, DateTimeField, DecimalField, DeferredForeignKey, ForeignKeyField, IntegerField, SmallIntegerField
+from peewee import fn, BooleanField, CharField, DateTimeField, DecimalField, DeferredForeignKey, ForeignKeyField, IntegerField, SmallIntegerField
 from playhouse.flask_utils import FlaskDB
+from playhouse.postgres_ext import TSVectorField
 
 from .fields import bcrypt, PasswordField  # noqa F401
 
@@ -143,6 +144,7 @@ class Product(db_wrapper.Model):
     description = CharField(max_length=None, null=True, verbose_name='описание')
     price = IntegerField(verbose_name='цена')
     add_watermark = BooleanField(default=False, verbose_name='добавлять водяной знак')
+    fts_vector = TSVectorField()
 
     @property
     def serialize(self):
@@ -158,6 +160,37 @@ class Product(db_wrapper.Model):
             'images': [image.serialize for image in self.images]
         }
         return data
+
+    def update_fts_vector(self):
+        language = 'russian'
+        vector = (
+            fn.setweight(
+                fn.to_tsvector(language, fn.coalesce(Product.code, ''))
+                .concat(fn.to_tsvector(language, fn.coalesce(Product.name, '')))
+                .concat(fn.to_tsvector(language, fn.coalesce(Brand.name, ''))),
+                'A'
+            )
+            .concat(fn.setweight(
+                fn.to_tsvector(language, fn.coalesce(Product.description, '')),
+                'B'
+            ))
+            .concat(fn.setweight(
+                fn.to_tsvector(language, fn.coalesce(ProductCategory.name, '')),
+                'C'
+            ))
+        )
+
+        query = (
+            Product
+            .update(fts_vector=vector)
+            .from_(Brand, ProductCategory)
+            .where(
+                Product.id == self.id,
+                Brand.id == Product.brand,
+                ProductCategory.id == Product.category
+            )
+        )
+        query.execute()
 
 
 class ProductImage(db_wrapper.Model):
@@ -221,7 +254,7 @@ class Contractor(db_wrapper.Model):
             price_factor = self.price_factor.factor
         else:
             price_factor = Decimal('1')
-            
+
         data = {
             'id': self.id,
             'kind': self.kind,

@@ -17,8 +17,6 @@ import prettyBytes from 'pretty-bytes'
 
 import styles from '@/components/ui/admin/mdx-editor.module.css'
 
-const Header = ({ children }) => <Typography variant="h4" sx={{ mt: 2, mb: 1 }}>{children}</Typography>
-
 export default async function Service({ params }) {
     const { id } = params
     const service = await getService(id)

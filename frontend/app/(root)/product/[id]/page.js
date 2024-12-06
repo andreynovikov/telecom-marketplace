@@ -9,7 +9,7 @@ import RelatedProducts from '@/components/product/related'
 export default async function Product({ params }) {
     const product = await getProduct(params.id)
 
-    return <Container className="mt-2 mb-2">
+    return <Container sx={{ my: 2 }}>
         <ProductIntro product={product} />
         <ProductDescription product={product} />
         <RelatedProducts product={product} />

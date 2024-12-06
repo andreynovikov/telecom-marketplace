@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
-from peewee import fn
+from peewee import fn, Expression, SQL
+from playhouse.postgres_ext import TS_MATCH
 
 from ..models import ProductCategory, Product
 
@@ -81,6 +82,17 @@ def list_products():
     for field, values in request.args.lists():
         if field == 'category':
             products = products.where(Product.category == values)
+        if field == 'text':
+            query = fn.plainto_tsquery('russian', values[0]).alias('query')
+            products = (
+                products
+                .select(Product, fn.ts_rank_cd(Product.fts_vector, SQL('query')).alias('rank'))
+                .from_(Product, query)
+                .where(Expression(Product.fts_vector, TS_MATCH, query))
+                .order_by(SQL('rank').desc())
+            )
+            # sql = products.sql()
+            # print(sql[0] % tuple(sql[1]))
 
     return [p.serialize for p in products]
 
@@ -98,7 +110,7 @@ def create_product():
 
     data = request.get_json()
     product = Product.create(**data)
-
+    product.update_fts_vector()
     return product.serialize
 
 
@@ -111,6 +123,7 @@ def update_product(id):
     data = request.get_json()
     Product.update(**data).where(Product.id == id).execute()
     product = Product.get_by_id(id)
+    product.update_fts_vector()
     return product.serialize
 
 
