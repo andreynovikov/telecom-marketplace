@@ -30,7 +30,7 @@ export default function SearchInput() {
         border: 0
       }
     },
-    endAdornment: <Button color="primary" disableElevation variant="contained" sx={{
+    endAdornment: <Button type="submit" color="primary" disableElevation variant="contained" sx={{
       px: "3rem",
       height: "100%",
       borderRadius: "0 4px 4px 0"
