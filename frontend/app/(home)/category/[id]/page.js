@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
-import { Button } from '@mui/material'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 
 import { FlexBetween } from '@/components/theme/flex-box'
@@ -39,6 +40,14 @@ export default async function Products({ params }) {
                     <ProductCard product={product} />
                 </Grid>)}
             </Grid>
+
+            <Box display="flex" justifyContent="flex-end" sx={{ mt: 3 }}>
+                <Link href={`/export/products?category=${id}`} passHref>
+                    <Button variant="outlined" size="small" color="secondary" sx={{ textTransform: "none" }}>
+                        Скачать в виде таблицы
+                    </Button>
+                </Link>
+            </Box>
         </div>
     )
 }

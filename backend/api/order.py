@@ -1,9 +1,7 @@
-from decimal import Decimal
-
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
 
-from ..models import db_wrapper, Order, OrderItem, Product, Contractor, ContractorUser
+from ..models import db_wrapper, Order, OrderItem, Product
 
 bp = Blueprint('order', __name__, url_prefix='/orders')
 
@@ -25,17 +23,7 @@ def list_orders():
 def create_order():
     data = request.get_json()
 
-    contractors = (
-        Contractor
-        .select()
-        .join(ContractorUser)
-        .where(ContractorUser.user == current_user)
-        .distinct()
-    )
-    price_factor = Decimal('1')
-    for contractor in contractors:
-        if contractor.price_factor is not None and contractor.price_factor.factor < price_factor:
-            price_factor = contractor.price_factor.factor
+    price_factor = current_user.get_price_factor()
 
     with db_wrapper.database.atomic():
         order = Order.create(user=current_user, comment=data.pop('comment'))

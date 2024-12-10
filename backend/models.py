@@ -41,6 +41,9 @@ STATUS_CHOICES = [
 class Brand(db_wrapper.Model):
     name = CharField(verbose_name='название')
 
+    def __str__(self):
+        return self.name
+
     @property
     def serialize(self):
         data = {
@@ -320,6 +323,20 @@ class User(db_wrapper.Model):
             'admin': self.admin
         }
         return data
+
+    def get_price_factor(self):
+        contractors = (
+            Contractor
+            .select()
+            .join(ContractorUser)
+            .where(ContractorUser.user == self)
+            .distinct()
+        )
+        price_factor = Decimal('1')
+        for contractor in contractors:
+            if contractor.price_factor is not None and contractor.price_factor.factor < price_factor:
+                price_factor = contractor.price_factor.factor
+        return price_factor
 
 
 class UserFile(db_wrapper.Model):

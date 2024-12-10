@@ -6,7 +6,7 @@ import stringify from 'json-sorted-stringify'
 
 import { auth } from '@/lib/auth'
 
-export async function getProducts(filters=null) {
+export async function getProducts(filters = null) {
     const url = new URL(`${process.env.NEXT_PUBLIC_API_ROOT}/products`)
 
     let key = ''
@@ -31,6 +31,38 @@ export async function getProducts(filters=null) {
     }
 
     return res.json()
+}
+
+export async function getProductsCsvStream(filters = null) {
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_ROOT}/products/export`)
+
+    if (filters !== null) {
+        for (const filter of filters)
+            if (Array.isArray(filter.value)) {
+                for (const value of filter.value)
+                    url.searchParams.append(filter.field, value)
+            } else {
+                url.searchParams.append(filter.field, filter.value)
+            }
+    }
+
+    const session = await auth()
+    let headers = {}
+    if (session?.user?.access_token)
+        headers['Authorization'] = `Bearer ${session.user.access_token}`
+    const res = await fetch(url.toString(), { headers })
+
+    if (!res.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        throw new Error('Failed to fetch data')
+    }
+
+    headers = {}
+    for (const [header, value] of res.headers.entries())
+        if (header.startsWith('content'))
+            headers[header] = value
+
+    return [headers, res.body]
 }
 
 export async function getProduct(productId) {
@@ -74,9 +106,9 @@ export async function createProduct(_currentState, formData) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(values)
-        });
+        })
 
-        const result = await response.json();
+        const result = await response.json()
         if (response.ok) {
             console.log(result)
             revalidateTag('products')
@@ -140,9 +172,9 @@ export async function deleteProduct(productId) {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
                 'Content-Type': 'application/json'
             }
-        });
+        })
 
-        const result = await response.json();
+        const result = await response.json()
         if (response.ok) {
             revalidateTag('products')
             revalidateTag(`products__${productId}`)
