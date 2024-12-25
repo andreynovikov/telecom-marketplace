@@ -6,8 +6,8 @@ from flask_jwt_extended import current_user, jwt_required
 from peewee import fn
 from PIL import Image
 
-from ..models import Product, ProductImage, ServiceFile, UserFile
-from ..images import add_watermark
+from models import Product, ProductImage, ServiceFile, UserFile
+from images import add_watermark
 
 secure_file_name = re.compile(r"[/\\?%*:|\"<>\x7F\x00-\x1F]")
 

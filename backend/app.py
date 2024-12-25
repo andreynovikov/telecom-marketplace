@@ -5,7 +5,7 @@ from flask import Flask, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, set_access_cookies
 
-from .models import bcrypt, db_wrapper, jwt, setup_db
+from models import bcrypt, db_wrapper, jwt, setup_db
 
 
 cors = CORS()
@@ -81,16 +81,16 @@ def create_app(context=None):
             as_attachment=False
         )
 
-    from .api import bp as api_bp
+    from api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api/v0')
 
-    from .auth import bp as auth_bp
+    from auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/api/v0/auth')
 
-    from .admin import create_admin
+    from admin import create_admin
     create_admin(app)
 
-    from .api.files import setup_files
+    from api.files import setup_files
     setup_files(app)
 
     return app

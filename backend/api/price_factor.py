@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
 
-from ..models import PriceFactor
+from models import PriceFactor
 
 bp = Blueprint('price_factor', __name__, url_prefix='/price-factors')
 

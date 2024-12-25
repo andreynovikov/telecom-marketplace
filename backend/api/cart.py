@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app, request
 from flask_jwt_extended import current_user, jwt_required
 
-from ..models import Cart, Product
+from models import Cart, Product
 
 bp = Blueprint('cart', __name__, url_prefix='/cart')
 

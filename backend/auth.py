@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, set_access_cookies, unset_jwt_cookies
 
-from .altcha import challenge_altcha, validate_altcha
-from .models import bcrypt, User
+from altcha import challenge_altcha, validate_altcha
+from models import bcrypt, User
 
 
 bp = Blueprint('auth', __name__)

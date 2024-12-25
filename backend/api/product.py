@@ -8,7 +8,7 @@ from flask_jwt_extended import current_user, jwt_required
 from peewee import fn, Expression, SQL
 from playhouse.postgres_ext import TS_MATCH
 
-from ..models import ProductCategory, Product
+from models import ProductCategory, Product
 
 bp = Blueprint('product', __name__, url_prefix='/products')
 

@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from ..models import Subject
+from models import Subject
 
 bp = Blueprint('subject', __name__, url_prefix='/subjects')
 

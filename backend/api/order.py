@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
 
-from ..models import db_wrapper, Order, OrderItem, Product
+from models import db_wrapper, Order, OrderItem, Product
 
 bp = Blueprint('order', __name__, url_prefix='/orders')
 

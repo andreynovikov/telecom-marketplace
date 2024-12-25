@@ -2,7 +2,7 @@ from flask_admin import Admin, BaseView, expose
 from flask_admin.contrib.peewee import ModelView
 from flask_jwt_extended import current_user, verify_jwt_in_request
 
-from .models import ServiceCategory, Service, Subject, Contractor
+from models import ServiceCategory, Service, Subject, Contractor
 
 
 class LoginView(BaseView):

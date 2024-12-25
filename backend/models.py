@@ -9,7 +9,7 @@ from peewee import fn, BooleanField, CharField, DateTimeField, DecimalField, Def
 from playhouse.flask_utils import FlaskDB
 from playhouse.postgres_ext import TSVectorField
 
-from .fields import bcrypt, PasswordField  # noqa F401
+from fields import bcrypt, PasswordField  # noqa F401
 
 
 jwt = JWTManager()

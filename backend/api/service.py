@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
 from peewee import fn
 
-from ..models import ServiceCategory, Service, ServiceFile
+from models import ServiceCategory, Service, ServiceFile
 
 bp = Blueprint('service', __name__, url_prefix='/services')
 
