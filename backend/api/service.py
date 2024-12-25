@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
-from peewee import fn
+from peewee import fn, Expression, SQL
+from playhouse.postgres_ext import TS_MATCH
 
 from models import ServiceCategory, Service, ServiceFile
 
@@ -81,6 +82,18 @@ def list_services():
     for field, values in request.args.lists():
         if field == 'category':
             services = services.where(Service.category == values)
+        if field == 'text':
+            query = fn.plainto_tsquery('russian', values[0]).alias('query')
+            services = (
+                services
+                .select(Service, fn.ts_rank_cd(Service.fts_vector, SQL('query')).alias('rank'))
+                .from_(Service, query)
+                .where(Expression(Service.fts_vector, TS_MATCH, query))
+                .order_by(SQL('rank').desc())
+            )
+
+    for service in services:
+        service.update_fts_vector()
 
     return [s.serialize for s in services]
 

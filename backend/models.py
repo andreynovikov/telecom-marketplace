@@ -76,6 +76,7 @@ class Service(db_wrapper.Model):
     short_name = CharField(verbose_name='краткое название')
     name = CharField(verbose_name='название')
     description = CharField(max_length=None, null=True, verbose_name='описание')
+    fts_vector = TSVectorField()
 
     @property
     def serialize(self):
@@ -87,6 +88,34 @@ class Service(db_wrapper.Model):
             'description': self.description
         }
         return data
+
+    def update_fts_vector(self):
+        language = 'russian'
+        vector = (
+            fn.setweight(
+                fn.to_tsvector(language, fn.coalesce(Service.name, '')),
+                'A'
+            )
+            .concat(fn.setweight(
+                fn.to_tsvector(language, fn.coalesce(Service.description, '')),
+                'B'
+            ))
+            .concat(fn.setweight(
+                fn.to_tsvector(language, fn.coalesce(ServiceCategory.name, '')),
+                'C'
+            ))
+        )
+
+        query = (
+            Service
+            .update(fts_vector=vector)
+            .from_(ServiceCategory)
+            .where(
+                Service.id == self.id,
+                ServiceCategory.id == Service.category
+            )
+        )
+        query.execute()
 
 
 class ServiceFile(db_wrapper.Model):
