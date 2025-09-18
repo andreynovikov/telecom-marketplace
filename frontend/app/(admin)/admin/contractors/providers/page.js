@@ -10,6 +10,7 @@ import { StyledTableHeaderCell } from '@/components/theme/pages-sections/vendor-
 
 import Scrollbar from '@/components/theme/scrollbar'
 
+import AddAction from '@/components/contractor/admin/add-button'
 import { ProviderRow } from '@/components/contractor/admin/row'
 
 import { getContractors } from '@/components/contractor/queries'
@@ -42,6 +43,7 @@ export default async function ProviderList() {
 
     return (
         <PageWrapper title="Поставщики">
+            <AddAction kind={1} />
             <Card>
                 <Scrollbar>
                     <TableContainer sx={{ minWidth: 900 }}>

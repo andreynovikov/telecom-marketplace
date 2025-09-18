@@ -5,6 +5,7 @@ import { useFormState } from 'react-dom'
 import dynamic from 'next/dynamic'
 
 import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
@@ -74,14 +75,27 @@ export default function ProductEditDialog(props) {
                     defaultValue={product?.name}
                     InputLabelProps={{ shrink: !!product?.name ? true : undefined }} />
 
-                <TextField
-                    required
-                    name="price"
-                    type="text"
-                    label="Цена"
-                    margin="dense"
-                    defaultValue={product?.price}
-                    InputLabelProps={{ shrink: !!product?.price ? true : undefined }} />
+                <Grid container spacing={1}>
+                    <Grid item>
+                        <TextField
+                            required
+                            name="price"
+                            type="text"
+                            label="Цена"
+                            margin="dense"
+                            defaultValue={product?.price}
+                            InputLabelProps={{ shrink: !!product?.price ? true : undefined }} />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            name="stock"
+                            type="text"
+                            label="Склад"
+                            margin="dense"
+                            defaultValue={product?.stock}
+                            InputLabelProps={{ shrink: !!product?.stock ? true : undefined }} />
+                    </Grid>
+                </Grid>
 
                 <FormGroup>
                     <FormControlLabel

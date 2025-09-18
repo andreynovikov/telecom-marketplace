@@ -7,7 +7,7 @@ from models import STATUS_MODIFIED
 bp = Blueprint('contractor', __name__, url_prefix='/contractors')
 
 
-@bp.route('', methods=['GET', 'POST'])
+@bp.route('', methods=['GET'])
 @jwt_required()
 def list_contractors():
     contractors = (
@@ -23,36 +23,73 @@ def list_contractors():
         if field == 'kind':
             contractors = contractors.where(Contractor.kind == values[0])
 
-    if request.method == 'POST':
-        data = request.get_json()
-        current_app.logger.error(data)
-        catalogue = data.pop('catalogue', None)
-        geography = data.pop('geography', None)
-        if not current_user.admin:
-            data.pop('comment', None)
-            data.pop('price_factor', None)
-        if contractors.count() == 0:
-            contractor = Contractor.create(**data)
-            ContractorUser.create(contractor=contractor, user=current_user)
-        else:
-            contractor = contractors.first()
-            if data.keys() or catalogue is not None or geography is not None:
-                data['status'] = STATUS_MODIFIED
-            if data.keys():
-                contractor.update(**data).where(Contractor.id == contractor.id).execute()
-                contractor.reload()
-        if catalogue is not None:
-            Catalogue.delete().where(Catalogue.contractor == contractor, ~(Catalogue.service << catalogue)).execute()
-            existing = [s[0] for s in Catalogue.select(Catalogue.service).where(Catalogue.contractor == contractor, Catalogue.service << catalogue).distinct().tuples()]
-            for key in catalogue:
-                if key not in existing:
-                    Catalogue.create(contractor=contractor, service=key)
-        if geography is not None:
-            Geography.delete().where(Geography.contractor == contractor).execute()
-            for code in geography:
-                Geography.create(contractor=contractor, subject=code)
-    elif contractors is None:
+    if contractors is None:
         return []
+
+    data = [contractor.serialize(current_user.admin) for contractor in contractors]
+    return data
+
+
+@bp.route('', methods=['POST'])
+@jwt_required()
+def create_contractor():
+    if not current_user.admin:
+        return jsonify(msg='Доступ запрещён'), 401
+
+    data = request.get_json()
+    catalogue = data.pop('catalogue', None)
+    geography = data.pop('geography', None)
+
+    contractor = Contractor.create(**data)
+
+    if catalogue is not None:
+        for key in catalogue:
+            Catalogue.create(contractor=contractor, service=key)
+    if geography is not None:
+        for code in geography:
+            Geography.create(contractor=contractor, subject=code)
+
+    return contractor.serialize(current_user.admin)
+
+
+@bp.route('save', methods=['POST'])
+@jwt_required()
+def save_contractor():
+    contractors = (
+        Contractor
+        .select()
+        .join(ContractorUser)
+        .join(User)
+        .where(User.id == current_user.id)
+        .distinct()
+    )
+
+    data = request.get_json()
+    current_app.logger.error(data)
+    catalogue = data.pop('catalogue', None)
+    geography = data.pop('geography', None)
+    data.pop('comment', None)
+    data.pop('price_factor', None)
+    if contractors.count() == 0:
+        contractor = Contractor.create(**data)
+        ContractorUser.create(contractor=contractor, user=current_user)
+    else:
+        contractor = contractors.first()
+        if data.keys() or catalogue is not None or geography is not None:
+            data['status'] = STATUS_MODIFIED
+        if data.keys():
+            contractor.update(**data).where(Contractor.id == contractor.id).execute()
+            contractor.reload()
+    if catalogue is not None:
+        Catalogue.delete().where(Catalogue.contractor == contractor, ~(Catalogue.service << catalogue)).execute()
+        existing = [s[0] for s in Catalogue.select(Catalogue.service).where(Catalogue.contractor == contractor, Catalogue.service << catalogue).distinct().tuples()]
+        for key in catalogue:
+            if key not in existing:
+                Catalogue.create(contractor=contractor, service=key)
+    if geography is not None:
+        Geography.delete().where(Geography.contractor == contractor).execute()
+        for code in geography:
+            Geography.create(contractor=contractor, subject=code)
     data = [contractor.serialize(current_user.admin) for contractor in contractors]
     return data
 

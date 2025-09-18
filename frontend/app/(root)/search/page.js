@@ -84,6 +84,11 @@ export default function SearchResults(props) {
                             </Box>
                         </>
                     )}
+                    {products.length === 0 && services.length === 0 && (
+                        <Box fontSize={25} sx={{ m: 5 }}>
+                            Ничего не найдено
+                        </Box>
+                    )}
                 </>
             )}
         </Container>

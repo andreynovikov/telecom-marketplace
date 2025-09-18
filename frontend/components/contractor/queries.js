@@ -97,7 +97,7 @@ export async function saveContractor(_currentState, formData) {
     }
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/contractors`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/contractors/save`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${session?.user?.access_token}`,
@@ -116,6 +116,53 @@ export async function saveContractor(_currentState, formData) {
             }
         } else {
             console.error(result.msg)
+            return {
+                success: false,
+                error: result.msg
+            }
+        }
+    } catch (error) {
+        console.error("Error: " + error)
+        return {
+            success: false,
+            error
+        }
+    }
+}
+
+export async function createContractor(_currentState, formData) {
+    const values = {}
+    for (const key of formData.keys()) {
+        if (key.startsWith('$')) // nextjs action fields
+            continue
+        if (['catalogue', 'geography'].includes(key))
+            values[key] = formData.getAll(key)
+        else
+            values[key] = formData.get(key)
+    }
+    console.log(values)
+
+    const session = await auth()
+
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/contractors`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${session?.user?.access_token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values)
+        })
+
+        const result = await response.json();
+        if (response.ok) {
+            revalidateTag('contractors')
+            return {
+                success: true,
+                data: result
+            }
+        } else {
+            console.error("Error message", result.msg)
             return {
                 success: false,
                 error: result.msg

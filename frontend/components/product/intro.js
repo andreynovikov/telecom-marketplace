@@ -30,6 +30,11 @@ export default async function ProductIntro(props) {
                     <H6><Brand id={product.brand} /></H6>
                 </FlexBox>
 
+                { product.stock > 0 && <FlexBox alignItems="center" mb={1}>
+                    <div>Доступно:&nbsp;</div>
+                    <div>{product.stock} шт.</div>
+                </FlexBox>}
+
                 <ProductShopping product={product} />
             </Grid>
         </Grid>

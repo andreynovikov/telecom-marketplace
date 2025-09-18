@@ -98,6 +98,9 @@ export async function createProduct(_currentState, formData) {
     const values = Object.fromEntries(formData.entries())
     const session = await auth()
 
+    if (values['stock'] === '')
+	values['stock'] = null
+
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/products`, {
             method: 'POST',
@@ -130,6 +133,9 @@ export async function createProduct(_currentState, formData) {
 export async function updateProduct(productId, _currentState, formData) {
     const values = Object.fromEntries(formData.entries())
     const session = await auth()
+
+    if (values['stock'] === '')
+	values['stock'] = null
 
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/products/${productId}`, {

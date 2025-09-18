@@ -38,7 +38,7 @@ export default function ProductShopping(props) {
                     px: "1.75rem",
                     height: 40
                 }}>
-                    {cartItem?.quantity > 0 ? 'Добавить в корзину' : 'В корзине'}
+                    {cartItem?.quantity > 0 ? 'В корзине' : 'Добавить в корзину'}
                 </Button>
             ) : (
                 <Box>

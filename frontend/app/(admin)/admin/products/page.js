@@ -38,6 +38,10 @@ const tableHeading = [{
     label: "Цена",
     align: "right"
 }, {
+    id: "stock",
+    label: "Склад",
+    align: "right"
+}, {
     id: "image",
     label: "Изображения",
     align: "center"

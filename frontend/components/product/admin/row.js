@@ -23,6 +23,9 @@ export default async function ProductRow({ product }) {
                 <StyledTableCell align="right">
                     {product.price}
                 </StyledTableCell>
+                <StyledTableCell align="right">
+                    {product.stock !== null ? product.stock : '-'}
+                </StyledTableCell>
                 <StyledTableCell align="center">
                     {product.images.length > 0 ? product.images.length : '-'}
                 </StyledTableCell>

@@ -10,6 +10,7 @@ import { StyledTableHeaderCell } from '@/components/theme/pages-sections/vendor-
 
 import Scrollbar from '@/components/theme/scrollbar'
 
+import AddAction from '@/components/contractor/admin/add-button'
 import { ConsumerRow } from '@/components/contractor/admin/row'
 
 import { getContractors } from '@/components/contractor/queries'
@@ -51,6 +52,7 @@ export default async function ConsumerList() {
     console.log(contractors)
     return (
         <PageWrapper title="Заказчики">
+            <AddAction kind={2} />
             <Card>
                 <Scrollbar>
                     <TableContainer sx={{ minWidth: 900 }}>

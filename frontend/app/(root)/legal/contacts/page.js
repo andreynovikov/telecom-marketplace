@@ -37,8 +37,8 @@ export default function Contacts() {
 
                 <YMaps>
                     <Box sx={{ mt: 2, height:400 }}>
-                        <Map width="100%" height="400px" defaultState={{ center: [59.916315, 30.377938], zoom: 16 }}>
-                            <Placemark geometry={[59.916315, 30.377938]} />
+                        <Map width="100%" height="400px" defaultState={{ center: [59.914054, 30.376841], zoom: 16 }}>
+                            <Placemark geometry={[59.914054, 30.376841]} />
                         </Map>
                     </Box>
                 </YMaps>

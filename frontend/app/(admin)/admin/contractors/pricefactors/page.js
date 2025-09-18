@@ -38,7 +38,7 @@ export default async function PriceFactorList() {
     const factors = await getPriceFactors()
 
     return (
-        <PageWrapper title="Бренды">
+        <PageWrapper title="Коэфициенты цен">
             <AddAction />
             <Card>
                 <Scrollbar>

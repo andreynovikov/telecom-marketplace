@@ -175,6 +175,7 @@ class Product(db_wrapper.Model):
     category = ForeignKeyField(ProductCategory, verbose_name='категория')
     description = CharField(max_length=None, null=True, verbose_name='описание')
     price = IntegerField(verbose_name='цена')
+    stock = IntegerField(null=True, verbose_name='кол-во')
     add_watermark = BooleanField(default=False, verbose_name='добавлять водяной знак')
     fts_vector = TSVectorField()
 
@@ -188,6 +189,7 @@ class Product(db_wrapper.Model):
             'category': self.category_id,
             'description': self.description,
             'price': self.price,
+            'stock': self.stock,
             'add_watermark': self.add_watermark,
             'images': [image.serialize for image in self.images]
         }
@@ -476,32 +478,33 @@ def user_lookup_callback(_jwt_header, jwt_data):
 
 
 def setup_db(app):
-    db_wrapper.database.create_tables([
-        Brand,
-        ServiceCategory,
-        Service,
-        ServiceFile,
-        Subject,
-        ProductCategory,
-        Product,
-        ProductImage,
-        Contractor,
-        Geography,
-        Catalogue,
-        User,
-        UserFile,
-        ContractorUser,
-        PriceFactor,
-        Cart,
-        Order,
-        OrderItem
-    ], safe=True)
-    if not User.select().count():
-        admin = User(name='Администратор', email='admin', password='admin', admin=True)
-        admin.save()
-        app.logger.warn('Default admin user created, you should change their password!')
-    if not Subject.select().count():
-        with open('data/subjects.csv') as csvfile:
-            data = list(csv.DictReader(csvfile))
-            if data:
-                Subject.insert_many(data).execute()
+    with db_wrapper.database:
+        db_wrapper.database.create_tables([
+            Brand,
+            ServiceCategory,
+            Service,
+            ServiceFile,
+            Subject,
+            ProductCategory,
+            Product,
+            ProductImage,
+            Contractor,
+            Geography,
+            Catalogue,
+            User,
+            UserFile,
+            ContractorUser,
+            PriceFactor,
+            Cart,
+            Order,
+            OrderItem
+        ], safe=True)
+        if not User.select().count():
+            admin = User(name='Администратор', email='admin', password='admin', admin=True)
+            admin.save()
+            app.logger.warn('Default admin user created, you should change their password!')
+        if not Subject.select().count():
+            with open('data/subjects.csv') as csvfile:
+                data = list(csv.DictReader(csvfile))
+                if data:
+                    Subject.insert_many(data).execute()
