@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation'
+
 import Card from '@mui/material/Card'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -57,7 +59,8 @@ const tableHeading = [{
 
 export default async function ProductList() {
     const session = await auth()
-    if (session?.user?.role !== "admin") return <div>Not authenticated</div>
+
+    if (session?.user?.role !== "admin") redirect('/login')
 
     const products = await getProducts()
 

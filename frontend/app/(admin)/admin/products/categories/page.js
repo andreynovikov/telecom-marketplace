@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation'
+
 import Card from '@mui/material/Card'
 
 import PageWrapper from '@/components/theme/pages-sections/vendor-dashboard/page-wrapper'
@@ -12,7 +14,7 @@ import { auth } from '@/lib/auth'
 
 export default async function ProductCategories() {
     const session = await auth()
-    if (session?.user?.role !== "admin") return <div>Not authenticated</div>
+    if (session?.user?.role !== "admin") redirect('/login')
 
     const categories = await getCategories()
 
