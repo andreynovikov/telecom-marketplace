@@ -138,6 +138,7 @@ export async function getRelatedProducts(product) {
         categoryId = category.parent_id
     }
     if (related.length < 4) {
+        const ids = [product.id, ...related.map(product => product.id)]
         const products = await sql`
             SELECT
                 id,
@@ -151,7 +152,7 @@ export async function getRelatedProducts(product) {
                 add_watermark
             FROM product
             WHERE
-                id != ${product.id}
+                id != ALL(${ids})
             ORDER BY random()
             LIMIT ${4 - related.length}
         `
