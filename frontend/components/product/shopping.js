@@ -40,11 +40,11 @@ export default function ProductShopping(props) {
                 }}>
                     {cartItem?.quantity > 0 ? 'В корзине' : 'Добавить в корзину'}
                 </Button>
-            ) : (
+            ) : false ? (
                 <Box>
                     Для оформления заказа войдите в систему или зарегистрируйтесь, как заказчик
                 </Box>
-            )}
+            ) : null} {/* Disabled login */}
         </>
     )
 }
