@@ -1,16 +1,24 @@
+'use client'
+
 import IconButton from '@mui/material/IconButton'
 
 import { ViewIcon } from '@/theme/icons'
 
+import ProductViewDialog from '@/components/product/view-dialog'
 import { HoverIconWrapper } from '../styles'
 
-export default function HoverActions({
-    isFavorite,
-    toggleFavorite,
-    toggleView
-  }) {
+import useProduct from '@/components/product/use-product'
+
+export default function HoverActions({product, images}) {
+    const {
+        isFavorite,
+        toggleFavorite,
+        openModal,
+        toggleDialog,
+    } = useProduct(product.id)
+
     return <HoverIconWrapper className="hover-box">
-        <IconButton onClick={toggleView}>
+        <IconButton onClick={toggleDialog}>
             <ViewIcon color="disabled" fontSize="small" />
         </IconButton>
 
@@ -20,5 +28,6 @@ export default function HoverActions({
         </IconButton>
         */
         }
+        <ProductViewDialog product={product} images={images} open={openModal} onClose={toggleDialog} />
     </HoverIconWrapper>
 }

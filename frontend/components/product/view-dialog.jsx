@@ -1,19 +1,16 @@
+'use client'
+
 import Grid from "@mui/material/Grid"
-import Rating from "@mui/material/Rating"
 import Dialog from "@mui/material/Dialog"
 import Button from "@mui/material/Button"
 import Divider from "@mui/material/Divider"
 import IconButton from "@mui/material/IconButton"
 import DialogContent from "@mui/material/DialogContent"
 
-import Add from "@mui/icons-material/Add"
-import Remove from "@mui/icons-material/Remove"
-
-//import { Carousel } from "@/components/theme/carousel";
+import { Carousel } from "@/components/theme/carousel"
 import BazaarImage from "@/components/theme/BazaarImage"
-import FlexBox from "@/components/theme/flex-box/flex-box"
 import { FlexRowCenter } from '@/components/theme/flex-box'
-import { H1, H2, H3, H6, Paragraph } from "@/components/theme/Typography"
+import { H1, H2, Paragraph } from "@/components/theme/Typography"
 
 import { CloseIcon } from '@/theme/icons'
 import { IconCamera } from '@tabler/icons-react'
@@ -27,6 +24,7 @@ import { useEffect, useState } from 'react'
 export default function ProductViewDialog(props) {
     const {
         product,
+        images,
         open,
         onClose
     } = props
@@ -34,7 +32,10 @@ export default function ProductViewDialog(props) {
     const [category, setCategory] = useState({})
 
     useEffect(() => {
-        getCategory(product.category).then(category => setCategory(category))
+        if (product.category !== undefined)
+            getCategory(product.category).then(category => setCategory(category))
+        else
+            setCategory({})
     }, [product])
 
     const { cart, available, modify } = useCart()
@@ -52,17 +53,13 @@ export default function ProductViewDialog(props) {
             <div>
                 <Grid container spacing={3}>
                     <Grid item md={6} xs={12}>
-                        {product.images.length > 0 ? (
-                            <>
-                                {/*
-              <Carousel slidesToShow={1} arrowStyles={{
-              boxShadow: 0,
-              color: "primary.main",
-              backgroundColor: "transparent"
-            }}>
-              */
-                                }
-                                {product.images.map((image, index) => <BazaarImage key={index} src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${image.src}`} alt="product" sx={{
+                        {images.length > 0 ? (
+                            <Carousel slidesToShow={1} arrowStyles={{
+                                boxShadow: 0,
+                                color: "primary.main",
+                                backgroundColor: "transparent"
+                            }}>
+                                {images.map((image, index) => <BazaarImage key={index} src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${image.src}`} alt="product" sx={{
                                     mx: "auto",
                                     width: "100%",
                                     objectFit: "contain",
@@ -71,11 +68,7 @@ export default function ProductViewDialog(props) {
                                         xs: 250
                                     }
                                 }} />)}
-                                {/*
-              </Carousel>
-              */
-                                }
-                            </>
+                            </Carousel>
                         ) : (
                             <FlexRowCenter sx={{ aspectRatio: 1, position: "relative" }}>
                                 <IconCamera color='grey' size={150} strokeWidth={1.5} />
@@ -92,10 +85,9 @@ export default function ProductViewDialog(props) {
 
                         <H1 color="primary.main">{currency(product.price)}</H1>
 
-                        <Paragraph my={2}>
-                            Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus
-                            libero eu augue. Morbi purus liberpuro ate vol faucibus adipiscing.
-                        </Paragraph>
+                        {product.description && <Paragraph my={2}>
+                            {product.description}
+                        </Paragraph>}
 
                         <Divider sx={{
                             mb: 2

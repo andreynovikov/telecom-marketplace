@@ -8,7 +8,7 @@ import ProductCard from './related-product-card'
 import { getRelatedProducts } from './queries'
 
 export default async function RelatedProducts({ product }) {
-    const products = await getRelatedProducts(product.id)
+    const products = await getRelatedProducts(product)
 
     return (
         <Box mb={7.5}>

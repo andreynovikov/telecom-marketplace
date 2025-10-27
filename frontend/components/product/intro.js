@@ -8,13 +8,16 @@ import Brand from '@/components/brand'
 import ProductShopping from './shopping'
 import ProductImage from './image'
 
+import { getProductImages } from '@/components/product/queries'
+
 export default async function ProductIntro(props) {
     const { product } = props
+    const images = await getProductImages(product.id)
 
     return <Box width="100%">
         <Grid container spacing={3} justifyContent="space-around">
             <Grid item md={6} xs={12} alignItems="center">
-                <ProductImage name={product.name} images={product.images} />
+                <ProductImage name={product.name} images={images} />
             </Grid>
 
             <Grid item md={6} xs={12} alignItems="center">

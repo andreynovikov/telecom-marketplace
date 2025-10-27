@@ -1,7 +1,3 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
@@ -16,28 +12,9 @@ import { getServices } from '@/components/service/queries'
 import { Paragraph } from '@/components/theme/Typography'
 import Link from 'next/link'
 
-export default function SearchResults(props) {
-    const [products, setProducts] = useState(undefined)
-    const [services, setServices] = useState(undefined)
-
+export default async function SearchResults(props) {
     const searchParams = props.searchParams
     const query = searchParams.q
-
-    useEffect(() => {
-        if (query === undefined || query.length === 0)
-            return
-
-        setProducts(undefined)
-        getProducts([{
-            field: 'text',
-            value: query
-        }]).then(result => setProducts(result))
-        setServices(undefined)
-        getServices([{
-            field: 'text',
-            value: query
-        }]).then(result => setServices(result))
-    }, [query, setProducts, setServices])
 
     if (query === undefined || query.length === 0)
         return (
@@ -45,6 +22,16 @@ export default function SearchResults(props) {
                 Необходимо указать поисковый запрос
             </Box>
         )
+
+    const products = await getProducts([{
+        field: 'text',
+        value: query
+    }])
+
+    const services = await getServices([{
+        field: 'text',
+        value: query
+    }])
 
     return (
         <Container sx={{ my: 2 }}>
