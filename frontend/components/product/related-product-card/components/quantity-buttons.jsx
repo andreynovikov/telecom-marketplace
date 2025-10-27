@@ -10,9 +10,13 @@ import useProduct from '@/components/product/use-product'
 
 export default function QuantityButtons({ product }) {
     const {
+        available,
         cartItem,
         handleCartAmountChange
     } = useProduct(product.id)
+
+    if (!available)
+        return null
 
     const quantity = cartItem?.quantity || 0
 
