@@ -51,4 +51,5 @@ const Carousel = forwardRef((props, ref) => {
       </SlickCarousel>
     </RootStyle>;
 });
+Carousel.displayName = "Carousel";
 export default Carousel;
