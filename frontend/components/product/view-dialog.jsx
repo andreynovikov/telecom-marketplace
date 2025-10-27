@@ -21,6 +21,12 @@ import { useCart } from '@/lib/cart'
 import { currency } from '@/lib'
 import { useEffect, useState } from 'react'
 
+import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
+
+import styles from '@/components/ui/admin/mdx-editor.module.css'
+
 export default function ProductViewDialog(props) {
     const {
         product,
@@ -86,7 +92,9 @@ export default function ProductViewDialog(props) {
                         <H1 color="primary.main">{currency(product.price)}</H1>
 
                         {product.description && <Paragraph my={2}>
-                            {product.description}
+                            <Markdown className={styles.prose} remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                                {product.description}
+                            </Markdown>
                         </Paragraph>}
 
                         <Divider sx={{
