@@ -12,7 +12,8 @@ import ProductCard from '@/components/product/product-card'
 import { getProducts } from '@/components/product/queries'
 import { getCategories, getCategory } from '@/components/product/category/queries'
 
-export default async function Products({ params }) {
+export default async function Products(props) {
+    const params = await props.params
     const { id } = params
 
     const category = await getCategory(id)

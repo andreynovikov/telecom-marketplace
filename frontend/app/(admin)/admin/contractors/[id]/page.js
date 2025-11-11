@@ -29,7 +29,8 @@ const checkboxProps = {
     sx: { p: 0.5, pl: 0 }
 }
 
-export default async function Contractor({ params }) {
+export default async function Contractor(props) {
+    const params = await props.params
     const contractor = await getContractor(params.id)
 
     async function handleFormAction(formData) {

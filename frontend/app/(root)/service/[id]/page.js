@@ -17,7 +17,8 @@ import prettyBytes from 'pretty-bytes'
 
 import styles from '@/components/ui/admin/mdx-editor.module.css'
 
-export default async function Service({ params }) {
+export default async function Service(props) {
+    const params = await props.params
     const { id } = params
     const service = await getService(id)
     const files = await getServiceFiles(id)

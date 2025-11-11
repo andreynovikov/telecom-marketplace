@@ -13,7 +13,7 @@ import { Paragraph } from '@/components/theme/Typography'
 import Link from 'next/link'
 
 export default async function SearchResults(props) {
-    const searchParams = props.searchParams
+    const searchParams = await props.searchParams
     const query = searchParams.q
 
     if (query === undefined || query.length === 0)

@@ -6,7 +6,8 @@ import ProductIntro from '@/components/product/intro'
 import { getProducts, getProduct } from '@/components/product/queries'
 import RelatedProducts from '@/components/product/related'
 
-export default async function Product({ params }) {
+export default async function Product(props) {
+    const params = await props.params
     const product = await getProduct(params.id)
 
     return <Container sx={{ my: 2 }}>

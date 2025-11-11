@@ -17,7 +17,8 @@ import { statuses } from '@/components/order/admin'
 
 import moment from 'moment'
 
-export default async function Order({ params }) {
+export default async function Order(props) {
+    const params = await props.params
     const order = await getOrder(params.id)
 
     async function handleFormAction(formData) {
