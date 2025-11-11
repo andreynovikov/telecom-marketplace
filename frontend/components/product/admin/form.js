@@ -103,7 +103,7 @@ export default function ProductEditDialog(props) {
                         label="Добавлять водяной знак" />
                 </FormGroup>
 
-                <Box margin={1}>
+                <Box sx={{ margin: 1 }}>
                     Категория *{' '}
                     <CategorySelect name="category" defaultValue={product?.category} />
                 </Box>

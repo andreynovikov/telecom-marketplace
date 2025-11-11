@@ -65,7 +65,7 @@ export default function ServiceEditDialog(props) {
                     defaultValue={service?.name}
                     InputLabelProps={{ shrink: !!service?.name ? true : undefined }} />
 
-                <Box margin={1}>
+                <Box sx={{ margin: 1 }}>
                     Категория *{' '}
                     <CategorySelect name="category" defaultValue={service?.category} />
                 </Box>

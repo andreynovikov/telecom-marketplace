@@ -41,8 +41,12 @@ export default async function Products(props) {
                     <ProductCard product={product} />
                 </Grid>)}
             </Grid>
-
-            <Box display="flex" justifyContent="flex-end" sx={{ mt: 3 }}>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    mt: 3
+                }}>
                 <Link href={`/export/products?category=${id}`} passHref>
                     <Button variant="outlined" size="small" color="secondary" sx={{ textTransform: "none" }}>
                         Скачать в виде таблицы

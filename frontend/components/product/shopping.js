@@ -25,7 +25,7 @@ export default function ProductShopping(props) {
 
     return (
         <>
-            <Box pt={1} mb={3}>
+            <Box sx={{ pt: 1, mb: 3 }}>
                 <H2 color="primary.main" mb={0.5} lineHeight="1">
                     {currency(product.price * priceFactor)}
                 </H2>

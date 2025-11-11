@@ -34,19 +34,36 @@ export default function SearchInputWithCategory() {
         //border: 0
       }
     },
-    startAdornment: <Box mr={2} px={2} display="grid" alignItems="center" justifyContent="center" borderRight="1px solid" borderColor="grey.400">
+    startAdornment: <Box
+      sx={{
+        mr: 2,
+        px: 2,
+        display: "grid",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRight: "1px solid",
+        borderColor: "grey.400"
+      }}>
       <SearchIcon sx={{ color: "grey.600" }} />
     </Box>,
     //endAdornment: <CategoryDropdown title={categoryTitle} handleChange={handleCategoryChange} />
   }
-  return <Box component="form" action="/search" position="relative" flex="1 1 0" maxWidth="670px" mx="auto" {...{
-    //ref: parentRef
-  }}>
-    <TextField name="q" fullWidth variant="outlined" placeholder="Искать..." /*onChange={handleSearch}*/ InputProps={INPUT_PROPS} />
+  return (
+    <Box component="form" action="/search" {...{
+        //ref: parentRef
+      }}
+      sx={{
+        position: "relative",
+        flex: "1 1 0",
+        maxWidth: "670px",
+        mx: "auto"
+      }}>
+      <TextField name="q" fullWidth variant="outlined" placeholder="Искать..." /*onChange={handleSearch}*/ InputProps={INPUT_PROPS} />
 
-    {
-      /* SHOW SEARCH RESULT LIST */
-    }
-    {/*resultList.length > 0 ? <SearchResult results={resultList} /> : null*/}
-  </Box>
+      {
+        /* SHOW SEARCH RESULT LIST */
+      }
+      {/*resultList.length > 0 ? <SearchResult results={resultList} /> : null*/}
+    </Box>
+  )
 }

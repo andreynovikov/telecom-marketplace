@@ -21,41 +21,43 @@ export default async function ProductCard({
 }) {
     const images = product.id !== undefined ? await getProductImages(product.id) : []
 
-    return <StyledBazaarCard hoverEffect={hoverEffect}>
-        <ImageWrapper>
+    return (
+        <StyledBazaarCard hoverEffect={hoverEffect}>
+            <ImageWrapper>
 
-            <HoverActions product={product} images={images} />
+                <HoverActions product={product} images={images} />
 
-            <Link href={`/product/${product.id}`}>
-                <FlexRowCenter bgcolor="grey.50" borderRadius={3} mb={2} sx={{ aspectRatio: 1, position: "relative" }}>
-                    {images.length > 0 ? (
-                        <LazyImage
-                            alt={product.name}
-                            fill
-                            src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${images[0].src}`}
-                            sx={{ p: 2, objectFit: "contain" }} />
-                    ) : (
-                        <IconCamera color='grey' size={150} strokeWidth={1.5} />
-                    )}
-                </FlexRowCenter>
-            </Link>
-        </ImageWrapper>
-
-        <ContentWrapper>
-            <Box flex="1 1 0" minWidth="0px" mr={1}>
                 <Link href={`/product/${product.id}`}>
-                    <H3 mb={1} ellipsis title={product.name} fontSize={14} fontWeight={600} className="title" color="text.secondary">
-                        {product.name}
-                    </H3>
+                    <FlexRowCenter bgcolor="grey.50" borderRadius={3} mb={2} sx={{ aspectRatio: 1, position: "relative" }}>
+                        {images.length > 0 ? (
+                            <LazyImage
+                                alt={product.name}
+                                fill
+                                src={`${process.env.NEXT_PUBLIC_MEDIA_ROOT}${images[0].src}`}
+                                sx={{ p: 2, objectFit: "contain" }} />
+                        ) : (
+                            <IconCamera color='grey' size={150} strokeWidth={1.5} />
+                        )}
+                    </FlexRowCenter>
                 </Link>
+            </ImageWrapper>
 
-                <Paragraph fontWeight={600} color="primary.main" mt={0.5}>
-                    <Price product={product} />
-                </Paragraph>
+            <ContentWrapper>
+                <Box sx={{ flex: "1 1 0", minWidth: "0px",  mr: 1 }}>
+                    <Link href={`/product/${product.id}`}>
+                        <H3 mb={1} ellipsis title={product.name} fontSize={14} fontWeight={600} className="title" color="text.secondary">
+                            {product.name}
+                        </H3>
+                    </Link>
 
-            </Box>
+                    <Paragraph fontWeight={600} color="primary.main" mt={0.5}>
+                        <Price product={product} />
+                    </Paragraph>
 
-            <QuantityButtons product={product} />
-        </ContentWrapper>
-    </StyledBazaarCard>
+                </Box>
+
+                <QuantityButtons product={product} />
+            </ContentWrapper>
+        </StyledBazaarCard>
+    )
 }

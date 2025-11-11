@@ -18,7 +18,7 @@ export default async function SearchResults(props) {
 
     if (query === undefined || query.length === 0)
         return (
-            <Box fontSize={25} sx={{ m: 5 }}>
+            <Box sx={{ fontSize: 25,  m: 5 }}>
                 Необходимо указать поисковый запрос
             </Box>
         )
@@ -40,7 +40,12 @@ export default async function SearchResults(props) {
                 &laquo;{query}&raquo;
             </Typography>
             {products === undefined || services === undefined ? (
-                <Stack alignItems="center" justifyContent="center" sx={{ minHeight: 200 }}>
+                <Stack
+                    sx={{
+                        alignItems: "center",
+                        justifyContent: "center",
+                        minHeight: 200
+                    }}>
                     <CircularProgress size={80} />
                 </Stack>
             ) : (
@@ -72,7 +77,7 @@ export default async function SearchResults(props) {
                         </>
                     )}
                     {products.length === 0 && services.length === 0 && (
-                        <Box fontSize={25} sx={{ m: 5 }}>
+                        <Box sx={{ fontSize: 25,  m: 5 }}>
                             Ничего не найдено
                         </Box>
                     )}

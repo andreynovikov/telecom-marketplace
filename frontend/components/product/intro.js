@@ -14,32 +14,34 @@ export default async function ProductIntro(props) {
     const { product } = props
     const images = await getProductImages(product.id)
 
-    return <Box width="100%">
-        <Grid container spacing={3} justifyContent="space-around">
-            <Grid item md={6} xs={12} alignItems="center">
-                <ProductImage name={product.name} images={images} />
+    return (
+        <Box sx={{ width: "100%" }}>
+            <Grid container spacing={3} sx={{ justifyContent: "space-around" }}>
+                <Grid item md={6} xs={12} sx={{ alignItems: "center" }}>
+                    <ProductImage name={product.name} images={images} />
+                </Grid>
+
+                <Grid item md={6} xs={12} sx={{ alignItems: "center" }}>
+                    <H1 mb={1}>{product.name}</H1>
+
+                    <FlexBox alignItems="center" mb={1}>
+                        <div>Код товара:&nbsp;</div>
+                        <div>{product.code}</div>
+                    </FlexBox>
+
+                    <FlexBox alignItems="center" mb={1}>
+                        <div>Производитель:&nbsp;</div>
+                        <H6><Brand id={product.brand} /></H6>
+                    </FlexBox>
+
+                    { product.stock > 0 && <FlexBox alignItems="center" mb={1}>
+                        <div>Доступно:&nbsp;</div>
+                        <div>{product.stock} шт.</div>
+                    </FlexBox>}
+
+                    <ProductShopping product={product} />
+                </Grid>
             </Grid>
-
-            <Grid item md={6} xs={12} alignItems="center">
-                <H1 mb={1}>{product.name}</H1>
-
-                <FlexBox alignItems="center" mb={1}>
-                    <div>Код товара:&nbsp;</div>
-                    <div>{product.code}</div>
-                </FlexBox>
-
-                <FlexBox alignItems="center" mb={1}>
-                    <div>Производитель:&nbsp;</div>
-                    <H6><Brand id={product.brand} /></H6>
-                </FlexBox>
-
-                { product.stock > 0 && <FlexBox alignItems="center" mb={1}>
-                    <div>Доступно:&nbsp;</div>
-                    <div>{product.stock} шт.</div>
-                </FlexBox>}
-
-                <ProductShopping product={product} />
-            </Grid>
-        </Grid>
-    </Box>
+        </Box>
+    )
 }

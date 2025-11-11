@@ -39,14 +39,25 @@ export default function SearchInput() {
       </Button>,
     startAdornment: <SearchIcon sx={{ color: "grey.600", mr: 1 }} fontSize="small" />
   };
-  return <Box component="form" action="/search" position="relative" flex="1 1 0" maxWidth="670px" mx="auto" {...{
-    //ref: parentRef
-  }}>
-      <TextField name="q" fullWidth variant="outlined" placeholder="Искать..." /*onChange={handleSearch}*/ InputProps={INPUT_PROPS} />
+  return (
+    <Box
+      component="form"
+      action="/search"
+      {...{
+        //ref: parentRef
+      }}
+      sx={{
+        position: "relative",
+        flex: "1 1 0",
+        maxWidth: "670px",
+        mx: "auto"
+      }}>
+        <TextField name="q" fullWidth variant="outlined" placeholder="Искать..." /*onChange={handleSearch}*/ InputProps={INPUT_PROPS} />
 
-      {
-      /* SHOW SEARCH RESULT LIST */
-    }
-      {/*resultList.length > 0 ? <SearchResult results={resultList} /> : null*/}
-    </Box>;
+        {
+        /* SHOW SEARCH RESULT LIST */
+      }
+        {/*resultList.length > 0 ? <SearchResult results={resultList} /> : null*/}
+      </Box>
+  )
 }

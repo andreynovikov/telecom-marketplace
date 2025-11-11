@@ -89,13 +89,29 @@ export default function FileUpload(props) {
     }, [file])
 
     return (
-        <Box py={4} px={{
-            md: 10,
-            xs: 4
-        }} display="flex" minHeight="200px" textAlign="center" alignItems="center" borderRadius="10px" border="1.5px dashed" flexDirection="column" borderColor="grey.300" justifyContent="center" bgcolor={isDragActive ? "grey.200" : "grey.100"} sx={{
-            transition: "all 250ms ease-in-out",
-            outline: "none"
-        }} {...getRootProps()}>
+        <Box
+            {...getRootProps()}
+            sx={{
+                py: 4,
+
+                px: {
+                    md: 10,
+                    xs: 4
+                },
+
+                display: "flex",
+                minHeight: "200px",
+                textAlign: "center",
+                alignItems: "center",
+                borderRadius: "10px",
+                border: "1.5px dashed",
+                flexDirection: "column",
+                borderColor: "grey.300",
+                justifyContent: "center",
+                bgcolor: isDragActive ? "grey.200" : "grey.100",
+                transition: "all 250ms ease-in-out",
+                outline: "none"
+            }}>
             <input {...getInputProps()} />
 
             <H6 mb={1} color="grey.600">

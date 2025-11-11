@@ -24,8 +24,13 @@ export default function Profile() {
     }, [router])
 
     return (
-        <Stack alignItems="center" justifyContent="center" sx={{minHeight: 200}}>
+        <Stack
+            sx={{
+                alignItems: "center",
+                justifyContent: "center",
+                minHeight: 200
+            }}>
             <CircularProgress size={80} />
         </Stack>
-    )
+    );
 }

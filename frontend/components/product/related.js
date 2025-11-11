@@ -11,7 +11,7 @@ export default async function RelatedProducts({ product }) {
     const products = await getRelatedProducts(product)
 
     return (
-        <Box mb={7.5}>
+        <Box sx={{ mb: 7.5 }}>
             <H3 mb={3}>Другие товары</H3>
 
             <Grid container spacing={3}>

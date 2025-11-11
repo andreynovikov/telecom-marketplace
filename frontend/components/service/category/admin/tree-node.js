@@ -58,7 +58,14 @@ export const TreeNode = (props) => {
 
     return (
         <>
-            <Stack direction="row" alignItems="center" {...dragOverProps} className="tree-node" style={{ paddingInlineStart: indent }}>
+            <Stack
+                direction="row"
+                {...dragOverProps}
+                className="tree-node"
+                style={{ paddingInlineStart: indent }}
+                sx={[{
+                    alignItems: "center"
+                }, ...(Array.isArray(dragOverProps.sx) ? dragOverProps.sx : [dragOverProps.sx])]}>
                 <div className={`${styles.expandIconWrapper} ${isOpen ? styles.isOpen : ""}`}>
                     {node.children ? (
                         <div onClick={handleToggle}>
@@ -70,7 +77,7 @@ export const TreeNode = (props) => {
                         </div>
                     )}
                 </div>
-                <Stack direction="row" alignItems="center">
+                <Stack direction="row" sx={{ alignItems: "center" }}>
                     <Typography sx={{ mr: 1 }}>
                         {node.name}
                     </Typography>

@@ -97,12 +97,27 @@ export default function FileUpload(props) {
     }
 
     return (
-        <Box pt={2} px={2} display="flex" minHeight={80} minWidth={80} textAlign="center" alignItems="center" borderRadius="10px" border="1.5px dashed" flexDirection="column" borderColor="grey.300" justifyContent="center" bgcolor={isDragActive ? "grey.200" : "grey.100"} sx={{
-            transition: "all 250ms ease-in-out",
-            outline: "none",
-            position: "relative",
-            ...props?.sx
-        }} {...getRootProps()}>
+        <Box
+            {...getRootProps()}
+            sx={{
+                pt: 2,
+                px: 2,
+                display: "flex",
+                minHeight: 80,
+                minWidth: 80,
+                textAlign: "center",
+                alignItems: "center",
+                borderRadius: "10px",
+                border: "1.5px dashed",
+                flexDirection: "column",
+                borderColor: "grey.300",
+                justifyContent: "center",
+                bgcolor: isDragActive ? "grey.200" : "grey.100",
+                transition: "all 250ms ease-in-out",
+                outline: "none",
+                position: "relative",
+                ...props?.sx
+            }}>
             <input {...getInputProps()} />
 
             {serverFile ? (
@@ -120,7 +135,7 @@ export default function FileUpload(props) {
                         {progress >= 0 && progress < 100 && (
                             <>
                                 {' '}
-                                <Typography component="span" color="grey.600" noWrap>
+                                <Typography component="span" noWrap sx={{ color: "grey.600" }}>
                                     ({progress}%)
                                 </Typography>
                             </>
@@ -133,7 +148,7 @@ export default function FileUpload(props) {
                             {serverFile?.size && (
                                 <>
                                     {' '}
-                                    <Typography component="span" color="grey.600" noWrap>
+                                    <Typography component="span" noWrap sx={{ color: "grey.600" }}>
                                         ({prettyBytes(serverFile.size)})
                                     </Typography>
                                 </>

@@ -59,7 +59,7 @@ export default async function Contractor(props) {
                 <Scrollbar>
                     <Grid container spacing={3}>
                         <Grid item sm={3} xs={12}>
-                            <Typography color="grey.600">
+                            <Typography sx={{ color: "grey.600" }}>
                                 Название
                             </Typography>
                         </Grid>
@@ -72,7 +72,7 @@ export default async function Contractor(props) {
                                 defaultValue={contractor.name} />
                         </Grid>
                         <Grid item sm={3} xs={12}>
-                            <Typography color="grey.600">
+                            <Typography sx={{ color: "grey.600" }}>
                                 ИНН
                             </Typography>
                         </Grid>
@@ -80,7 +80,7 @@ export default async function Contractor(props) {
                             {contractor.inn}
                         </Grid>
                         <Grid item sm={3} xs={12}>
-                            <Typography color="grey.600">
+                            <Typography sx={{ color: "grey.600" }}>
                                 Юридический адрес
                             </Typography>
                         </Grid>
@@ -93,7 +93,7 @@ export default async function Contractor(props) {
                                 defaultValue={contractor.legal_address} />
                         </Grid>
                         <Grid item sm={3} xs={12}>
-                            <Typography color="grey.600">
+                            <Typography sx={{ color: "grey.600" }}>
                                 Контактный телефон
                             </Typography>
                         </Grid>
@@ -108,7 +108,7 @@ export default async function Contractor(props) {
                         {contractor.kind === 1 && (
                             <>
                                 <Grid item sm={3} xs={12}>
-                                    <Typography color="grey.600">
+                                    <Typography sx={{ color: "grey.600" }}>
                                         Информация о компании
                                     </Typography>
                                 </Grid>
@@ -116,7 +116,7 @@ export default async function Contractor(props) {
                                     {contractor.cover_letter}
                                 </Grid>
                                 <Grid item sm={3} xs={12}>
-                                    <Typography color="grey.600">
+                                    <Typography sx={{ color: "grey.600" }}>
                                         Опыт работы
                                     </Typography>
                                 </Grid>
@@ -124,7 +124,7 @@ export default async function Contractor(props) {
                                     {contractor.experience}
                                 </Grid>
                                 <Grid item sm={3} xs={12}>
-                                    <Typography color="grey.600">
+                                    <Typography sx={{ color: "grey.600" }}>
                                         Перечень услуг
                                     </Typography>
                                 </Grid>
@@ -141,7 +141,7 @@ export default async function Contractor(props) {
                                     ))}
                                 </Grid>
                                 <Grid item sm={3} xs={12}>
-                                    <Typography color="grey.600">
+                                    <Typography sx={{ color: "grey.600" }}>
                                         География услуг
                                     </Typography>
                                 </Grid>
@@ -160,7 +160,7 @@ export default async function Contractor(props) {
                                 {contractor.company_info && (
                                     <>
                                         <Grid item sm={3} xs={12}>
-                                            <Typography color="grey.600">
+                                            <Typography sx={{ color: "grey.600" }}>
                                                 Файл с информацией о компании
                                             </Typography>
                                         </Grid>
@@ -172,7 +172,7 @@ export default async function Contractor(props) {
                                 {contractor.pricelist && (
                                     <>
                                         <Grid item sm={3} xs={12}>
-                                            <Typography color="grey.600">
+                                            <Typography sx={{ color: "grey.600" }}>
                                                 Файл с прайслистом
                                             </Typography>
                                         </Grid>
@@ -186,7 +186,7 @@ export default async function Contractor(props) {
                         {contractor.kind === 2 && (
                             <>
                                 <Grid item sm={3} xs={12}>
-                                    <Typography color="grey.600">
+                                    <Typography sx={{ color: "grey.600" }}>
                                         Категория цен
                                     </Typography>
                                 </Grid>

@@ -24,33 +24,35 @@ function ListItem({
 export default function CheckoutSummary() {
     const { cart, priceFactor, total } = useCart()
 
-    return <div>
-        <Paragraph color="secondary.900" fontWeight={700} mb={2}>
-            Ваш заказ
-        </Paragraph>
+    return (
+        <div>
+            <Paragraph color="secondary.900" fontWeight={700} mb={2}>
+                Ваш заказ
+            </Paragraph>
 
-        {cart.map((item) => (
-            <FlexBetween key={item.id} mb={1.5}>
-                <Paragraph>
-                    {/*<Span fontWeight="700">{item.quantity}</Span> x */}{item.product.name}
-                </Paragraph>
+            {cart.map((item) => (
+                <FlexBetween key={item.id} mb={1.5}>
+                    <Paragraph>
+                        {/*<Span fontWeight="700">{item.quantity}</Span> x */}{item.product.name}
+                    </Paragraph>
 
-                <Paragraph>{currency(item.product.price * priceFactor)}</Paragraph>
-            </FlexBetween>
-        ))}
+                    <Paragraph>{currency(item.product.price * priceFactor)}</Paragraph>
+                </FlexBetween>
+            ))}
 
-        <Box component={Divider} borderColor="grey.300" my={3} />
+            <Box  component={Divider} sx={{ borderColor: "grey.300",  my: 3 }} />
 
-        {/*
-          <ListItem title="Subtotal" value={2610} />
-          <ListItem title="Shipping" />
-          <ListItem title="Tax" value={40} />
-          <ListItem title="Discount" mb={3} />
-    
-          <Box component={Divider} borderColor="grey.300" mb={1} />
-          */
-        }
+            {/*
+              <ListItem title="Subtotal" value={2610} />
+              <ListItem title="Shipping" />
+              <ListItem title="Tax" value={40} />
+              <ListItem title="Discount" mb={3} />
+        
+              <Box component={Divider} borderColor="grey.300" mb={1} />
+              */
+            }
 
-        <ListItem title="Всего" value={total * priceFactor} color="inherit" />
-    </div>
+            <ListItem title="Всего" value={total * priceFactor} color="inherit" />
+        </div>
+    )
 }

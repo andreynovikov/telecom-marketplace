@@ -53,7 +53,7 @@ export default function CheckoutForm() {
             <Card sx={{ p: 3, mb: 3 }}>
                 <Heading number={0} title="Детали заказа" />
 
-                <Box mb={3}>
+                <Box sx={{ mb: 3 }}>
                     <TextField fullWidth multiline minRows={4} maxRows={15} type="text" name="comment" label="Комментарий к заказу" />
                 </Box>
 
