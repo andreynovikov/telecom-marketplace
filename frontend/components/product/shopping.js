@@ -40,7 +40,7 @@ export default function ProductShopping(props) {
                 }}>
                     {cartItem?.quantity > 0 ? 'В корзине' : 'Добавить в корзину'}
                 </Button>
-            ) : false ? (
+            ) : false ? ( /* eslint-disable-line no-constant-condition */
                 <Box>
                     Для оформления заказа войдите в систему или зарегистрируйтесь, как заказчик
                 </Box>

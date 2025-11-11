@@ -39,7 +39,7 @@ export default async function Service(props) {
                                 {' '}
                                 <a href={`${process.env.NEXT_PUBLIC_FILES_ROOT}/${file.src}`}>{file.name}</a>
                                 {' '}
-                                <Typography component="span" color="grey">({prettyBytes(file.size)})</Typography>
+                                <Typography component="span" sx={{ color: "grey" }}>({prettyBytes(file.size)})</Typography>
                             </div>
                         ))}
                     </Stack>

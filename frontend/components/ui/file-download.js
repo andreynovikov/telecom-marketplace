@@ -32,7 +32,7 @@ export default function FileDownload(props) {
         downloadFile(`${process.env.NEXT_PUBLIC_API_FILES}/get/${scope}/${file.id}`, session?.user?.access_token)
             .then((xhr) => {
                 if (xhr.status != 200)
-                    throw new Error(body)
+                    throw new Error(xhr.body)
 
                 const type = xhr.getResponseHeader('Content-Type')        
                 const blob = new Blob([xhr.response], { type })
@@ -40,7 +40,7 @@ export default function FileDownload(props) {
                 const downloadUrl = URL.createObjectURL(blob)
         
                 const a = document.createElement("a")
-                if (typeof a.download === undefined) {
+                if (typeof a.download === "undefined") {
                     window.location = downloadUrl
                 } else {
                     a.href = downloadUrl

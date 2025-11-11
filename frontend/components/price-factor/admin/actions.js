@@ -17,7 +17,7 @@ export default function PriceFactorActions({ factor }) {
             <StyledIconButton onClick={() => setPriceFactorOpen(true)}>
                 <EditIcon />
             </StyledIconButton>
-            <StyledIconButton onClick={async () => await deletePriceFactor(brand?.id)}>
+            <StyledIconButton onClick={async () => await deletePriceFactor(factor?.id)}>
                 <DeleteIcon />
             </StyledIconButton>
             <PriceFactorEditDialog factor={factor} open={priceFactorOpen} setOpen={setPriceFactorOpen} />
