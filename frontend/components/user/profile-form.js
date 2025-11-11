@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useFormState, useFormStatus } from 'react-dom'
+import { useState, useEffect, useActionState } from 'react'
 import { useSession } from 'next-auth/react'
 
 import Alert from '@mui/material/Alert'
@@ -17,7 +16,7 @@ export default function ProfileForm() {
 
     const updateUserWithId = updateUser.bind(null, userId)
 
-    const [state, dispatch] = useFormState(updateUserWithId, { success: true })
+    const [state, dispatch] = useActionState(updateUserWithId, { success: true })
     const { data: session, update: updateSession } = useSession()
 
     useEffect(() => {

@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useFormState } from 'react-dom'
+import { useState, useEffect, useActionState } from 'react'
 import { useSearchParams } from 'next/navigation'
 
 import Box from '@mui/material/Box'
@@ -27,7 +26,7 @@ const altchaStrings = {
 
 export default function SignUpForm() {
     const [agreement, setAgreement] = useState(false)
-    const [result, dispatch] = useFormState(register, undefined)
+    const [result, dispatch] = useActionState(register, undefined)
     const { visiblePassword, togglePasswordVisible } = usePasswordVisible()
     const searchParams = useSearchParams()
     const as = searchParams.get('as')

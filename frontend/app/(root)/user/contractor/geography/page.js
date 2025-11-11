@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useFormState, useFormStatus } from 'react-dom'
+import { useState, useEffect, useActionState } from 'react'
+import { useFormStatus } from 'react-dom'
 import Alert from '@mui/material/Alert'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
@@ -18,7 +18,7 @@ import { IconMapPins } from '@tabler/icons-react'
 export default function ContractorForm() {
     const [data, setData] = useState({})
 
-    const [state, dispatch] = useFormState(saveGeography, { success: true })
+    const [state, dispatch] = useActionState(saveGeography, { success: true })
 
     useEffect(() => {
         if (state.success)

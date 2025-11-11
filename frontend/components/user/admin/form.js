@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useFormState } from 'react-dom'
+import { useEffect, useActionState } from 'react'
 
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
@@ -21,7 +20,7 @@ export default function UserEditDialog(props) {
     const updateUserWithId = updateUser.bind(null, user?.id)
     const deleteUserWithId = deleteUser.bind(null, user?.id)
 
-    const [state, dispatch] = useFormState(user?.id ? updateUserWithId : createUser, user ? { data: user } : {})
+    const [state, dispatch] = useActionState(user?.id ? updateUserWithId : createUser, user ? { data: user } : {})
 
     useEffect(() => {
         if (state.data?.id)

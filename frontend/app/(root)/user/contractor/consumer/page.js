@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useFormState, useFormStatus } from 'react-dom'
+import { useState, useEffect, useActionState } from 'react'
+import { useFormStatus } from 'react-dom'
 
 import Alert from '@mui/material/Alert'
 import Grid from '@mui/material/Grid'
@@ -23,7 +23,7 @@ export default function ContractorForm() {
     const [data, setData] = useState({})
     const [endConsumer, setEndConsumer] = useState(false)
 
-    const [state, dispatch] = useFormState(saveContractor, { success: true })
+    const [state, dispatch] = useActionState(saveContractor, { success: true })
 
     useEffect(() => {
         if (state.success)

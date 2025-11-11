@@ -1,6 +1,6 @@
 "use client";
 
-import styled from "@mui/material/styles/styled";
+import { styled}  from "@mui/material/styles";
 export const PriceText = styled("p")(({
   theme
 }) => ({

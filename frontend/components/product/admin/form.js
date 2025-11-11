@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
-import { useFormState } from 'react-dom'
+import { useState, useEffect, useActionState, Suspense } from 'react'
 import dynamic from 'next/dynamic'
 
 import Box from '@mui/material/Box'
@@ -31,7 +30,7 @@ export default function ProductEditDialog(props) {
     const updateProductWithId = updateProduct.bind(null, product?.id)
     const deleteProductWithId = deleteProduct.bind(null, product?.id)
 
-    const [state, dispatch] = useFormState(product?.id ? updateProductWithId : createProduct, product || {})
+    const [state, dispatch] = useActionState(product?.id ? updateProductWithId : createProduct, product || {})
 
     useEffect(() => {
         if (state.id)

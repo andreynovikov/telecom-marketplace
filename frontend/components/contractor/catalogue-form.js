@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useFormState, useFormStatus } from 'react-dom'
+import { useState, useEffect, useActionState } from 'react'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 
@@ -17,7 +16,7 @@ const CatalogueIcon = (props) => makeSvgIcon(IconListLetters, props)
 export default function CatalogueForm() {
     const [data, setData] = useState({})
 
-    const [state, dispatch] = useFormState(saveCatalogue, { success: true })
+    const [state, dispatch] = useActionState(saveCatalogue, { success: true })
 
     useEffect(() => {
         if (state.success)

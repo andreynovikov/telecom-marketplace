@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation'
 
 import Image from 'next/image'
 import Container from '@mui/material/Container'
-import styled from '@mui/material/styles/styled'
+import { styled }  from '@mui/material/styles'
 
 import BazaarCard from '@/components/theme/BazaarCard'
 import { H1, Paragraph } from '@/components/theme/Typography'

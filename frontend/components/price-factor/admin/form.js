@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useFormState } from 'react-dom'
+import { useEffect, useActionState } from 'react'
 
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -17,7 +16,7 @@ export default function PriceFactorEditDialog(props) {
     const updatePriceFactorWithId = updatePriceFactor.bind(null, factor?.id)
     const deletePriceFactorWithId = deletePriceFactor.bind(null, factor?.id)
 
-    const [state, dispatch] = useFormState(factor?.id ? updatePriceFactorWithId : createPriceFactor, factor || {})
+    const [state, dispatch] = useActionState(factor?.id ? updatePriceFactorWithId : createPriceFactor, factor || {})
 
     useEffect(() => {
         if (state.id)

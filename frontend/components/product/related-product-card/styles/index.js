@@ -1,6 +1,6 @@
 "use client";
 
-import styled from "@mui/material/styles/styled"; 
+import { styled}  from "@mui/material/styles"; 
 // GLOBAL CUSTOM COMPONENT
 
 import BazaarCard from "@/components/theme/BazaarCard";

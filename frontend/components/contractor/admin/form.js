@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useFormState } from 'react-dom'
+import { useEffect, useActionState } from 'react'
 
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -15,7 +14,7 @@ import { createContractor } from '../queries'
 export default function ContractorCreateDialog(props) {
     const { kind, open, setOpen } = props
 
-    const [state, dispatch] = useFormState(createContractor, {})
+    const [state, dispatch] = useActionState(createContractor, {})
 
     useEffect(() => {
         if (state.success)

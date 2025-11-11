@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useFormState, useFormStatus } from 'react-dom'
+import { useState, useEffect, useActionState } from 'react'
+import { useFormStatus } from 'react-dom'
 
 import Alert from '@mui/material/Alert'
 import Grid from '@mui/material/Grid'
@@ -22,7 +22,7 @@ import { IconClipboardText } from '@tabler/icons-react'
 export default function ContractorForm() {
     const [data, setData] = useState({})
 
-    const [state, dispatch] = useFormState(saveContractor, {success: true})
+    const [state, dispatch] = useActionState(saveContractor, {success: true})
 
     useEffect(() => {
         if (state.success)

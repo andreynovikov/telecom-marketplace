@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useFormState } from 'react-dom'
+import { useEffect, useActionState } from 'react'
 
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -17,7 +16,7 @@ export default function BrandEditDialog(props) {
     const updateBrandWithId = updateBrand.bind(null, brand?.id)
     const deleteBrandWithId = deleteBrand.bind(null, brand?.id)
 
-    const [state, dispatch] = useFormState(brand?.id ? updateBrandWithId : createBrand, brand || {})
+    const [state, dispatch] = useActionState(brand?.id ? updateBrandWithId : createBrand, brand || {})
 
     useEffect(() => {
         if (state.id)

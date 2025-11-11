@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useFormState } from 'react-dom'
+import { useEffect, useActionState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import Avatar from "@mui/material/Avatar"
@@ -39,7 +38,7 @@ export default function CheckoutForm() {
     const router = useRouter()
     const { cart, clear } = useCart()
     const createOrderWithCart = createOrder.bind(null, cart)
-    const [state, dispatch] = useFormState(createOrderWithCart, {success: null})
+    const [state, dispatch] = useActionState(createOrderWithCart, {success: null})
 
     useEffect(() => {
         if (state.success) {

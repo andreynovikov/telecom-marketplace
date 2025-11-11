@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
-import { useFormState } from 'react-dom'
+import { useState, useEffect, useActionState, Suspense } from 'react'
 import dynamic from 'next/dynamic'
 
 import Box from '@mui/material/Box'
@@ -26,7 +25,7 @@ export default function ServiceEditDialog(props) {
     const updateServiceWithId = updateService.bind(null, service?.id)
     const deleteServiceWithId = deleteService.bind(null, service?.id)
 
-    const [state, dispatch] = useFormState(service?.id ? updateServiceWithId : createService, service || {})
+    const [state, dispatch] = useActionState(service?.id ? updateServiceWithId : createService, service || {})
 
     useEffect(() => {
         if (state.id)

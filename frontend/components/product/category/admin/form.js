@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useFormState } from 'react-dom'
+import { useEffect, useActionState } from 'react'
 
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -17,7 +16,7 @@ export default function CategoryEditDialog(props) {
     const updateCategoryWithId = updateCategory.bind(null, category?.id)
     const deleteCategoryWithId = deleteCategory.bind(null, category?.id)
 
-    const [state, dispatch] = useFormState(category?.id ? updateCategoryWithId : createCategory, category || {})
+    const [state, dispatch] = useActionState(category?.id ? updateCategoryWithId : createCategory, category || {})
 
     useEffect(() => {
         if (state.id)
