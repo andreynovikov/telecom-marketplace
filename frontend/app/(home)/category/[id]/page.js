@@ -19,7 +19,7 @@ export default async function Products(props) {
     const category = await getCategory(id)
 
     const products = await getProducts([{
-        field: 'category',
+        field: 'category_id',
         value: id
     }])
 

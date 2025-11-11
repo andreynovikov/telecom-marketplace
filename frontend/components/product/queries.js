@@ -29,15 +29,13 @@ export async function getProducts(filters = null) {
                 from.push(sql`plainto_tsquery('russian', ${filter.value}) AS query`)
                 where.push(sql`product.fts_vector @@ query`)
                 order = 'rank DESC'
-            }
-            /*
-            if (Array.isArray(filter.value)) {
-                for (const value of filter.value)
-                    url.searchParams.append(filter.field, value)
+            } else if (Array.isArray(filter.value)) {
+                const field = sql(`product.${filter.field}`)
+                where.push(sql`${field} in ${sql(filter.value)}`)
             } else {
-                url.searchParams.append(filter.field, filter.value)
+                const field = sql(`product.${filter.field}`)
+                where.push(sql`${field} = ${filter.value}`)
             }
-            */
         //key = '__' + stringify(filters)
     }
 
