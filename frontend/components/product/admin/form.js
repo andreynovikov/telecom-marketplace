@@ -76,7 +76,7 @@ export default function ProductEditDialog(props) {
                     InputLabelProps={{ shrink: !!product?.name ? true : undefined }} />
 
                 <Grid container spacing={1}>
-                    <Grid item>
+                    <Grid>
                         <TextField
                             required
                             name="price"
@@ -86,7 +86,7 @@ export default function ProductEditDialog(props) {
                             defaultValue={product?.price}
                             InputLabelProps={{ shrink: !!product?.price ? true : undefined }} />
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <TextField
                             name="stock"
                             type="text"

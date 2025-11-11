@@ -41,10 +41,10 @@ export default async function Order(props) {
         <PageWrapper title={`Заказ №${order.id} от ${moment(order.created).format('L LT')}`}>
             <form action={handleFormAction}>
                 <Grid container spacing={3}>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Card sx={{ p: 3 }}>
                             <Grid container spacing={3}>
-                                <Grid item sm={3} xs={12}>
+                                <Grid size={{ sm: 3, xs: 12 }}>
                                     <FormControl fullWidth margin="dense">
                                         <InputLabel id="status-select-label">Статус</InputLabel>
                                         <Select
@@ -60,7 +60,7 @@ export default async function Order(props) {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid item sm={9} xs={12}>
+                                <Grid size={{ sm: 9, xs: 12 }}>
                                     <TextField
                                         fullWidth
                                         multiline
@@ -72,23 +72,22 @@ export default async function Order(props) {
                                         maxRows={5}
                                         defaultValue={order.comment} />
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={12}>
                                     {order.items.map((item, index) => <OrderedProduct item={item} key={index} />)}
                                 </Grid>
                             </Grid>
                         </Card>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <TotalSummary total={order.total} />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Button type="submit" variant="contained" color="primary">
                             Сохранить
                         </Button>
                     </Grid>
                 </Grid>
             </form>
-
         </PageWrapper>
     )
 }

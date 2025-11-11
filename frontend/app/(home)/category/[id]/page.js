@@ -37,7 +37,7 @@ export default async function Products(props) {
             </FlexBetween>
 
             <Grid container spacing={3}>
-                {products.map(product => <Grid item xl={3} md={4} sm={6} xs={12} key={product.id}>
+                {products.map(product => <Grid key={product.id} size={{ xl: 3, md: 4, sm: 6, xs: 12 }}>
                     <ProductCard product={product} />
                 </Grid>)}
             </Grid>

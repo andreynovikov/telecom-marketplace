@@ -5,15 +5,17 @@ import CheckoutForm from '@/components/shopping/checkout-form'
 import CheckoutSummary from '@/components/shopping/checkout-summary'
 
 export default function CheckoutPage() {
-    return <Container sx={{ my: "1.5rem" }}>
-        <Grid container spacing={3}>
-            <Grid item lg={8} md={8} xs={12}>
-                <CheckoutForm />
-            </Grid>
+    return (
+        <Container sx={{ my: "1.5rem" }}>
+            <Grid container spacing={3}>
+                <Grid size={{ lg: 8, md: 8, xs: 12 }}>
+                    <CheckoutForm />
+                </Grid>
 
-            <Grid item lg={4} md={4} xs={12}>
-                <CheckoutSummary />
+                <Grid size={{ lg: 4, md: 4, xs: 12 }}>
+                    <CheckoutSummary />
+                </Grid>
             </Grid>
-        </Grid>
-    </Container>
+        </Container>
+    )
 }

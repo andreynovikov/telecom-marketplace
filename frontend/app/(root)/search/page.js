@@ -57,7 +57,7 @@ export default async function SearchResults(props) {
                                     Товары
                                 </Paragraph>
                                 <Grid container spacing={3}>
-                                    {products.map(product => <Grid item md={3} sm={6} xs={12} key={product.id}>
+                                    {products.map(product => <Grid key={product.id} size={{ md: 3, sm: 6, xs: 12 }}>
                                         <ProductCard product={product} />
                                     </Grid>)}
                                 </Grid>

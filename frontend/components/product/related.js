@@ -13,10 +13,9 @@ export default async function RelatedProducts({ product }) {
     return (
         <Box sx={{ mb: 7.5 }}>
             <H3 mb={3}>Другие товары</H3>
-
             <Grid container spacing={3}>
                 {products.map((product) => (
-                    <Grid item lg={3} md={4} sm={6} xs={12} key={product.id}>
+                    <Grid key={product.id} size={{ lg: 3, md: 4, sm: 6, xs: 12 }}>
                         <ProductCard hoverEffect product={product} />
                     </Grid>
                 ))}

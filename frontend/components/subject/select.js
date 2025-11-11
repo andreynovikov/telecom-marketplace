@@ -34,7 +34,7 @@ export default function SubjectSelector(props) {
 
     return (
         subjects.map((subject) => (
-            <Grid item md={6} xs={12} key={subject.code}>
+            <Grid key={subject.code} size={{ md: 6, xs: 12 }}>
                 <FormControlLabel
                     control={
                         <Checkbox

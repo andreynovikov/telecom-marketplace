@@ -57,7 +57,7 @@ export default function ProductViewDialog(props) {
             }}>
                 <div>
                     <Grid container spacing={3}>
-                        <Grid item md={6} xs={12}>
+                        <Grid size={{  md: 6, xs: 12 }}>
                             {images.length > 0 ? (
                                 <Carousel slidesToShow={1} arrowStyles={{
                                     boxShadow: 0,
@@ -81,7 +81,7 @@ export default function ProductViewDialog(props) {
                             )}
                         </Grid>
 
-                        <Grid item md={6} xs={12} sx={{ alignSelf: "center" }}>
+                        <Grid sx={{ alignSelf: "center" }} size={{ md: 6, xs: 12 }}>
                             <H2>{product.name}</H2>
 
                             <Paragraph py={1} color="grey.500" fontWeight={600} fontSize={13}>

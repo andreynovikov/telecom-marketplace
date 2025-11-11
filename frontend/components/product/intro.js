@@ -17,11 +17,11 @@ export default async function ProductIntro(props) {
     return (
         <Box sx={{ width: "100%" }}>
             <Grid container spacing={3} sx={{ justifyContent: "space-around" }}>
-                <Grid item md={6} xs={12} sx={{ alignItems: "center" }}>
+                <Grid sx={{ alignItems: "center" }} size={{ md: 6, xs: 12 }}>
                     <ProductImage name={product.name} images={images} />
                 </Grid>
 
-                <Grid item md={6} xs={12} sx={{ alignItems: "center" }}>
+                <Grid sx={{ alignItems: "center" }} size={{ md: 6, xs: 12 }}>
                     <H1 mb={1}>{product.name}</H1>
 
                     <FlexBox alignItems="center" mb={1}>

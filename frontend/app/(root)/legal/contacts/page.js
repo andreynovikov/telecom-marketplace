@@ -23,14 +23,14 @@ export default function Contacts() {
             <Card sx={{ p: 3 }}>
                 <Grid container spacing={2}>
                     {emails.map(({ address, description }) => (
-                        <Grid item xs={12} md={6} key={address}>
+                        <Grid key={address} size={{ xs: 12, md: 6 }}>
                             <IconCard icon={IconMail} body={description} title={address} />
                         </Grid>
                     ))}
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <IconCard icon={IconPhone} title={phone} />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <IconCard icon={IconMapPin} title={address} />
                     </Grid>
                 </Grid>

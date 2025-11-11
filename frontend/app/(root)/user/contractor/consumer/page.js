@@ -40,7 +40,7 @@ export default function ContractorForm() {
                 <form action={dispatch}>
                     <input type="hidden" name="kind" value="2" />
                     <Grid container spacing={3}>
-                        <Grid item md={6} xs={12}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <TextField
                                 fullWidth
                                 required
@@ -51,7 +51,7 @@ export default function ContractorForm() {
                                 InputLabelProps={{ shrink: !!data.name ? true : undefined }} />
                         </Grid>
 
-                        <Grid item md={6} xs={12}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <TextField
                                 fullWidth
                                 required
@@ -64,7 +64,7 @@ export default function ContractorForm() {
                                 InputLabelProps={{ shrink: !!data.inn ? true : undefined }} />
                         </Grid>
 
-                        <Grid item md={6} xs={12}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <TextField
                                 fullWidth
                                 name="legal_address"
@@ -74,7 +74,7 @@ export default function ContractorForm() {
                                 InputLabelProps={{ shrink: !!data.legal_address ? true : undefined }} />
                         </Grid>
 
-                        <Grid item md={6} xs={12}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <TextField
                                 fullWidth
                                 name="contact_phone"
@@ -84,7 +84,7 @@ export default function ContractorForm() {
                                 InputLabelProps={{ shrink: !!data.contact_phone ? true : undefined }} />
                         </Grid>
 
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -96,7 +96,7 @@ export default function ContractorForm() {
                                 label="Компания является конечным потребителем товаров и услуг, предложенных на маркетплейсе" />
                         </Grid>
 
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Button type="submit" variant="contained" color="primary">
                                 Сохранить
                             </Button>
@@ -105,7 +105,7 @@ export default function ContractorForm() {
                             )}
                         </Grid>
 
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Paragraph color="grey.600" fontSize={12}>
                                 Вы можете заполнить некоторые поля позже
                             </Paragraph>

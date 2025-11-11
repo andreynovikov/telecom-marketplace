@@ -58,12 +58,12 @@ export default async function Contractor(props) {
             <Card sx={{ p: 3 }} component="form" action={handleFormAction}>
                 <Scrollbar>
                     <Grid container spacing={3}>
-                        <Grid item sm={3} xs={12}>
+                        <Grid size={{ sm: 3,  xs: 12 }}>
                             <Typography sx={{ color: "grey.600" }}>
                                 Название
                             </Typography>
                         </Grid>
-                        <Grid item sm={9} xs={12}>
+                        <Grid size={{  sm: 9, xs: 12 }}>
                             <TextField
                                 fullWidth
                                 name="name"
@@ -71,20 +71,20 @@ export default async function Contractor(props) {
                                 variant="standard"
                                 defaultValue={contractor.name} />
                         </Grid>
-                        <Grid item sm={3} xs={12}>
+                        <Grid size={{ sm: 3, xs: 12 }}>
                             <Typography sx={{ color: "grey.600" }}>
                                 ИНН
                             </Typography>
                         </Grid>
-                        <Grid item sm={9} xs={12}>
+                        <Grid size={{ sm: 9,  xs: 12 }}>
                             {contractor.inn}
                         </Grid>
-                        <Grid item sm={3} xs={12}>
+                        <Grid size={{  sm: 3, xs: 12 }}>
                             <Typography sx={{ color: "grey.600" }}>
                                 Юридический адрес
                             </Typography>
                         </Grid>
-                        <Grid item sm={9} xs={12}>
+                        <Grid size={{ sm: 9, xs: 12 }}>
                             <TextField
                                 fullWidth
                                 name="legal_address"
@@ -92,12 +92,12 @@ export default async function Contractor(props) {
                                 variant="standard"
                                 defaultValue={contractor.legal_address} />
                         </Grid>
-                        <Grid item sm={3} xs={12}>
+                        <Grid size={{ sm: 3, xs: 12 }}>
                             <Typography sx={{ color: "grey.600" }}>
                                 Контактный телефон
                             </Typography>
                         </Grid>
-                        <Grid item sm={9} xs={12}>
+                        <Grid size={{ sm: 9, xs: 12 }}>
                             <TextField
                                 fullWidth
                                 name="contact_phone"
@@ -107,28 +107,28 @@ export default async function Contractor(props) {
                         </Grid>
                         {contractor.kind === 1 && (
                             <>
-                                <Grid item sm={3} xs={12}>
+                                <Grid size={{ sm: 3, xs: 12 }}>
                                     <Typography sx={{ color: "grey.600" }}>
                                         Информация о компании
                                     </Typography>
                                 </Grid>
-                                <Grid item sm={9} xs={12}>
+                                <Grid size={{ sm: 9, xs: 12 }}>
                                     {contractor.cover_letter}
                                 </Grid>
-                                <Grid item sm={3} xs={12}>
+                                <Grid size={{ sm: 3, xs: 12 }}>
                                     <Typography sx={{ color: "grey.600" }}>
                                         Опыт работы
                                     </Typography>
                                 </Grid>
-                                <Grid item sm={9} xs={12}>
+                                <Grid size={{ sm: 9, xs: 12 }}>
                                     {contractor.experience}
                                 </Grid>
-                                <Grid item sm={3} xs={12}>
+                                <Grid size={{ sm: 3, xs: 12 }}>
                                     <Typography sx={{ color: "grey.600" }}>
                                         Перечень услуг
                                     </Typography>
                                 </Grid>
-                                <Grid item sm={9} xs={12}>
+                                <Grid size={{ sm: 9, xs: 12 }}>
                                     {contractor.services.map((item) => (
                                         <FlexBox key={item.id} alignItems="center">
                                             <Checkbox
@@ -140,12 +140,12 @@ export default async function Contractor(props) {
                                         </FlexBox>
                                     ))}
                                 </Grid>
-                                <Grid item sm={3} xs={12}>
+                                <Grid size={{ sm: 3, xs: 12 }}>
                                     <Typography sx={{ color: "grey.600" }}>
                                         География услуг
                                     </Typography>
                                 </Grid>
-                                <Grid item sm={9} xs={12}>
+                                <Grid size={{ sm: 9, xs: 12 }}>
                                     {contractor.geography.map((item) => (
                                         <FlexBox key={item.code} alignItems="center">
                                             <Checkbox
@@ -159,24 +159,24 @@ export default async function Contractor(props) {
                                 </Grid>
                                 {contractor.company_info && (
                                     <>
-                                        <Grid item sm={3} xs={12}>
+                                        <Grid size={{ sm: 3, xs: 12 }}>
                                             <Typography sx={{ color: "grey.600" }}>
                                                 Файл с информацией о компании
                                             </Typography>
                                         </Grid>
-                                        <Grid item sm={9} xs={12}>
+                                        <Grid size={{ sm: 9, xs: 12 }}>
                                             <FileDownload scope="users" file={contractor.company_info} />
                                         </Grid>
                                     </>
                                 )}
                                 {contractor.pricelist && (
                                     <>
-                                        <Grid item sm={3} xs={12}>
+                                        <Grid size={{ sm: 3, xs: 12 }}>
                                             <Typography sx={{ color: "grey.600" }}>
                                                 Файл с прайслистом
                                             </Typography>
                                         </Grid>
-                                        <Grid item sm={9} xs={12}>
+                                        <Grid size={{ sm: 9, xs: 12 }}>
                                             <FileDownload scope="users" file={contractor.pricelist} />
                                         </Grid>
                                     </>
@@ -185,19 +185,19 @@ export default async function Contractor(props) {
                         )}
                         {contractor.kind === 2 && (
                             <>
-                                <Grid item sm={3} xs={12}>
+                                <Grid size={{ sm: 3, xs: 12 }}>
                                     <Typography sx={{ color: "grey.600" }}>
                                         Категория цен
                                     </Typography>
                                 </Grid>
-                                <Grid item sm={9} xs={12}>
+                                <Grid size={{ sm: 9, xs: 12 }}>
                                     <PriceFactorSelect
                                         name="price_factor"
                                         defaultValue={contractor.price_factor} />
                                 </Grid>
                             </>
                         )}
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                                 fullWidth
                                 name="comment"
@@ -208,7 +208,7 @@ export default async function Contractor(props) {
                                 defaultValue={contractor.comment}
                                 InputLabelProps={{ shrink: !!contractor.comment ? true : undefined }} />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Button type="submit" variant="contained" color="primary">
                                 Сохранить
                             </Button>

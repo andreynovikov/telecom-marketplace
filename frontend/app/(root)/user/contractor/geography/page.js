@@ -32,7 +32,7 @@ export default function ContractorForm() {
                 <form action={dispatch}>
                     <Grid container rowSpacing={1} columnSpacing={3}>
                         <SubjectSelector geography={data?.geography} />
-                        <Grid item xs={12} sx={{ mt: 2 }}>
+                        <Grid sx={{ mt: 2 }} size={12}>
                             <Button type="submit" variant="contained" color="primary">
                                 Сохранить
                             </Button>

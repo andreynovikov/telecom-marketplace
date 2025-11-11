@@ -36,7 +36,7 @@ export default function ProfileForm() {
     return (
         <form action={dispatch}>
             <Grid container spacing={3}>
-                <Grid item md={6} xs={12}>
+                <Grid size={{ md: 6, xs: 12 }}>
                     <TextField
                         fullWidth
                         required
@@ -47,7 +47,7 @@ export default function ProfileForm() {
                         InputLabelProps={{ shrink: !!data.name ? true : undefined }} />
                 </Grid>
 
-                <Grid item md={6} xs={12}>
+                <Grid size={{ md: 6, xs: 12 }}>
                     <TextField
                         fullWidth
                         required
@@ -58,7 +58,7 @@ export default function ProfileForm() {
                         InputLabelProps={{ shrink: !!data.email ? true : undefined }} />
                 </Grid>
 
-                <Grid item md={6} xs={12}>
+                <Grid size={{ md: 6, xs: 12 }}>
                     <TextField
                         fullWidth
                         name="phone"
@@ -68,7 +68,7 @@ export default function ProfileForm() {
                         InputLabelProps={{ shrink: !!data.phone ? true : undefined }} />
                 </Grid>
 
-                <Grid item md={6} xs={12}>
+                <Grid size={{ md: 6, xs: 12 }}>
                     <TextField
                         fullWidth
                         name="position"
@@ -78,7 +78,7 @@ export default function ProfileForm() {
                         InputLabelProps={{ shrink: !!data.position ? true : undefined }} />
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Button type="submit" variant="contained" color="primary">
                         Сохранить
                     </Button>

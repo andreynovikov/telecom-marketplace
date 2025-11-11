@@ -36,7 +36,7 @@ export default function ContractorForm() {
                 <form action={dispatch}>
                     <input type="hidden" name="kind" value="1" />
                     <Grid container spacing={3}>
-                        <Grid item md={6} xs={12}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <TextField
                                 fullWidth
                                 required
@@ -47,7 +47,7 @@ export default function ContractorForm() {
                                 InputLabelProps={{ shrink: !!data.name ? true : undefined }} />
                         </Grid>
 
-                        <Grid item md={6} xs={12}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <TextField
                                 fullWidth
                                 required
@@ -60,7 +60,7 @@ export default function ContractorForm() {
                                 InputLabelProps={{ shrink: !!data.inn ? true : undefined }} />
                         </Grid>
 
-                        <Grid item md={6} xs={12}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <TextField
                                 fullWidth
                                 name="legal_address"
@@ -70,7 +70,7 @@ export default function ContractorForm() {
                                 InputLabelProps={{ shrink: !!data.legal_address ? true : undefined }} />
                         </Grid>
 
-                        <Grid item md={6} xs={12}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <TextField
                                 fullWidth
                                 name="contact_phone"
@@ -80,7 +80,7 @@ export default function ContractorForm() {
                                 InputLabelProps={{ shrink: !!data.contact_phone ? true : undefined }} />
                         </Grid>
 
-                        <Grid item md={6} xs={12}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <TextField
                                 fullWidth
                                 name="cover_letter"
@@ -91,7 +91,7 @@ export default function ContractorForm() {
                                 InputLabelProps={{ shrink: !!data.cover_letter ? true : undefined }} />
                         </Grid>
 
-                        <Grid item md={6} xs={12}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <TextField
                                 fullWidth
                                 name="experience"
@@ -102,7 +102,7 @@ export default function ContractorForm() {
                                 InputLabelProps={{ shrink: !!data.experience ? true : undefined }} />
                         </Grid>
 
-                        <Grid item md={6} xs={12}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <FileUpload
                                 name="company_info"
                                 current={data.company_info}
@@ -110,7 +110,7 @@ export default function ContractorForm() {
                                 variants="Документ или архив" />
                         </Grid>
 
-                        <Grid item md={6} xs={12}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <FileUpload
                                 name="pricelist"
                                 current={data.pricelist}
@@ -118,7 +118,7 @@ export default function ContractorForm() {
                                 variants="Документ или архив" />
                         </Grid>
 
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Button type="submit" variant="contained" color="primary">
                                 Сохранить
                             </Button>
@@ -127,7 +127,7 @@ export default function ContractorForm() {
                             )}
                         </Grid>
 
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Paragraph color="grey.600" fontSize={12}>
                                 Вы можете заполнить некоторые поля позже
                             </Paragraph>
