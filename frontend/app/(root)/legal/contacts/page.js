@@ -5,7 +5,7 @@ import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 
-import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps'
+import { YMaps, Map, Placemark } from '@iminside/react-yandex-maps'
 
 import PageWrapper from '@/components/ui/page-wrapper'
 import IconCard from '@/components/ui/icon-card'
