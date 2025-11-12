@@ -13,8 +13,8 @@ export default async function ProductDescription(props) {
         return null
 
     return (
-        <Box sx={{ mb: 7.5, mt: 1 }}>
-            <Markdown className={styles.prose} remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+        <Box sx={{ mb: 7.5, mt: 1 }} className={styles.prose}>
+            <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                 {product.description}
             </Markdown>
         </Box>

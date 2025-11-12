@@ -90,8 +90,8 @@ export default function ProductViewDialog(props) {
 
                             <H1 color="primary.main">{currency(product.price)}</H1>
 
-                            {product.description && <Paragraph my={2}>
-                                <Markdown className={styles.prose} remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                            {product.description && <Paragraph my={2} className={styles.prose}>
+                                <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                                     {product.description}
                                 </Markdown>
                             </Paragraph>}

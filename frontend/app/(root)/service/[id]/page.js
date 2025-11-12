@@ -26,8 +26,8 @@ export default async function Service(props) {
     return (
         <Container maxWidth="lg">
             <PageWrapper title={service.name}>
-                <Card sx={{ p: 3 }}>
-                    <Markdown className={styles.prose} remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                <Card sx={{ p: 3 }} className={styles.prose}>
+                    <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                         {service.description}
                     </Markdown>
                 </Card>

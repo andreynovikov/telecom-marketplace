@@ -1,4 +1,5 @@
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript'
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
 
 import Providers from './providers'
 
@@ -15,12 +16,14 @@ export const metadata = {
 
 export default function Layout({ children }) {
     return (
-        <html lang="ru">
+        <html lang="ru" suppressHydrationWarning>
             <body className={inter.className}>
-                <InitColorSchemeScript />
-                <Providers>
-                    {children}
-                </Providers>
+                <InitColorSchemeScript attribute="data" />
+                <AppRouterCacheProvider>
+                    <Providers>
+                        {children}
+                    </Providers>
+                </AppRouterCacheProvider>
             </body>
         </html>
     )
