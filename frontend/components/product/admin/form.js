@@ -61,7 +61,7 @@ export default function ProductEditDialog(props) {
 
                 <BrandSelect
                     name="brand"
-                    defaultValue={product?.brand}
+                    defaultValue={product?.brand_id}
                     required />
 
                 <TextField
@@ -104,7 +104,7 @@ export default function ProductEditDialog(props) {
 
                 <Box sx={{ margin: 1 }}>
                     Категория *{' '}
-                    <CategorySelect name="category" defaultValue={product?.category} />
+                    <CategorySelect name="category" defaultValue={product?.category_id} />
                 </Box>
 
                 <Suspense fallback={

@@ -3,27 +3,28 @@
 import { revalidateTag } from 'next/cache'
 
 import { auth } from '@/lib/auth'
+import sql from '@/lib/db'
 
 export async function getBrands() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/brands`, { next: { tags: ['brands'] } })
-
-    if (!res.ok) {
-        // This will activate the closest `error.js` Error Boundary
-        throw new Error('Failed to fetch data')
-    }
-
-    return res.json()
+    const brands = await sql`
+        SELECT
+            id,
+            name
+        FROM brand
+        ORDER BY name
+    `
+    return brands
 }
 
 export async function getBrand(brandId) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/brands/${brandId}`, { next: { tags: `brands__${brandId}` } })
-
-    if (!res.ok) {
-        // This will activate the closest `error.js` Error Boundary
-        throw new Error('Failed to fetch data')
-    }
-
-    return res.json()
+    const brand = await sql`
+        SELECT
+            id,
+            name
+        FROM brand
+        WHERE id = ${brandId}
+    `
+    return brand[0]
 }
 
 export async function createBrand(_currentState, formData) {

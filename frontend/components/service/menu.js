@@ -32,7 +32,7 @@ export default async function ServiceSidebarMenu() {
     }, { tree: [], refs: {} })
 
     await Promise.all(categories.map(async (category) => {
-        const services = await getServices([{field: 'category', value: category.id}])
+        const services = await getServices([{field: 'category_id', value: category.id}])
         if (services.length > 0) {
             if (!('children' in refs[category.id]))
                 refs[category.id].children = []

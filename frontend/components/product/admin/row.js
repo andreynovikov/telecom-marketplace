@@ -2,9 +2,12 @@ import { StyledTableRow, StyledTableCell } from '@/components/theme/pages-sectio
 
 import Brand from '@/components/brand'
 import Category from '../category'
+import { getProductImages } from '../queries'
 import ProductActions from './actions'
 
 export default async function ProductRow({ product }) {
+    const images = await getProductImages(product.id)
+
     return (
         <>
             <StyledTableRow tabIndex={-1}>
@@ -15,10 +18,10 @@ export default async function ProductRow({ product }) {
                     {product.name}
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                    <Brand id={product.brand} />
+                    <Brand id={product.brand_id} />
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                    <Category id={product.category} />
+                    <Category id={product.category_id} />
                 </StyledTableCell>
                 <StyledTableCell align="right">
                     {product.price}
@@ -27,7 +30,7 @@ export default async function ProductRow({ product }) {
                     {product.stock !== null ? product.stock : '-'}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                    {product.images.length > 0 ? product.images.length : '-'}
+                    {images.length > 0 ? images.length : '-'}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                     {product.description ? 'есть' : '-'}

@@ -1,7 +1,7 @@
 import { getServices } from './queries'
 
 export default async function ServiceList({ category }) {
-    const data = await getServices(category)
+    const data = await getServices([{field: 'category_id', value: category}])
 
     return (
         <div>

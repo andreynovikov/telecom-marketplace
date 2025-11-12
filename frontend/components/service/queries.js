@@ -5,45 +5,61 @@ import { revalidateTag } from 'next/cache'
 import stringify from 'json-sorted-stringify'
 
 import { auth } from '@/lib/auth'
+import sql, { and, comma } from '@/lib/db'
 
 export async function getServices(filters=null) {
-    const url = new URL(`${process.env.NEXT_PUBLIC_API_ROOT}/services`)
+    const select = [
+        sql`id`,
+        sql`short_name`,
+        sql`name`,
+        sql`description`,
+        sql`category_id`,
+    ]
+    const from = [sql`service`]
+    const where = []
+    let order = 'service.name'
 
-    let key = ''
+    //let key = ''
     if (filters !== null) {
         for (const filter of filters)
-            if (Array.isArray(filter.value)) {
-                for (const value of filter.value)
-                    url.searchParams.append(filter.field, value)
+            if (filter.field === 'text') {
+                select.push(sql`ts_rank_cd(service.fts_vector, query) AS rank`)
+                from.push(sql`plainto_tsquery('russian', ${filter.value}) AS query`)
+                where.push(sql`service.fts_vector @@ query`)
+                order = 'rank DESC'
+            } else if (Array.isArray(filter.value)) {
+                const field = sql(`service.${filter.field}`)
+                where.push(sql`${field} in ${sql(filter.value)}`)
             } else {
-                url.searchParams.append(filter.field, filter.value)
+                const field = sql(`service.${filter.field}`)
+                where.push(sql`${field} = ${filter.value}`)
             }
-        key = '__' + stringify(filters)
+        //key = '__' + stringify(filters)
     }
 
-    const res = await fetch(url.toString(), {
-        next: { tags: [`services__${key}`] }
-    })
+    const services = await sql`
+        SELECT ${comma(select)} FROM ${comma(from)}
+        ${where.length > 0 ? sql`
+        WHERE ${and(where)}
+        ` : sql``}
+        ORDER BY ${sql`${order}`}
+    `
 
-    if (!res.ok) {
-        // This will activate the closest `error.js` Error Boundary
-        throw new Error('Failed to fetch data')
-    }
-
-    return res.json()
+    return services
 }
 
 export async function getService(serviceId) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services/${serviceId}`, {
-        next: { tags: `services__${serviceId}` }
-    })
-
-    if (!res.ok) {
-        // This will activate the closest `error.js` Error Boundary
-        throw new Error('Failed to fetch data')
-    }
-
-    return res.json()
+        const service = await sql`
+        SELECT
+            id,
+            short_name,
+            name,
+            description,
+            category_id AS category
+        FROM service
+        WHERE id = ${serviceId}
+    `
+    return service[0]
 }
 
 export async function getServiceFiles(serviceId) {

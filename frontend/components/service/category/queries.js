@@ -3,18 +3,30 @@
 import { revalidateTag } from 'next/cache'
 
 import { auth } from '@/lib/auth'
+import sql from '@/lib/db'
 
 export async function getCategories() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/services/categories`, {
-        next: { tags: ['services__categories'] }
-    })
+    const categories = await sql`
+        SELECT
+            id,
+            name,
+            parent_id AS parent
+        FROM servicecategory
+        ORDER BY parent_id, seq
+    `
+    return categories
+}
 
-    if (!res.ok) {
-        // This will activate the closest `error.js` Error Boundary
-        throw new Error('Failed to fetch data')
-    }
-
-    return res.json()
+export async function getCategory(categoryId) {
+    const category = await sql`
+        SELECT
+            id,
+            name,
+            parent_id AS parent
+        FROM servicecategory
+        WHERE id = ${categoryId}
+    `
+    return category[0]
 }
 
 export async function createCategory(_currentState, formData) {

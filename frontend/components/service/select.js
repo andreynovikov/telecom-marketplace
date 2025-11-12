@@ -17,7 +17,7 @@ export default function ServiceSelector(props) {
     useEffect(() => {
         getCategories().then((result) => {
             setCategories(result)
-            const serviceCalls = result.map((category) => getServices(category.id))
+            const serviceCalls = result.map((category) => getServices([{field: 'category_id', value: category.id}]))
             Promise.all(serviceCalls).then((result) => {
                 const services = result.reduce((services, list) => {
                     list.map((service) => {
