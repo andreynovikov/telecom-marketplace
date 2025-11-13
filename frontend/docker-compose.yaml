@@ -1,0 +1,17 @@
+name: simarket
+services:
+  app:
+    container_name: nextjs-simarket
+    image: simarket
+    build:
+      context: ./
+      network: host
+      target: runner
+      tags:
+        - simarket
+    volumes:
+      - ./.docker/:/app/.docker/
+    network_mode: host
+    environment:
+      NODE_ENV: production
+    restart: unless-stopped

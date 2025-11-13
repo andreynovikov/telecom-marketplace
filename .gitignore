@@ -6,6 +6,7 @@ logs/
 .venv/
 __pycache__/
 
+.docker/
 .next/
 node_modules/
 
